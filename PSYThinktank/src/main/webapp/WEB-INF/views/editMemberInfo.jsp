@@ -17,7 +17,7 @@
 </head>
 <body>
 	<c:import url="header.jsp" />
-	<div class="container-fluid">
+	<div class="container-fluid" style="height:80vh">
 		<div class="text-center">
 			<h2 class="m-2">회원 정보 변경</h2>
 			<div class="w-75 mx-auto">
@@ -61,5 +61,6 @@
 			</div>
 		</div>			
 	</div>
+	<c:import url="footer.jsp"></c:import>
 </body>
 </html>

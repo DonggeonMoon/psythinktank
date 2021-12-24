@@ -1,12 +1,10 @@
 package com.mdg.PSYThinktank.contoller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +33,7 @@ public class PSYThinktankController {
 
 	@GetMapping("/")
 	public String home() {
-		return "redirect:/boardList";
+		return "redirect:/login";
 	}
 
 	@GetMapping("/login")
@@ -88,6 +86,19 @@ public class PSYThinktankController {
 		}
 		return map;
 	}
+	
+	@PostMapping("/checkEmail")
+	@ResponseBody
+	public Map<Object, Object> checkEmail(@RequestBody String memberEmail) {
+		System.out.println(memberEmail);
+		HashMap<Object, Object> map = new HashMap<Object, Object>();
+		if (!service.checkEmail(memberEmail)) {
+			map.put("isUnique2", true);
+		} else {
+			map.put("isUnique2", false);
+		}
+		return map;
+	}
 
 	@PostMapping("/member")
 	public String insertMemberInfo2(HttpSession session, Member member) {
@@ -99,6 +110,41 @@ public class PSYThinktankController {
 			session.removeAttribute(null);
 			return "redirect:/login";
 		}
+	}
+	
+	@GetMapping("/findIdAndPw")
+	public String findIdAndPw() {
+		return "findIdAndPw";
+	}
+	
+	@PostMapping("/findId")
+	@ResponseBody
+	public Map<String, Object> findId(@RequestBody HashMap<String, String> member) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Member result = service.selectOneMemberByEmail(member.get("memberEmail"));
+		if (result != null) {
+			map.put("exists", true);
+			map.put("id", result.getMemberId());
+		} else {
+			map.put("exists", false);
+			map.put("id", null);
+		}
+		return map;
+	}
+	
+	@PostMapping("/findPw")
+	@ResponseBody
+	public Map<String, Object> findPw(@RequestBody HashMap<String, String> member) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Member result = service.selectOneMemberByEmailAndId(member.get("memberEmail"), member.get("memberId"));
+		if (result != null) {
+			map.put("exists", true);
+			service.sendTempPwEmail(result.getMemberId(), result.getMemberEmail());
+		} else {
+			map.put("exists", false);
+
+		}
+		return map;
 	}
 
 	@GetMapping("/editMemberInfo")
@@ -126,21 +172,24 @@ public class PSYThinktankController {
 	}
 
 	@DeleteMapping("/member")
-	public void deleteMemberInfo(HttpSession session, String memberId, HttpServletResponse response) throws IOException {
+	public String deleteMemberInfo(HttpSession session, String memberId) throws IOException {
 		Member sessionInfo = (Member) session.getAttribute("member");
-		PrintWriter out = response.getWriter();
 		if (sessionInfo == null) {
-			out.println("<script type=\"text/javascript\">location.href='login';</script>");
+			return "redirect:/login";
 		} else {
 			if (sessionInfo.getMemberId().equals(memberId)) {
 				service.deleteMemberInfo(memberId);
 				session.removeAttribute("member");
-				out.println("<meta charset=\"utf-8\"><script type=\"text/javascript\">alert('탈퇴되었습니다. 그동안 이용해주셔서 감사합니다.');location.href='login';</script>");
-				out.println("<meta charset=\"utf-8\"><script type=\"text/javascript\">location.href='login';</script>");
+				return "redirect:/goodBye";
 			} else {
-				out.println("<script type=\"text/javascript\">location.href='login';</script>");
+				return "redirect:/login";
 			}
 		}
+	}
+	
+	@GetMapping("/goodBye")
+	public String goodBye() {
+		return "goodBye";
 	}
 
 	@GetMapping("/managerPage")

@@ -16,8 +16,8 @@
 				if(regex.test(searchText)) {
 					$.ajax({
 						url: "searchByStockCode",
-						data: searchText,
 						type: "post",
+						data: searchText,
 						dataType: "json",
 						contentType: "application/json; charset=utf-8"
 					}).done(function(data) {
@@ -35,8 +35,8 @@
 				} else {
 					$.ajax({
 						url: "searchByStockName",
-						data: searchText,
 						type: "post",
+						data: searchText,
 						dataType: "json",
 						contentType: "application/json; charset=utf-8"
 					}).done(function(data) {
@@ -63,7 +63,7 @@
 </head>
 <body>
 	<c:import url="header.jsp" />
-	<div class="container-fluid">
+	<div class="container-fluid" style="height:80vh">
 		<h2 class="m-2">주식 종목</h2>
 		<div class="d-flex justify-content-center m-2">
 				<input type="text" id="searchText" class="form-control mx-2" name="searchText" placeholder="종목명 또는 종목코드">
@@ -108,5 +108,6 @@
 			</ul>
 		</div>
 	</div>
+	<c:import url="footer.jsp"></c:import>
 </body>
 </html>

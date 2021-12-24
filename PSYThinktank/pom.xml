@@ -65,7 +65,12 @@
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-taglibs</artifactId>
-		</dependency> 
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 		
 		<dependency>
 		    <groupId>org.apache.tomcat</groupId>
@@ -81,13 +86,13 @@
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-crypto</artifactId>
 		</dependency>
-		<!-- 		
+				
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		 -->
+		
 	</dependencies>
 	<build>
 		<plugins>

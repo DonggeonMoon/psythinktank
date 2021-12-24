@@ -9,7 +9,7 @@
 </head>
 <body>
 	<c:import url="header.jsp" />
-	<div class="container-fluid">
+	<div class="container-fluid" style="height:80vh">
 		<h2 class="m-2">관리자 페이지</h2>
 		<table class="table text-center">
 			<thead class="table-dark">
@@ -58,5 +58,6 @@
 			</ul>
 		</div>
 	</div>
+	<c:import url="footer.jsp"></c:import>
 </body>
 </html>
