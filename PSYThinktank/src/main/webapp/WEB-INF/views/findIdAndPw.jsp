@@ -1,0 +1,92 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>아이디/비밀번호 찾기</title>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#findIdBtn").click(function() {
+			let data ={
+				memberEmail: $("#memberEmail").val(),
+			}
+			$.ajax({
+				url: "findId",
+				type: "post",
+				data: JSON.stringify(data),
+				dataType: "json",
+				contentType: "application/json; charset=utf-8"
+			}).done(function(data){
+				if(data.exists) {
+					alert("회원님의 아이디는 " + data.id + "입니다.");
+				} else {
+					alert("아이디가 존재하지 않습니다.");
+				}
+			}).fail(function(error){
+				alert("오류: " + error);
+			});
+		});
+		
+		$("#findPwBtn").click(function() {
+			let data ={
+				memberEmail: $("#memberEmail2").val(),
+				memberId : $("#memberId").val()
+			}
+			$.ajax({
+				url: "findPw",
+				type: "post",
+				data: JSON.stringify(data),
+				dataType: "json",
+				contentType: "application/json; charset=utf-8"
+			}).done(function(data){
+				if(data.exists) {
+					alert("회원님의 이메일로 임시비밀번호를 발송하였습니다.");
+				} else {
+					alert("회원 정보가 존재하지 않습니다.");
+				}
+			}).fail(function(error){
+				alert("오류: " + error);
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	<div class="container-fluid">
+		<h2 class="d-flex justify-content-center m-5">아이디/비밀번호 찾기</h2>
+		<div class="mx-auto text-center">
+			<form action="findId" method="post">
+				<div class="m-2">
+					<label class="form-label d-inline">이메일:</label>
+					<input type="email" class="form-control w-25 d-inline" id="memberEmail" name="memberEmail">
+				</div>
+				<div>
+					<input class="m-2" type="button" id="findIdBtn" value="아이디 찾기">
+				</div>
+			</form>
+		</div>
+		<div class="mx-auto text-center">
+			<form action="findPw" method="post">
+				<div class="m-2">
+					<label class="form-label d-inline">아이디:</label>
+					<input type="text" class="form-control w-25 d-inline" id="memberId" name="memberId">
+				</div>
+				<div class="m-2">
+					<label class="form-label d-inline">이메일:</label>
+					<input type="email" class="form-control w-25 d-inline" id="memberEmail2" name="memberEmail">
+				</div>
+				<div>
+					<input class="m-2" type="button" id="findPwBtn" value="비밀번호 찾기">
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

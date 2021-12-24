@@ -18,7 +18,7 @@
 </head>
 <body>
 	<c:import url="header.jsp" />
-	<div class="container-fluid">
+	<div class="container-fluid" style="height:80vh">
 		<h2 class="m-2">게시글 작성</h2>
 		<div class="border rounded-3 p-3">
 			<form action="board" method="post">
@@ -39,5 +39,6 @@
 			</form>
 		</div>
 	</div>
+	<c:import url="footer.jsp"></c:import>
 </body>
 </html>

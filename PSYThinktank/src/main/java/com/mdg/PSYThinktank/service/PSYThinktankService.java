@@ -1,7 +1,9 @@
 package com.mdg.PSYThinktank.service;
 
 import java.util.List;
+import java.util.Random;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
@@ -9,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +54,9 @@ public class PSYThinktankService {
 	
 	@Autowired
 	DividendRepository ddao;
+	
+	@Autowired
+	JavaMailSender mailSender;
 
 	@Transactional
 	public boolean checkId(String memberId) {
@@ -58,6 +66,11 @@ public class PSYThinktankService {
 	@Transactional
 	public boolean checkPw(String memberId, String memberPw) {
 		return (BCrypt.checkpw(memberPw, mdao.findById(memberId).orElse(null).getMemberPw())) ? true : false;
+	}
+	
+	@Transactional
+	public boolean checkEmail(String memberEmail) {
+		return ((mdao.findByMemberEmail(memberEmail) != null) ? true : false);
 	}
 
 	@Transactional
@@ -112,6 +125,16 @@ public class PSYThinktankService {
 	@Transactional
 	public Page<Member> selectAllMember(int page) {
 		return mdao.findAll(PageRequest.of(page, 50, Sort.by("userLevel").descending().and(Sort.by("memberId").ascending())));
+	}
+	
+	@Transactional
+	public Member selectOneMemberByEmail(String memberEmail) {
+		return mdao.findByMemberEmail(memberEmail);
+	}
+	
+	@Transactional
+	public Member selectOneMemberByEmailAndId(String memberEmail, String memberId) {
+		return mdao.findByMemberEmailAndMemberId(memberEmail, memberId);
 	}
 
 	@Transactional
@@ -234,5 +257,43 @@ public class PSYThinktankService {
 	@Transactional
 	public Dividend selectOneDividendByStockCode(String StockCode) {
 		return ddao.findById(StockCode).get();
+	}
+	
+	@Transactional
+	public void sendVerificationEmail(String id, String email) {
+		final MimeMessagePreparator preparator = new MimeMessagePreparator() {
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+				final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+				helper.setFrom("officialpsythinktank@gmail.com");
+				helper.setTo(email);
+				helper.setSubject("PSYThinktank 이메일 인증 메일입니다.");
+				helper.setText("", true);		
+			}
+		};
+		mailSender.send(preparator);
+	}
+	
+	@Transactional
+	public void sendTempPwEmail(String id, String email) {
+		StringBuffer sb = new StringBuffer();
+		Random random = new Random();
+		for(int i = 0; i < 11; i++) {
+			sb.append((char) (random.nextInt(57) + 'A'));
+		}
+		String randomizedStr = sb.toString();
+		Member member = mdao.findByMemberEmail(email);
+		member.setMemberPw(BCrypt.hashpw(randomizedStr, BCrypt.gensalt()));
+		final MimeMessagePreparator preparator = new MimeMessagePreparator() {
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+				final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+				helper.setFrom("officialpsythinktank@gmail.com");
+				helper.setTo(email);
+				helper.setSubject("임시 비밀번호를 보내드립니다.");
+				helper.setText("임시비밀번호는 "+ randomizedStr +"입니다.", true);
+			}
+		};
+		mailSender.send(preparator);
 	}
 }

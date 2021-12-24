@@ -2,6 +2,10 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="PSYThinktank, 주식, 채권, 부동산, 파생상품, 투자, 금융, 증권">
+<meta name="description" content="올바른 주식 투자, PSYThinktank가 만들어 갑니다.">
+<meta name="author" content="PSYThinktank">
+<meta name="google-site-verification" content="RIrNGTJOZcoMVdOjVbu1AlGgeDUxXoTC4YQnD2LrjCo" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -10,7 +14,7 @@
 	<div class="container-fluid mr-5">
 	  <ul class="navbar-nav">
 	    <li class="nav-item">
-	      <a class="navbar-brand" href="/PSYThinktank/">PSYThinktank</a>
+	      <a class="navbar-brand" href="boardList">PSYThinktank</a>
 	    </li>
 	  </ul>
 	  <ul class="navbar-nav me-5">
@@ -44,9 +48,7 @@
 	</button>
 	<div class="collapse navbar-collapse mx-2" id="navbarSupportedContent">
 	    <ul class="navbar-nav text-center">
-	      <li class="nav-item">
-	        <a class="nav-link active" href="/PSYThinktank/">홈</a>
-	      </li>
+	      
 	      <li class="nav-item">
 	        <a class="nav-link" href="stockList">종목 검색</a>
 	      </li>
