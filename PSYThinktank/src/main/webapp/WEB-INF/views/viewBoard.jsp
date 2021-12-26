@@ -99,7 +99,7 @@
 											<input type="hidden" name="commentDepth" value="<c:out value='${i.commentDepth}' />">
 											<input type="hidden" name="commentSeq" value="<c:out value='${i.commentSeq}' />">
 											<input type="hidden" name="commentDate" value="${i.commentDate}">
-											<input type="hidden" name="memberId" value="<c:out value='${sessionScope.member.memberId}' />">
+											<input type="hidden" name="memberId" value="<c:out value='${i.memberId}' />">
 											<textarea class="w-100" name="commentContent" cols="100">${i.commentContent}</textarea>
 											<div class="text-end">
 												<button type="submit" class="badge bg-secondary my-2">댓글 수정</button>
@@ -118,7 +118,7 @@
 				</c:forEach>
 				<tr class="text-end">
 					<td colspan="6">
-						<form class="d-inline" action="comment" method="post">
+						<form class="d-flex justify-content-end" action="comment" method="post">
 							<textarea class="w-100" name="commentContent" cols="100"></textarea>
 							<input type="hidden" name="boardNo" value="<c:out value='${board.boardNo}' />">						
 							<input type="hidden" name="commentDepth" value="<c:out value='1' />">
