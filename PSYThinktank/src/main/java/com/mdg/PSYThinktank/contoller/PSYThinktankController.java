@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +21,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mdg.PSYThinktank.model.Board;
+import com.mdg.PSYThinktank.model.Circular;
 import com.mdg.PSYThinktank.model.Comment;
 import com.mdg.PSYThinktank.model.Member;
 import com.mdg.PSYThinktank.model.StockInfo;
@@ -389,8 +394,44 @@ public class PSYThinktankController {
 		return "viewStock";
 	}
 	
-	@GetMapping("/viewCircular")
-	public String viewCircular(HttpSession session, Model model) {
+	@GetMapping("/circularList")
+	public String circularList(@RequestParam(defaultValue = "1") int page, Model model) {
+		Page<Circular> circularPage = service.selectAllCircular(page - 1);
+		model.addAttribute("circularList", circularPage);
+		model.addAttribute("currentBlock", circularPage.getNumber()/circularPage.getSize());
+		return "circularList";
+	}
+	
+	@GetMapping("/circular")
+	public String viewCircular(@RequestParam(defaultValue = "1") int circularId, Model model) {
+		model.addAttribute("circular", service.selectOneCircular(circularId));
 		return "viewCircular";
+	}
+	
+	@GetMapping("/insertCircular")
+	public String insertCircular(Model model) {
+		return "insertCircular";
+	}
+	
+	@PostMapping("/circular")
+	public String insertCircular2(Circular circular, @RequestParam("file") MultipartFile file, HttpServletRequest request) throws IllegalStateException, IOException {
+		if (!file.isEmpty()) {
+			ServletContext sc = request.getServletContext();
+			String realPath = sc.getRealPath("/");
+			String originalFilename = file.getOriginalFilename();
+			String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1, originalFilename.length());
+			String fileName = UUID.randomUUID() + "." + extension;
+			circular.setFileName(fileName);
+			service.insertOneCircular(circular, file, realPath);
+		}
+		return "redirect:/circularList";
+	}
+	
+	@DeleteMapping("/circular")
+	public String deleteCircular(int circularId, HttpServletRequest request) {
+		ServletContext sc = request.getServletContext();
+		String realPath = sc.getRealPath("/");
+		service.deleteOneCircular(circularId, realPath);
+		return "redirect:/circularList";
 	}
 }

@@ -56,7 +56,7 @@
 	        <a class="nav-link" href="boardList">회원 게시판</a>
 	      </li>
 	      <li class="nav-item">
-	        <a class="nav-link" href="viewCircular">회보</a>
+	        <a class="nav-link" href="circularList">회보</a>
 	      </li>
 	    </ul>
 	 </div>
