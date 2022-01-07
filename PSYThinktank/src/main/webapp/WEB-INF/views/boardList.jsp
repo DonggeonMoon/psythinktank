@@ -50,7 +50,7 @@
 						</td>
 						<td>${i.memberId}</td>
 						<td>${i.boardHit}</td>
-						<td><fmt:formatDate value="${i.writeDate}" pattern="yyyy-mm-dd hh:mm:ss" /></td>
+						<td><fmt:formatDate value="${i.writeDate}" pattern="yyyy-MM-dd hh:mm:ss" /></td>
 					</tr>
 				</c:forEach>
 			</tbody>

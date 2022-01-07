@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.AllArgsConstructor;
@@ -35,4 +36,8 @@ public class Member {
 
 	@Column(name = "user_level", nullable = false)
 	private int userLevel;
+	
+	@Column(name="login_try")
+	@ColumnDefault(value = "0")
+	private int login_try;
 }

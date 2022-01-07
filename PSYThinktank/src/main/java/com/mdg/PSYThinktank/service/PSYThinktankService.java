@@ -1,5 +1,6 @@
 package com.mdg.PSYThinktank.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Random;
 
@@ -16,8 +17,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mdg.PSYThinktank.model.Board;
+import com.mdg.PSYThinktank.model.Circular;
 import com.mdg.PSYThinktank.model.Comment;
 import com.mdg.PSYThinktank.model.Dividend;
 import com.mdg.PSYThinktank.model.HRR;
@@ -25,6 +28,7 @@ import com.mdg.PSYThinktank.model.Member;
 import com.mdg.PSYThinktank.model.Share;
 import com.mdg.PSYThinktank.model.StockInfo;
 import com.mdg.PSYThinktank.repository.BoardRepository;
+import com.mdg.PSYThinktank.repository.CircularRepository;
 import com.mdg.PSYThinktank.repository.CommentRepository;
 import com.mdg.PSYThinktank.repository.DividendRepository;
 import com.mdg.PSYThinktank.repository.HRRRepository;
@@ -54,6 +58,9 @@ public class PSYThinktankService {
 	
 	@Autowired
 	DividendRepository ddao;
+	
+	@Autowired
+	CircularRepository crdao;
 	
 	@Autowired
 	JavaMailSender mailSender;
@@ -295,5 +302,39 @@ public class PSYThinktankService {
 			}
 		};
 		mailSender.send(preparator);
+	}
+	
+	@Transactional
+	public Page<Circular> selectAllCircular(int page) {
+		return crdao.findAll(PageRequest.of(page, 10, Sort.by("circularId").ascending()));
+	}
+	
+	@Transactional
+	public Circular selectOneCircular(int circularId) {
+		return crdao.findById(circularId).get();
+	}
+	
+	@Transactional
+	public void insertOneCircular(Circular circular, MultipartFile file, String realPath) {
+		String filePath = realPath + "\\WEB-INF\\classes\\static\\web\\" + circular.getFileName();
+		System.out.println("경로: " + filePath);
+		try {
+			file.transferTo(new File(filePath));
+			crdao.save(circular);	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Transactional
+	public void deleteOneCircular(int circularId, String realPath) {
+		Circular circular = selectOneCircular(circularId);
+		String filePath = realPath + "\\WEB-INF\\classes\\static\\web\\" + circular.getFileName();
+		try {
+			new File(filePath).delete();
+			crdao.deleteById(circularId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

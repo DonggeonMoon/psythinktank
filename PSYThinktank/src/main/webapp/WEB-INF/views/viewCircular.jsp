@@ -9,6 +9,6 @@
 </head>
 <body style="margin:0;padding:0;height:100vh;">
 	<c:import url="header.jsp" />
-	<iframe src="web/viewer.html?file=회보.pdf" width="100%" height="100%"></iframe>
+	<iframe src="web/viewer.html?file=${circular.fileName}" width="100%" height="100%"></iframe>
 </body>
 </html>
