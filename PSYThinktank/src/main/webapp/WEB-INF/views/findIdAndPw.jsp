@@ -61,6 +61,7 @@
 <body>
 	<div class="container-fluid">
 		<h2 class="d-flex justify-content-center m-5">아이디/비밀번호 찾기</h2>
+		<h3 class="d-flex justify-content-center m-5">아이디 찾기</h3>
 		<div class="mx-auto text-center">
 			<form action="findId" method="post">
 				<div class="m-2">
@@ -72,6 +73,8 @@
 				</div>
 			</form>
 		</div>
+		<h3 class="d-flex justify-content-center m-5">비밀번호 찾기</h3>
+		<h6 class="text-secondary d-flex justify-content-center m-5">회원정보가 일치하면 임시 비밀번호가 이메일로 발송됩니다.</h6>
 		<div class="mx-auto text-center">
 			<form action="findPw" method="post">
 				<div class="m-2">

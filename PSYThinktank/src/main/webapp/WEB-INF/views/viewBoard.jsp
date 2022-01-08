@@ -10,7 +10,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <body>
 	<c:import url="header.jsp" />
-	<div class="container-fluid" style="height:80vh">
+	<div class="container-fluid">
 		<h2 class="m-2">게시글 보기</h2>
 		<table class="table text-center">
 			<colgroup>
@@ -47,7 +47,7 @@
 		</table>
 		<button class="btn btn-dark my-2" onclick="location.href='boardList'">목록</button>
 
-		<div class="container-fluid">
+		<div class="container-fluid mb-5">
 			<table class="table">
 				<c:forEach var="i" items="${commentList}">
 					<table class="table">
@@ -82,7 +82,7 @@
 											<input type="hidden" name="commentDepth" value="<c:out value='${i.commentDepth + 1}' />">
 											<input type="hidden" name="commentSeq" value="<c:out value='${i.commentSeq + 1}' />">
 											<input type="hidden" name="memberId" value="<c:out value='${sessionScope.member.memberId}' />">
-											<textarea class="w-100" name="commentContent" cols="100"></textarea>
+											<textarea class="w-100" name="commentContent" cols="100" required></textarea>
 											<div class="text-end">
 												<button type="submit" class="badge bg-secondary my-2">댓글 달기</button>
 											</div>
@@ -100,7 +100,7 @@
 											<input type="hidden" name="commentSeq" value="<c:out value='${i.commentSeq}' />">
 											<input type="hidden" name="commentDate" value="${i.commentDate}">
 											<input type="hidden" name="memberId" value="<c:out value='${i.memberId}' />">
-											<textarea class="w-100" name="commentContent" cols="100">${i.commentContent}</textarea>
+											<textarea class="w-100" name="commentContent" cols="100" required>${i.commentContent}</textarea>
 											<div class="text-end">
 												<button type="submit" class="badge bg-secondary my-2">댓글 수정</button>
 											</div>
@@ -119,7 +119,7 @@
 				<tr class="text-end">
 					<td colspan="6">
 						<form class="d-flex justify-content-end" action="comment" method="post">
-							<textarea class="w-100" name="commentContent" cols="100"></textarea>
+							<textarea class="w-100" name="commentContent" cols="100" required></textarea>
 							<input type="hidden" name="boardNo" value="<c:out value='${board.boardNo}' />">						
 							<input type="hidden" name="commentDepth" value="<c:out value='1' />">
 							<input type="hidden" name="commentSeq" value="<c:out value='1' />">
@@ -131,6 +131,6 @@
 			</table>
 		</div>
 	</div>
-	<c:import url="footer.jsp"></c:import>
+	<c:import url="footer.jsp" />
 </body>
 </html>

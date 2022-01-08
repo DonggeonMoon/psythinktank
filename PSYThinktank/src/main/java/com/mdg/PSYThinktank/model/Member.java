@@ -37,7 +37,7 @@ public class Member {
 	@Column(name = "user_level", nullable = false)
 	private int userLevel;
 	
-	@Column(name="login_try")
+	@Column(name="login_try_count")
 	@ColumnDefault(value = "0")
-	private int login_try;
+	private int loginTryCount;
 }

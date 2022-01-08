@@ -21,7 +21,7 @@
 	<c:import url="header.jsp" />
 	<div class="container-fluid">
 		<h2 class="m-2">게시글 수정</h2>
-		<div class="border rounded-3 p-3">
+		<div class="border rounded-3 m-2 p-3">
 			<form action="board" method="post">
 				<div class="mb-3 mt-3">
 					<label for="title" class="form-label">제목</label>

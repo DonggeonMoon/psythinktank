@@ -9,7 +9,7 @@
 </head>
 <body>
 	<c:import url="header.jsp" />
-	<div class="container-fluid" style="height:80vh">
+	<div class="container-fluid">
 		<h2 class="m-2">관리자 페이지</h2>
 		<table class="table text-center">
 			<thead class="table-dark">
@@ -28,12 +28,12 @@
 						<td><c:out value="${i.userLevel }" /></td>
 						<td>
 							<c:if test="${i.userLevel != 3 }">
-								<form style="display:inline" action="changeUserLevel" method="post">
+								<form class="d-inline" action="changeUserLevel" method="post">
 									<input type="hidden" name="memberId" value="${i.memberId }">
 									<input type="hidden" name="userLevel" value="2">
 									<input type="submit" value="관리자 승격">
 								</form>
-								<form style="display:inline" action="changeUserLevel" method="post">
+								<form class="d-inline" action="changeUserLevel" method="post">
 									<input type="hidden" name="memberId" value="${i.memberId }">
 									<input type="hidden" name="userLevel" value="1">
 									<input type="submit" value="회원으로 강등">

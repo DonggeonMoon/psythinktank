@@ -14,12 +14,86 @@
 <script src="https://kit.fontawesome.com/51db22a717.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript">
+	$(document).ready(function() {
+		$("#loginBtn").click(function() {
+			let json = {
+					memberId : $("#memberId").val(),
+					memberPw : $("#memberPw").val()
+			};
+			$.ajax({
+				url: "login",
+				type: "post",
+				data: JSON.stringify(json),
+				dataType: "json",
+				contentType: "application/json; charset=utf-8"
+			}).done(function(data) {
+				if (data.isSucceeded) {
+					location.href = "boardList";		
+				} else {
+					switch (data.error) {
+					case 1:
+						$("#spinner").css("display", "block")
+						$("#messageArea").empty();
+						$("#messageArea").html("<div class='alert alert-info'><strong>아이디 또는 비밀번호가 입력되지 않았습니다.</strong></div>");
+						setTimeout(function() {
+							$("#spinner").css("display", "none");
+						}, 50);
+						$("#messageArea").fadeOut(10).fadeIn(10);
+						break;
+					case 2:
+						$("#spinner").css("display", "block")
+						$("#messageArea").empty();
+						$("#messageArea").html("<div class='alert alert-info'><strong>존재하지 않는 아이디 입니다</strong></div>");
+						setTimeout(function() {
+							$("#spinner").css("display", "none");
+						}, 50);
+						$("#messageArea").fadeOut(10).fadeIn(10);
+						break;
+					case 3:
+						$("#spinner").css("display", "block")
+						$("#messageArea").empty();
+						$("#messageArea").html("<div class='alert alert-info'><strong>비밀번호가 일치하지 않습니다.<br />(로그인 시도 횟수: "+ data.loginTryCount + "/5)</strong></div>");
+						setTimeout(function() {
+							$("#spinner").css("display", "none");
+						}, 50);
+						$("#messageArea").fadeOut(10).fadeIn(10);
+						break;
+					case 4:
+						$("#spinner").css("display", "block")
+						$("#messageArea").empty();
+						$("#messageArea").html("<div class='alert alert-info'><strong>로그인 잠김. 비밀번호 찾기를 통해 임시 비밀번호를 발급받아 로그인해주세요.</strong></div>");
+						setTimeout(function() {
+							$("#spinner").css("display", "none");
+						}, 50);
+						$("#messageArea").fadeOut(10).fadeIn(10);
+						break;
+					default:
+						$("#spinner").css("display", "block")
+						$("#messageArea").empty();
+						$("#messageArea").html("");
+						setTimeout(function() {
+							$("#spinner").css("display", "none");
+						}, 50);
+						$("#messageArea").fadeOut(10).fadeIn(10);
+						break;
+					}
+				}
+			}).fail(function(error) {
+				alert("오류: " + error);
+			});
+		});
+	});
 	function findIdAndPw() {
 		let newWindow = window.open("findIdAndPw", "아이디/비밀번호 찾기", "width=800, height=700");
 	}
 </script>
 </head>
 <body>
+	<div id="spinner" class="position-absolute vw-100 vh-100" style="z-index:100; display:none">
+		<div class="position-absolute top-50 start-50 translate-middle">
+			<div class="spinner-border"></div>
+		</div>
+	</div>
     <div class="page-container">
         <div class="login-form-container shadow">
             <div class="login-form-right-side">
@@ -36,24 +110,20 @@
                 </div>
                 <form action="login" method="post">
 		                <div class="login-input-container">
-		                	<c:if test="${message != ''}">
-							<div class="alert alert-info">
-							  <strong>${message}</strong>
-							</div>
-						</c:if>
-	                    <div class="login-input-wrap input-id">
-	                        <i class="far fa-id-card"></i>
-	                        <input name="memberId" placeholder="ID" type="text">
-	                    </div>
-	                    <div class="login-input-wrap input-password">
-	                        <i class="fas fa-key"></i>
-	                        <input name="memberPw" placeholder="Password"  type="password">
-	                    </div>
-	                </div>
-	                <div class="login-btn-wrap">
-	                    <button class="login-btn">Login</button>
-	                    <a href="#" onclick="findIdAndPw()" >아이디 혹은 비밀번호를 잊어버리셨나요?</a>
-	                </div>
+		                	<div id="messageArea"></div>
+		                    <div class="login-input-wrap input-id">
+		                        <i class="far fa-id-card"></i>
+		                        <input id="memberId" name="memberId" placeholder="ID" type="text">
+		                    </div>
+		                    <div class="login-input-wrap input-password">
+		                        <i class="fas fa-key"></i>
+		                        <input id="memberPw" name="memberPw" placeholder="Password"  type="password">
+		                    </div>
+		                </div>
+		                <div class="login-btn-wrap">
+		                    <button type="button" id="loginBtn" class="login-btn">Login</button>
+		                    <a href="#" onclick="findIdAndPw()" >아이디 혹은 비밀번호를 잊어버리셨나요?</a>
+		                </div>
                 </form>
             </div>
         </div>

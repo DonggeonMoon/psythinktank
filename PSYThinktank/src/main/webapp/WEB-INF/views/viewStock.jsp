@@ -9,7 +9,7 @@
 </head>
 <body>
 	<c:import url="header.jsp" />
-	<div class="container-fluid" style="height:80vh">
+	<div class="container-fluid">
 		<h2 class="m-2">종목 보기</h2>
 		<table class="table">
 			<colgroup>
@@ -73,8 +73,8 @@
 				</td>
 			</tr>
 		</table>
-		<button class="btn btn-dark mx-2" onclick="location.href='stockList'">목록</button>
+		<button class="btn btn-dark m-2" onclick="location.href='stockList'">목록</button>
 	</div>
-	<c:import url="footer.jsp"></c:import>
+	<c:import url="footer.jsp" />
 </body>
 </html>
