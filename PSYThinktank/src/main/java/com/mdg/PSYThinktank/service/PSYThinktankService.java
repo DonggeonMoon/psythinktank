@@ -1,7 +1,9 @@
 package com.mdg.PSYThinktank.service;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.mail.internet.MimeMessage;
@@ -81,18 +83,44 @@ public class PSYThinktankService {
 	}
 
 	@Transactional
-	public String login(String memberId, String memberPw, HttpSession session) {
-		if (memberId != "") {
+	public Map<String, Object> login(String memberId, String memberPw, HttpSession session) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (memberId != "" && memberPw != "") {
 			if (checkId(memberId) == true) {
-				if (checkPw(memberId, memberPw)) {
-					session.setAttribute("member", mdao.findById(memberId).get());
-					return "redirect:/boardList";
-				} else
-					return "redirect:/login?error=3";
+				Member member = mdao.findById(memberId).get();
+				if (member.getLoginTryCount() < 5) {
+					if (checkPw(memberId, memberPw)) {
+						member.setLoginTryCount(0);
+						session.setAttribute("member", mdao.findById(memberId).get());
+						map.put("isSucceeded", true);
+						map.put("error", -1);
+						map.put("loginTryCount", member.getLoginTryCount());
+						return map;
+					} else {
+						member.setLoginTryCount(member.getLoginTryCount() + 1);
+						map.put("isSucceeded", false);
+						map.put("error", 3);
+						map.put("loginTryCount", member.getLoginTryCount());
+						return map;
+					}					
+				} else {
+					map.put("isSucceeded", false);
+					map.put("error", 4);
+					return map;// 5회 이상 틀렸을 경우
+				}
 			} else
-				return "redirect:/login?error=2";
+				map.put("isSucceeded", false);
+				map.put("error", 2);
+				return map;
 		}
-		return "redirect:/login?error=1";
+		map.put("isSucceeded", false);
+		map.put("error", 1);
+		return map;
+	}
+	
+	@Transactional
+	public int getLoginTryCount(String memberId) {
+		return mdao.findById(memberId).get().getLoginTryCount();
 	}
 
 	@Transactional
@@ -291,6 +319,7 @@ public class PSYThinktankService {
 		String randomizedStr = sb.toString();
 		Member member = mdao.findByMemberEmail(email);
 		member.setMemberPw(BCrypt.hashpw(randomizedStr, BCrypt.gensalt()));
+		member.setLoginTryCount(0);
 		final MimeMessagePreparator preparator = new MimeMessagePreparator() {
 			@Override
 			public void prepare(MimeMessage mimeMessage) throws Exception {

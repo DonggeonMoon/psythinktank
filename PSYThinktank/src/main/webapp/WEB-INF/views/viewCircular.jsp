@@ -9,6 +9,7 @@
 </head>
 <body style="margin:0;padding:0;height:100vh;">
 	<c:import url="header.jsp" />
-	<iframe src="web/viewer.html?file=${circular.fileName}" width="100%" height="100%"></iframe>
+	<iframe class="m-0 p-0" src="web/viewer.html?file=${circular.fileName}" width="100%" height="100%"></iframe>
+	<c:import url="footer.jsp" />
 </body>
 </html>

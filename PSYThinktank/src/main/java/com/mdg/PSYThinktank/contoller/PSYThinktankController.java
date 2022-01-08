@@ -43,30 +43,13 @@ public class PSYThinktankController {
 
 	@GetMapping("/login")
 	public String login(String error, Model model) {
-		if (error != null) {
-			switch (error) {
-			case "1":
-				model.addAttribute("message", "아이디를 입력해주세요.");
-				break;
-			case "2":
-				model.addAttribute("message", "존재하지 않는 아이디 입니다.");
-				break;
-			case "3":
-				model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
-				break;
-			default:
-				model.addAttribute("message", "");
-				break;
-			}
-		} else {
-			model.addAttribute("message", "");
-		}
 		return "login";
 	}
 
 	@PostMapping("/login")
-	public String login2(String memberId, String memberPw, HttpSession session) {
-		return service.login(memberId, memberPw, session);
+	@ResponseBody
+	public Map<String, Object> login2(@RequestBody HashMap<String, String> map, HttpSession session) {
+		return service.login(map.get("memberId"), map.get("memberPw"), session);
 	}
 
 	@GetMapping("/logout")
@@ -91,7 +74,7 @@ public class PSYThinktankController {
 		}
 		return map;
 	}
-	
+
 	@PostMapping("/checkEmail")
 	@ResponseBody
 	public Map<Object, Object> checkEmail(@RequestBody String memberEmail) {
@@ -116,12 +99,12 @@ public class PSYThinktankController {
 			return "redirect:/login";
 		}
 	}
-	
+
 	@GetMapping("/findIdAndPw")
 	public String findIdAndPw() {
 		return "findIdAndPw";
 	}
-	
+
 	@PostMapping("/findId")
 	@ResponseBody
 	public Map<String, Object> findId(@RequestBody HashMap<String, String> member) {
@@ -136,7 +119,7 @@ public class PSYThinktankController {
 		}
 		return map;
 	}
-	
+
 	@PostMapping("/findPw")
 	@ResponseBody
 	public Map<String, Object> findPw(@RequestBody HashMap<String, String> member) {
@@ -191,7 +174,7 @@ public class PSYThinktankController {
 			}
 		}
 	}
-	
+
 	@GetMapping("/goodBye")
 	public String goodBye() {
 		return "goodBye";
@@ -206,7 +189,7 @@ public class PSYThinktankController {
 			if (sessionInfo.getUserLevel() == 3) {
 				Page<Member> memberPage = service.selectAllMember(page - 1);
 				model.addAttribute("memberList", memberPage);
-				model.addAttribute("currentBlock", memberPage.getNumber()/memberPage.getSize());
+				model.addAttribute("currentBlock", memberPage.getNumber() / memberPage.getSize());
 				return "managerPage";
 			} else {
 				return "redirect:/login";
@@ -233,7 +216,7 @@ public class PSYThinktankController {
 	public String boardList(@RequestParam(defaultValue = "1") int page, Model model) {
 		Page<Board> boardPage = service.selectAllBoard(page - 1);
 		model.addAttribute("boardList", boardPage);
-		model.addAttribute("currentBlock", boardPage.getNumber()/boardPage.getSize());
+		model.addAttribute("currentBlock", boardPage.getNumber() / boardPage.getSize());
 		return "boardList";
 	}
 
@@ -359,15 +342,15 @@ public class PSYThinktankController {
 			}
 		}
 	}
-	
+
 	@GetMapping("/stockList")
 	public String stockList(@RequestParam(defaultValue = "1") int page, Model model) {
 		Page<StockInfo> stockPage = service.selectAllStockInfo(page - 1);
 		model.addAttribute("stockList", stockPage);
-		model.addAttribute("currentBlock", stockPage.getNumber()/stockPage.getSize());
+		model.addAttribute("currentBlock", stockPage.getNumber() / stockPage.getSize());
 		return "stockList";
 	}
-	
+
 	@PostMapping("/searchByStockCode")
 	@ResponseBody
 	public Map<String, Object> searchByStockCode(@RequestBody String searchText) {
@@ -376,7 +359,7 @@ public class PSYThinktankController {
 		map.put("result", service.selectAllStockInfoByStockCode(searchText));
 		return map;
 	}
-	
+
 	@PostMapping("/searchByStockName")
 	@ResponseBody
 	public Map<String, List<StockInfo>> searchByStockName(@RequestBody String searchText) {
@@ -384,7 +367,7 @@ public class PSYThinktankController {
 		map.put("result", service.selectAllStockInfoByStockName(searchText));
 		return map;
 	}
-	
+
 	@GetMapping("/viewStock")
 	public String viewStock(String stockCode, Model model) {
 		model.addAttribute("stock", service.selectOneStockInfoByStockCode(stockCode));
@@ -393,26 +376,26 @@ public class PSYThinktankController {
 		model.addAttribute("dividend", service.selectOneDividendByStockCode(stockCode));
 		return "viewStock";
 	}
-	
+
 	@GetMapping("/circularList")
 	public String circularList(@RequestParam(defaultValue = "1") int page, Model model) {
 		Page<Circular> circularPage = service.selectAllCircular(page - 1);
 		model.addAttribute("circularList", circularPage);
-		model.addAttribute("currentBlock", circularPage.getNumber()/circularPage.getSize());
+		model.addAttribute("currentBlock", circularPage.getNumber() / circularPage.getSize());
 		return "circularList";
 	}
-	
+
 	@GetMapping("/circular")
 	public String viewCircular(@RequestParam(defaultValue = "1") int circularId, Model model) {
 		model.addAttribute("circular", service.selectOneCircular(circularId));
 		return "viewCircular";
 	}
-	
+
 	@GetMapping("/insertCircular")
 	public String insertCircular(Model model) {
 		return "insertCircular";
 	}
-	
+
 	@PostMapping("/circular")
 	public String insertCircular2(Circular circular, @RequestParam("file") MultipartFile file, HttpServletRequest request) throws IllegalStateException, IOException {
 		if (!file.isEmpty()) {
@@ -426,7 +409,7 @@ public class PSYThinktankController {
 		}
 		return "redirect:/circularList";
 	}
-	
+
 	@DeleteMapping("/circular")
 	public String deleteCircular(int circularId, HttpServletRequest request) {
 		ServletContext sc = request.getServletContext();

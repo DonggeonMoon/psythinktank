@@ -10,7 +10,7 @@
 </head>
 <body>
 	<c:import url="header.jsp" />
-	<div class="container-fluid" style="height:80vh">
+	<div class="container-fluid">
 		<h2 class="m-2">회보</h2>
 		<table class="table text-center">
 			<thead class="table-dark">
@@ -51,7 +51,7 @@
 			</tbody>
 		</table>
 		<c:if test="${sessionScope.member.userLevel >= 2}">
-			<button class="btn btn-dark" onclick="location.href='insertCircular'">파일 올리기</button>
+			<button class="btn btn-dark m-2" onclick="location.href='insertCircular'">파일 올리기</button>
 		</c:if>
 		<div class="d-flex justify-content-center">
 			<ul class="pagination">

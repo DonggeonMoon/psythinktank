@@ -144,8 +144,10 @@
 					</div>						
 				</form>
 			</div>
-			<button type="button" class="btn btn-secondary mx-2" onclick="submitForm()">회원 가입</button>
-			<button type="button" class="btn btn-secondary mx-2" onclick="history.back(-1);">돌아가기</button>
+			<div class="m-2">
+				<button type="button" class="btn btn-secondary mx-2" onclick="submitForm()">회원 가입</button>
+				<button type="button" class="btn btn-secondary mx-2" onclick="history.back(-1);">돌아가기</button>
+			</div>
 		</div>			
 	</div>
 	<c:import url="footer.jsp"></c:import>

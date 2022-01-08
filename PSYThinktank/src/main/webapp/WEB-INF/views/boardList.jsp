@@ -10,7 +10,7 @@
 </head>
 <body>
 	<c:import url="header.jsp" />
-	<div class="container-fluid" style="height:80vh">
+	<div class="container-fluid">
 		<h2 class="m-2">게시판</h2>
 		<table class="table text-center">
 			<thead class="table-dark">
@@ -55,7 +55,7 @@
 				</c:forEach>
 			</tbody>
 		</table>
-		<button class="btn btn-dark" onclick="location.href='insertBoard'">글 작성</button>
+		<button class="btn btn-dark m-2" onclick="location.href='insertBoard'">글 작성</button>
 		<div class="d-flex justify-content-center">
 			<ul class="pagination">
 				<c:if test="${currentBlock > 0}">

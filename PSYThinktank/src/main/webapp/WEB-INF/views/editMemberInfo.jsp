@@ -10,7 +10,19 @@
 <script>
 	$(document).ready(function() {
 		$("#editBtn").click(function() {
-			$("#form").submit();
+			let memberPw = $("#memberPw").val();
+			let memberPw2 = $("#memberPw2").val();
+			
+			if (memberPw != "" && memberPw2 != "") {
+				if (memberPw == memberPw2) {
+					$("#form").submit();	
+				} else {
+					alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+				}				
+			} else {
+				alert("비밀번호와 비밀번호 확인을 입력하세요.");
+			}
+			
 		});
 	});
 </script>
@@ -33,13 +45,13 @@
 						<div>
 							<label class="d-inline-block w-25">새 비밀번호</label>
 							<div class="d-inline">
-								<input class="d-inline-block form-control w-50 my-2" type="password" id="memberPw" name="memberPw" required>
+								<input class="d-inline-block form-control w-50 my-2" type="password" id="memberPw" name="memberPw">
 							</div>
 						</div>
 						<div>
 							<label class="d-inline-block w-25">새 비밀번호 확인</label> 
 							<div class="d-inline">
-								<input class="d-inline-block form-control w-50 my-2" type="password" id="memberPw2" required>
+								<input class="d-inline-block form-control w-50 my-2" type="password" id="memberPw2">
 							</div>
 						</div>
 						<div>
@@ -56,7 +68,7 @@
 				<form class="d-inline" action="member" method="post">
 					<input type="hidden" name="_method" value="delete">
 					<input type="hidden" name="memberId" value="<c:out value='${memberInfo.memberId}' />">
-					<input type="submit" class="btn btn-secondary mx-2 d-inline" value="회원 탈퇴">
+					<input type="submit" class="btn btn-secondary mx-2 d-inline <c:if test="${sessionScope.member.userLevel >= 3}">disabled</c:if>" value="회원 탈퇴"> 
 				</form>
 			</div>
 		</div>			
