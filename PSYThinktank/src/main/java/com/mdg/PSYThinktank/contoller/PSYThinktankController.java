@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -78,7 +80,6 @@ public class PSYThinktankController {
 	@PostMapping("/checkEmail")
 	@ResponseBody
 	public Map<Object, Object> checkEmail(@RequestBody String memberEmail) {
-		System.out.println(memberEmail);
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
 		if (!service.checkEmail(memberEmail)) {
 			map.put("isUnique2", true);
@@ -219,6 +220,33 @@ public class PSYThinktankController {
 		model.addAttribute("currentBlock", boardPage.getNumber() / boardPage.getSize());
 		return "boardList";
 	}
+	
+	@PostMapping("/searchByBoardTitle")
+	@ResponseBody
+	public Map<String, Object> searchBoardByBoardTitle(@RequestBody String searchText) {
+		System.out.println(searchText);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("result", service.searchBoardByBoardTitle(searchText));
+		return map;
+	}
+	
+	@PostMapping("/searchByBoardContent")
+	@ResponseBody
+	public Map<String, Object> searchBoardByBoardContent(@RequestBody String searchText) {
+		System.out.println(searchText);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("result", service.searchBoardByBoardContent(searchText));
+		return map;
+	}
+	
+	@PostMapping("/searchByMemberId")
+	@ResponseBody
+	public Map<String, Object> searchBoardByMemberId(@RequestBody String searchText) {
+		System.out.println(searchText);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("result", service.searchBoardByMemberId(searchText));
+		return map;
+	}
 
 	@GetMapping("/board")
 	public String viewBoard(int boardNo, Model model) {
@@ -354,7 +382,6 @@ public class PSYThinktankController {
 	@PostMapping("/searchByStockCode")
 	@ResponseBody
 	public Map<String, Object> searchByStockCode(@RequestBody String searchText) {
-		System.out.println(searchText);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("result", service.selectAllStockInfoByStockCode(searchText));
 		return map;
@@ -386,9 +413,12 @@ public class PSYThinktankController {
 	}
 
 	@GetMapping("/circular")
-	public String viewCircular(@RequestParam(defaultValue = "1") int circularId, Model model) {
+	@ResponseBody
+	public ResponseEntity<Resource> viewCircular(@RequestParam(defaultValue = "1") int circularId, Model model) {
+		Resource file = service.downloadCircular(circularId);
+		ResponseEntity<Resource> response = ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "application/pdf").body(file);
 		model.addAttribute("circular", service.selectOneCircular(circularId));
-		return "viewCircular";
+		return response;
 	}
 
 	@GetMapping("/insertCircular")
@@ -399,22 +429,18 @@ public class PSYThinktankController {
 	@PostMapping("/circular")
 	public String insertCircular2(Circular circular, @RequestParam("file") MultipartFile file, HttpServletRequest request) throws IllegalStateException, IOException {
 		if (!file.isEmpty()) {
-			ServletContext sc = request.getServletContext();
-			String realPath = sc.getRealPath("/");
 			String originalFilename = file.getOriginalFilename();
 			String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1, originalFilename.length());
 			String fileName = UUID.randomUUID() + "." + extension;
 			circular.setFileName(fileName);
-			service.insertOneCircular(circular, file, realPath);
+			service.insertOneCircular(circular, file);
 		}
 		return "redirect:/circularList";
 	}
 
 	@DeleteMapping("/circular")
 	public String deleteCircular(int circularId, HttpServletRequest request) {
-		ServletContext sc = request.getServletContext();
-		String realPath = sc.getRealPath("/");
-		service.deleteOneCircular(circularId, realPath);
+		service.deleteOneCircular(circularId);
 		return "redirect:/circularList";
 	}
 }
