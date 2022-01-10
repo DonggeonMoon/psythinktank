@@ -16,9 +16,10 @@
 <script type="text/javascript">
 	function login() {
 		let json = {
-				memberId : $("#memberId").val(),
+				memberId : $("#memberId").val().trim(),
 				memberPw : $("#memberPw").val()
 		};
+		
 		$.ajax({
 			url: "login",
 			type: "post",
@@ -81,6 +82,7 @@
 			alert("오류: " + error);
 		});
 	}
+	
 	$(document).ready(function() {
 		$("#loginBtn").click(function() {
 			login();
@@ -96,6 +98,7 @@
 			}
 		});
 	});
+	
 	function findIdAndPw() {
 		let newWindow = window.open("findIdAndPw", "아이디/비밀번호 찾기", "width=800, height=700");
 	}
@@ -126,11 +129,11 @@
 		                	<div id="messageArea"></div>
 		                    <div class="login-input-wrap input-id">
 		                        <i class="far fa-id-card"></i>
-		                        <input id="memberId" name="memberId" placeholder="ID" type="text">
+		                        <input id="memberId" name="memberId" placeholder="ID" type="text" maxlength="50">
 		                    </div>
 		                    <div class="login-input-wrap input-password">
 		                        <i class="fas fa-key"></i>
-		                        <input id="memberPw" name="memberPw" placeholder="Password"  type="password">
+		                        <input id="memberPw" name="memberPw" placeholder="Password"  type="password" maxlength="50">
 		                    </div>
 		                </div>
 		                <div class="login-btn-wrap">

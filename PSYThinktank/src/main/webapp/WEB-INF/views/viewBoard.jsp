@@ -6,8 +6,25 @@
 <head>
 <meta charset="UTF-8">
 <title>게시글 보기</title>
-</head>
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/chart/latest/toastui-chart.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui-color-picker/latest/tui-color-picker.min.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-table-merged-cell/latest/toastui-editor-plugin-table-merged-cell.min.css" />
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script src="https://uicdn.toast.com/editor/latest/i18n/ko-kr.js"></script>
+<script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
+<script src="https://uicdn.toast.com/editor-plugin-chart/latest/toastui-editor-plugin-chart.min.js"></script>
+<script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script>
+<script src="https://uicdn.toast.com/tui-color-picker/latest/tui-color-picker.min.js"></script>
+<script src="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.js"></script>
+<script src="https://uicdn.toast.com/editor-plugin-table-merged-cell/latest/toastui-editor-plugin-table-merged-cell.min.js"></script>
+<script src="https://uicdn.toast.com/editor-plugin-uml/latest/toastui-editor-plugin-uml.min.js"></script>
+</head>
 <body>
 	<c:import url="header.jsp" />
 	<div class="container-fluid">
@@ -30,8 +47,12 @@
 				<td><c:out value="${board.boardHit}" /></td>
 			</tr>
 			<tr>
+				<td class="table-light">작성일</td>
+				<td><c:out value="${board.writeDate}" /></td>
+			</tr>
+			<tr>
 				<td class="table-light">내용</td>
-				<td><c:out value="${board.boardContent}" /></td>
+				<td class="text-start" style="white-space:pre"><div id="viewer"></div></td>
 			</tr>
 			<tr style="text-align:right;">
 				<td colspan="2">
@@ -132,5 +153,26 @@
 		</div>
 	</div>
 	<c:import url="footer.jsp" />
+	<script>
+		const Editor = toastui.Editor;
+		const { chart, codeSyntaxHighlight, colorSyntax, tableMergedCell, uml } = toastui.Editor.plugin;
+		
+		const chartOptions = {
+		        minWidth: 100,
+		        maxWidth: 600,
+		        minHeight: 100,
+		        maxHeight: 300
+		      };
+		
+		let content = "${board.boardContent}";
+		const viewer = new Editor.factory({
+			usageStatistics: false,
+			language: 'ko',
+		    el: document.querySelector('#viewer'),
+		    viewer: true,
+	        initialValue: content,
+	        plugins: [[chart, chartOptions], [codeSyntaxHighlight, { highlighter: Prism }], colorSyntax, tableMergedCell, uml]
+		  });
+	</script>
 </body>
 </html>
