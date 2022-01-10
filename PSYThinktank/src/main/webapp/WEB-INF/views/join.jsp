@@ -8,42 +8,47 @@
 <title>회원 가입</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript">
-	var idChk = false;
-	var emailChk = false;
-	var checkedId = "";
-	var checkedEmail = "";
+	let idChk = false;
+	let emailChk = false;
+	let checkedId = "";
+	let checkedEmail = "";
 	
 	$(document).ready(function(){
 		$("#checkIdBtn").click(function(){
-			var memberId = $("#memberId").val();
+			let memberId = $("#memberId").val();
+			let regex = /^[^\s]+$/;
 			if (memberId != "") {
-				$.ajax({
-					async : true,
-					type : "POST",
-					data: memberId,
-					url : "checkId",
-					dataType : "json",
-					contentType : "application/json; charset=UTF-8"
-				}).done(function(data){
-					if (data.isUnique) {
-						idChk = true;
-						alert("사용할 수 있는 아이디입니다.");
-						$("#memberPw").focus();
-						checkedId = memberId;
-					} else {
-						alert("이미 존재하는 아이디입니다.");
-						$("#memberId").focus();
-					}
-				}).fail(function(request, status, error) {
-					alert("status: " + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-				});
+				if (regex.test(memberId)) {
+					$.ajax({
+						async : true,
+						type : "POST",
+						data: memberId,
+						url : "checkId",
+						dataType : "json",
+						contentType : "application/json; charset=UTF-8"
+					}).done(function(data){
+						if (data.isUnique) {
+							idChk = true;
+							alert("사용할 수 있는 아이디입니다.");
+							$("#memberPw").focus();
+							checkedId = memberId;
+						} else {
+							alert("이미 존재하는 아이디입니다.");
+							$("#memberId").focus();
+						}
+					}).fail(function(request, status, error) {
+						alert("status: " + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+					});
+				} else {
+					alert("공백이 포함된 아이디는 사용할 수 없습니다.");				}
+				
 			} else {
 				alert("아이디를 입력해주세요.");
 			}
 		});
 		
 		$("#checkEmailBtn").click(function(){
-			var memberEmail = $("#memberEmail").val();
+			let memberEmail = $("#memberEmail").val();
 			if (memberEmail != "") {
 				$.ajax({
 					async : true,
@@ -70,13 +75,17 @@
 	});
 	
 	function confirmPw() {
-		var memberPw = $("#memberPw").val();
-		var memberPw2 = $("#memberPw2").val();
+		let memberPw = $("#memberPw").val();
+		let memberPw2 = $("#memberPw2").val();
 		return (memberPw == memberPw2) ? true : false;
 	}
 	
 	function validateEmail(str) {
-		var regex = /^([A-z0-9!@#$%^&\*+-/=?_`\{\}\|~;. ]+)@([A-z0-9\-]+).([A-z.]+)$/;
+		if(str == "") {
+			alert("이메일을 입력해주세요.");
+			return false;
+		}
+		let regex = /^([A-z0-9!@#$%\^&\*+-/=?_`\{\}\|~;. ]+)@([A-z0-9\-]+).([A-z.]+)$/;
 		
 		return (regex.test(str)) ? true : false;
 	}
@@ -117,26 +126,26 @@
 						<div>
 							<label class="d-inline-block w-25">아이디</label>
 							<div class="d-inline">
-								<input class="d-inline-block form-control w-50 my-2" type="text" id="memberId" name="memberId">
+								<input class="d-inline-block form-control w-50 my-2" type="text" id="memberId" name="memberId" maxlength="50" required>
 								<button type="button" id="checkIdBtn" class="btn btn-secondary d-inline">아이디 중복 확인</button>
 							</div>
 						</div>
 						<div>
 							<label class="d-inline-block w-25">비밀번호</label>
 							<div class="d-inline">
-								<input class="d-inline-block form-control w-50 my-2" type="password" id="memberPw" name="memberPw" required>
+								<input class="d-inline-block form-control w-50 my-2" type="password" id="memberPw" name="memberPw" maxlength="50" required>
 							</div>
 						</div>
 						<div>
 							<label class="d-inline-block w-25">비밀번호 확인</label> 
 							<div class="d-inline">
-								<input class="d-inline-block form-control w-50 my-2" type="password" id="memberPw2" required>
+								<input class="d-inline-block form-control w-50 my-2" type="password" id="memberPw2" maxlength="50" required>
 							</div>
 						</div>
 						<div>
 							<label class="d-inline-block w-25">이메일</label>
 							<div class="d-inline">
-								<input class="d-inline-block form-control w-50 my-2" type="email" id="memberEmail" name="memberEmail" required>
+								<input class="d-inline-block form-control w-50 my-2" type="email" id="memberEmail" name="memberEmail" maxlength="50" required>
 								<button type="button" id="checkEmailBtn" class="btn btn-secondary d-inline">이메일 중복 확인</button>
 							</div>
 						</div>
