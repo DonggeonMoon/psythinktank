@@ -1,6 +1,9 @@
 package com.mdg.PSYThinktank.service;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +14,9 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -40,6 +46,10 @@ import com.mdg.PSYThinktank.repository.StockInfoRepository;
 
 @Service
 public class PSYThinktankService {
+	
+	@Value("${custom.circular-path}")
+	private String realPath;
+	
 	@Autowired
 	BoardRepository bdao;
 
@@ -176,15 +186,24 @@ public class PSYThinktankService {
 	public Page<Board> selectAllBoard(int page) {
 		return bdao.findAll(PageRequest.of(page, 10, Sort.by("isNotice").descending().and(Sort.by("boardNo").descending())));
 	}
-
-	@Transactional
-	public List<Board> searchAllByBoardContent(String boardContent) {
-		return bdao.findAllByBoardContentLike(boardContent);
-	}
-
 	@Transactional
 	public Board selectOneBoard(int boardNo) {
 		return bdao.findById(boardNo).orElse(null);
+	}
+	
+	@Transactional
+	public List<Board> searchBoardByBoardTitle(String boardTitle) {
+		return bdao.findByBoardTitleContainingOrderByBoardNoDesc(boardTitle);
+	}
+	
+	@Transactional
+	public List<Board> searchBoardByBoardContent(String boardContent) {
+		return bdao.findByBoardContentContainingOrderByBoardNoDesc(boardContent);
+	}
+	
+	@Transactional
+	public List<Board> searchBoardByMemberId(String memberId) {
+		return bdao.findByMemberIdOrderByBoardNoDesc(memberId);
 	}
 
 	@Transactional
@@ -344,8 +363,8 @@ public class PSYThinktankService {
 	}
 	
 	@Transactional
-	public void insertOneCircular(Circular circular, MultipartFile file, String realPath) {
-		String filePath = realPath + "\\WEB-INF\\classes\\static\\web\\" + circular.getFileName();
+	public void insertOneCircular(Circular circular, MultipartFile file) {
+		String filePath = realPath + "/" + circular.getFileName();
 		System.out.println("경로: " + filePath);
 		try {
 			file.transferTo(new File(filePath));
@@ -356,14 +375,30 @@ public class PSYThinktankService {
 	}
 	
 	@Transactional
-	public void deleteOneCircular(int circularId, String realPath) {
+	public void deleteOneCircular(int circularId) {
 		Circular circular = selectOneCircular(circularId);
-		String filePath = realPath + "\\WEB-INF\\classes\\static\\web\\" + circular.getFileName();
+		String filePath = realPath + "/" + circular.getFileName();
 		try {
 			new File(filePath).delete();
 			crdao.deleteById(circularId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Transactional
+	public Resource downloadCircular(int circularId) {
+		try {
+			Circular circular = selectOneCircular(circularId);
+			Path filePath = Paths.get(realPath + "/" + circular.getFileName());
+			Resource resource = new UrlResource(filePath.toUri());
+			System.out.println("dfd"+ filePath.toUri());
+			if (resource.exists() || resource.isReadable()) {
+				return resource;
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

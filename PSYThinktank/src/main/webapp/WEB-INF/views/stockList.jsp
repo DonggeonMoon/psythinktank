@@ -8,62 +8,68 @@
 <title>주식 검색</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript">
-	$(document).ready(function(){
-		$("#searchBtn").click(function() {
-			let searchText = $("#searchText").val();
-			if (searchText != "") {
-				let regex = /^([0-9]+)$/;
-				if(regex.test(searchText)) {
-					$.ajax({
-						url: "searchByStockCode",
-						type: "post",
-						data: searchText,
-						dataType: "json",
-						contentType: "application/json; charset=utf-8"
-					}).done(function(data) {
-						var list = data.result;
-						$("#result").empty();
-						for (var i =0; i < list.length; i++) {
-							$("#result").append("<tr><td>" + list[i].stockCode + "</td>"
-									+ "<td><a href='viewStock?stockCode="+ list[i].stockCode +"'>" + list[i].stockName + "</a></td>"
-									+ "<td>" + list[i].corpCls + "</td>" + "</td></tr>");
-						};
-						$(".pagination").remove();
-					}).fail(function(error) {
-						alert(error);
-					});
-				} else {
-					$.ajax({
-						url: "searchByStockName",
-						type: "post",
-						data: searchText,
-						dataType: "json",
-						contentType: "application/json; charset=utf-8"
-					}).done(function(data) {
-						var list = data.result;
-						$("#result").empty();
-						for (var i =0; i < list.length; i++) {
-							$("#result").append("<tr><td>" + list[i].stockCode + "</td>"
-									+ "<td><a href='viewStock?stockCode="+ list[i].stockCode +"'>" + list[i].stockName + "</a></td>"
-									+ "<td>" + list[i].corpCls + "</td>"
-									+ "</td></tr>");
-						};
-						$(".pagination").remove();
-					}).fail(function(error) {
-						alert(error);
-					});	
+	function search() {
+		let searchText = $("#searchText").val();
+		if (searchText != "") {
+			let regex = /^([0-9]+)$/;
+			if(regex.test(searchText)) {
+				$.ajax({
+					url: "searchByStockCode",
+					type: "post",
+					data: searchText,
+					dataType: "json",
+					contentType: "application/json; charset=utf-8"
+				}).done(function(data) {
+					var list = data.result;
+					$("#result").empty();
+					for (var i = 0; i < list.length; i++) {
+						$("#result").append("<tr><td>" + list[i].stockCode + "</td>"
+								+ "<td><a href='viewStock?stockCode="+ list[i].stockCode +"'>" + list[i].stockName + "</a></td>"
+								+ "<td>" + list[i].corpCls + "</td>" + "</td></tr>");
+					};
+					$(".pagination").remove();
+				}).fail(function(error) {
+					alert(error);
+				});
+			} else {
+				$.ajax({
+					url: "searchByStockName",
+					type: "post",
+					data: searchText,
+					dataType: "json",
+					contentType: "application/json; charset=utf-8"
+				}).done(function(data) {
+					var list = data.result;
+					$("#result").empty();
+					for (var i = 0; i < list.length; i++) {
+						$("#result").append("<tr><td>" + list[i].stockCode + "</td>"
+								+ "<td><a href='viewStock?stockCode="+ list[i].stockCode +"'>" + list[i].stockName + "</a></td>"
+								+ "<td>" + list[i].corpCls + "</td>"
+								+ "</td></tr>");
+					};
+					$(".pagination").remove();
+				}).fail(function(error) {
+					alert(error);
+				});
 				}
 			} else {
 				alert("검색어가 없습니다.");
 			}
+	};
+	
+	$(document).ready(function() {
+		$("#searchBtn").click(search);
+		$("#searchText").focus().keypress(function(event) {
+			if (event.keyCode == 13) {
+				search();
+			}
 		});
 	});
-	
 </script>
 </head>
 <body>
 	<c:import url="header.jsp" />
-	<div class="container-fluid" style="height:80vh">
+	<div class="container-fluid">
 		<h2 class="m-2">주식 종목</h2>
 		<div class="d-flex justify-content-center m-2">
 				<input type="text" id="searchText" class="form-control mx-2" name="searchText" placeholder="종목명 또는 종목코드">
