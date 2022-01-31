@@ -100,7 +100,7 @@
 						<div>
 							<label class="d-inline-block w-25">이메일</label>
 							<div class="d-inline">
-								<input class="d-inline-block form-control w-50 my-2" type="email" id="memberEmail" name="memberEmail" maxlength="50" required>
+								<input class="d-inline-block form-control w-50 my-2" type="email" id="memberEmail" name="memberEmail" value="<c:out value='${memberInfo.memberEmail }' />" maxlength="50" required>
 								<button type="button" id="checkEmailBtn" class="btn btn-secondary d-inline">이메일 중복 확인</button>
 							</div>
 						</div>
