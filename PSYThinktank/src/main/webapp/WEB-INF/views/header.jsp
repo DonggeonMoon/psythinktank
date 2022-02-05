@@ -14,7 +14,7 @@
 	<div class="container-fluid mr-5">
 	  <ul class="navbar-nav">
 	    <li class="nav-item">
-	      <a class="navbar-brand" href="boardList">PSYThinktank</a>
+	      <a class="navbar-brand" href="index.html">PSYThinktank</a>
 	    </li>
 	  </ul>
 	  <ul class="navbar-nav me-5">

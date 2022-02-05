@@ -38,10 +38,9 @@ public class PSYThinktankController {
 	@Autowired
 	PSYThinktankService service;
 
-	@GetMapping("/")
-	public String home() {
-		return "redirect:/login";
-	}
+	/*
+	 * @GetMapping("/") public String home() { return "redirect:/login"; }
+	 */
 
 	@GetMapping("/login")
 	public String login(String error, Model model) {
