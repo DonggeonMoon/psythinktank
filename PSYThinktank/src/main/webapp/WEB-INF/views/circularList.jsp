@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,26 +25,16 @@
 					<tr>
 						<c:url var="link" value="/circular">
 							<c:param name="circularId" value="${i.circularId}" />
-						</c:url> 
-						<td>
-							${i.circularId}
-						</td>
-						<td>
-							<a href="${link}">${i.circularTitle}</a>
-						</td>
-						<td>
-							<fmt:formatDate value="${i.uploadDate}" pattern="yyyy-MM-dd hh:mm:ss" />
-						</td>
-						<td>
-							<c:if test="${sessionScope.member.userLevel >= 2}">
-								
-									<form action="circular" method="post">
-										<input type="hidden" name="_method" value="delete">
-										<input type="hidden" name="circularId" value="${i.circularId }">
-										<button class="btn btn-primary p-1">삭제</button>
-									</form>
-							</c:if>
-						</td>
+						</c:url>
+						<td><c:out value="${i.circularId}" /></td>
+						<td><a href="${link}"><c:out value="${i.circularTitle}" /></a></td>
+						<td><fmt:formatDate value="${i.uploadDate}" pattern="yyyy-MM-dd hh:mm:ss" /></td>
+						<td><c:if test="${sessionScope.member.userLevel >= 2}">
+								<form action="circular" method="post">
+									<input type="hidden" name="_method" value="delete"> <input type="hidden" name="circularId" value="${i.circularId }">
+									<button class="btn btn-primary p-1">삭제</button>
+								</form>
+							</c:if></td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -59,7 +48,7 @@
 					<li class="page-item"><a class="page-link" href="circularList?page=<c:out value="${(currentBlock - 1) * circularList.getSize() + 1}" />">이전</a></li>
 				</c:if>
 				<c:forEach var="page" begin="${currentBlock * circularList.getSize() + 1}" end="${(currentBlock + 1) * circularList.getSize()}">
-					<li class="page-item"><a class="page-link" href="circularList?page=<c:out value="${page}" />"><c:out value="${page}"/></a></li>
+					<li class="page-item"><a class="page-link" href="circularList?page=<c:out value="${page}" />"><c:out value="${page}" /></a></li>
 				</c:forEach>
 				<c:if test="${(currentBlock + 1)* circularList.getSize() < circularList.getTotalPages() }">
 					<li class="page-item"><a class="page-link" href="circularList?page=<c:out value="${(currentBlock + 1) * circularList.getSize() + 1}" />">다음</a></li>
