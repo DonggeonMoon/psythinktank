@@ -6,6 +6,15 @@
 <meta name="description" content="올바른 주식 투자, PSYThinktank가 만들어 갑니다.">
 <meta name="author" content="PSYThinktank">
 <meta name="google-site-verification" content="RIrNGTJOZcoMVdOjVbu1AlGgeDUxXoTC4YQnD2LrjCo" />
+
+<meta property="og:title" content="PSYThinktank" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="www.psythinktank.com" />
+<meta property="og:image" content="http://www.psythinktank.com/assets/img/logo2.png" />
+<meta property="site_name" content="PSYThinktank" />
+<meta property="description" content="빅데이터 기반 금융투자" />
+<meta property="locale" content="ko_KR" />
+
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
