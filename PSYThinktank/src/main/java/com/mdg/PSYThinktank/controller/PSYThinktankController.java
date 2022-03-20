@@ -1,4 +1,4 @@
-package com.mdg.PSYThinktank.contoller;
+package com.mdg.PSYThinktank.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
