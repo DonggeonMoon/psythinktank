@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -46,9 +46,6 @@ import com.mdg.PSYThinktank.repository.StockInfoRepository;
 
 @Service
 public class PSYThinktankService {
-	
-	@Value("${custom.circular-path}")
-	private String realPath;
 	
 	@Autowired
 	BoardRepository bdao;
@@ -343,7 +340,7 @@ public class PSYThinktankService {
 			@Override
 			public void prepare(MimeMessage mimeMessage) throws Exception {
 				final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-				helper.setFrom("welco@kcomwel.or.kr");//officialpsythinktank@gmail.com");
+				helper.setFrom("officialpsythinktank@gmail.com");
 				helper.setTo(email);
 				helper.setSubject("임시 비밀번호를 보내드립니다.");
 				helper.setText("임시비밀번호는 "+ randomizedStr +"입니다.", true);
@@ -363,7 +360,8 @@ public class PSYThinktankService {
 	}
 	
 	@Transactional
-	public void insertOneCircular(Circular circular, MultipartFile file) {
+	public void insertOneCircular(Circular circular, HttpServletRequest request, MultipartFile file) {
+		String realPath = request.getServletContext().getRealPath("/uploadfile");
 		String filePath = realPath + "/" + circular.getFileName();
 		System.out.println("경로: " + filePath);
 		try {
@@ -375,7 +373,8 @@ public class PSYThinktankService {
 	}
 	
 	@Transactional
-	public void deleteOneCircular(int circularId) {
+	public void deleteOneCircular(int circularId, HttpServletRequest request) {
+		String realPath = request.getServletContext().getRealPath("/uploadfile");
 		Circular circular = selectOneCircular(circularId);
 		String filePath = realPath + "/" + circular.getFileName();
 		try {
@@ -387,12 +386,13 @@ public class PSYThinktankService {
 	}
 	
 	@Transactional
-	public Resource downloadCircular(int circularId) {
+	public Resource downloadCircular(int circularId, HttpServletRequest request) {
 		try {
+			String realPath = request.getServletContext().getRealPath("/uploadfile");
 			Circular circular = selectOneCircular(circularId);
 			Path filePath = Paths.get(realPath + "/" + circular.getFileName());
 			Resource resource = new UrlResource(filePath.toUri());
-			System.out.println("dfd"+ filePath.toUri());
+			System.out.println("uri: "+ filePath.toUri());
 			if (resource.exists() || resource.isReadable()) {
 				return resource;
 			}

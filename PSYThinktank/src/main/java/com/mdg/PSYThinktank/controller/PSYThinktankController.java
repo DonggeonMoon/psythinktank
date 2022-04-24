@@ -219,7 +219,7 @@ public class PSYThinktankController {
 		model.addAttribute("currentBlock", boardPage.getNumber() / boardPage.getSize());
 		return "boardList";
 	}
-	
+
 	@PostMapping("/searchByBoardTitle")
 	@ResponseBody
 	public Map<String, Object> searchBoardByBoardTitle(@RequestBody String searchText) {
@@ -228,7 +228,7 @@ public class PSYThinktankController {
 		map.put("result", service.searchBoardByBoardTitle(searchText));
 		return map;
 	}
-	
+
 	@PostMapping("/searchByBoardContent")
 	@ResponseBody
 	public Map<String, Object> searchBoardByBoardContent(@RequestBody String searchText) {
@@ -237,7 +237,7 @@ public class PSYThinktankController {
 		map.put("result", service.searchBoardByBoardContent(searchText));
 		return map;
 	}
-	
+
 	@PostMapping("/searchByMemberId")
 	@ResponseBody
 	public Map<String, Object> searchBoardByMemberId(@RequestBody String searchText) {
@@ -413,8 +413,8 @@ public class PSYThinktankController {
 
 	@GetMapping("/circular")
 	@ResponseBody
-	public ResponseEntity<Resource> viewCircular(@RequestParam(defaultValue = "1") int circularId, Model model) {
-		Resource file = service.downloadCircular(circularId);
+	public ResponseEntity<Resource> viewCircular(@RequestParam(defaultValue = "1") int circularId, Model model, HttpServletRequest request) {
+		Resource file = service.downloadCircular(circularId, request);
 		ResponseEntity<Resource> response = ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "application/pdf").body(file);
 		model.addAttribute("circular", service.selectOneCircular(circularId));
 		return response;
@@ -432,14 +432,14 @@ public class PSYThinktankController {
 			String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1, originalFilename.length());
 			String fileName = UUID.randomUUID() + "." + extension;
 			circular.setFileName(fileName);
-			service.insertOneCircular(circular, file);
+			service.insertOneCircular(circular, request, file);
 		}
 		return "redirect:/circularList";
 	}
 
 	@DeleteMapping("/circular")
 	public String deleteCircular(int circularId, HttpServletRequest request) {
-		service.deleteOneCircular(circularId);
+		service.deleteOneCircular(circularId, request);
 		return "redirect:/circularList";
 	}
 }
