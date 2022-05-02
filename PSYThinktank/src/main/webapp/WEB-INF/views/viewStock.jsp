@@ -70,6 +70,25 @@
 						</c:when>
 					</c:choose>
 					<c:if test="${sessionScope.member.userLevel >= 2}"> ${hrr.hrr}</c:if>
+					
+					<table class="table">
+						<tr>
+							<td class="table-light text-center w-25">성장성(Growth Potential)</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td class="table-light text-center w-25">지배구조(Governence)</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td class="table-light text-center w-25">이사회 독립성(Board Indipendence)</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td class="table-light text-center w-25">대외 환경(External Environment)</td>
+							<td></td>
+						</tr>					
+					</table>
 				</td>
 			</tr>
 		</table>
