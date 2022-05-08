@@ -302,7 +302,7 @@ public class PSYThinktankService {
 
 	@Transactional
 	public HRR selectOneHRRByStockCode(String stockCode) {
-		return hdao.findByStockCodeAndBsnsYearAndReprtCode(stockCode, "2020", "11011");
+		return hdao.findByStockCodeAndBsnsYearAndReprtCode(stockCode, "2021", "11011");
 	}
 	
 	@Transactional

@@ -36,7 +36,7 @@
 				<td class="table-light text-center">지분 변동</td>
 				<td>
 					<table class="table">
-						<c:forEach var="i" items="${share}">
+						<c:forEach var="i" items="${share}" varStatus="svs">
 							<tr>
 								<td class="table-light text-center"><c:if test="${i.date != temp}">${i.date}</c:if></td>
 								<td>
@@ -44,7 +44,10 @@
 								</td>
 								<td>${i.share}</td>
 							</tr>
-							<c:set var="temp" value="${i.date}"></c:set>
+							<c:set var="temp" value="${i.date}"/>
+							<c:if test="${svs.last}">
+								<c:set var="currentShare" value="${i.share}"/>
+							</c:if>
 						</c:forEach>						
 					</table>
 				</td>
@@ -58,35 +61,57 @@
 			<tr>
 				<td class="table-light text-center">PSYthinktank 빅데이터 기반 평가</td>
 				<td>
-					<c:choose>
-						<c:when test="${hrr.hrr >= 10}">
-							좋음
-						</c:when>
-						<c:when test="${hrr.hrr >= 0}">
-							보통
-						</c:when>
-						<c:when test="${hrr.hrr < 0}">
-							나쁨
-						</c:when>
-					</c:choose>
 					<c:if test="${sessionScope.member.userLevel >= 2}"> ${hrr.hrr}</c:if>
 					
 					<table class="table">
 						<tr>
 							<td class="table-light text-center w-25">성장성(Growth Potential)</td>
-							<td></td>
+							<td>
+								
+								<c:choose>
+									<c:when test="${empty hrr}">데이터 준비 중</c:when>
+									<c:when test="${hrr.hrr >= 10}">
+										A
+									</c:when>
+									<c:when test="${hrr.hrr >= 5}">
+										B
+									</c:when>
+									<c:when test="${hrr.hrr >= 0}">
+										C
+									</c:when>
+									<c:otherwise>
+										D
+									</c:otherwise>
+								</c:choose>
+							</td>
 						</tr>
 						<tr>
-							<td class="table-light text-center w-25">지배구조(Governence)</td>
-							<td></td>
+							<td class="table-light text-center w-25">지배구조(Governance)</td>
+							<td>
+								<c:choose>
+									<c:when test="${empty currentShare}">데이터 준비 중</c:when>
+									<c:when test="${currentShare >= 40}">
+										A
+									</c:when>
+									<c:when test="${currentShare >= 30}">
+										B
+									</c:when>
+									<c:when test="${currentShare >= 20}">
+										C
+									</c:when>
+									<c:otherwise>
+										D
+									</c:otherwise>
+								</c:choose>
+							</td>
 						</tr>
 						<tr>
-							<td class="table-light text-center w-25">이사회 독립성(Board Indipendence)</td>
-							<td></td>
+							<td class="table-light text-center w-25">이사회 독립성(Board Independence)</td>
+							<td>준비 중</td>
 						</tr>
 						<tr>
 							<td class="table-light text-center w-25">대외 환경(External Environment)</td>
-							<td></td>
+							<td>준비 중</td>
 						</tr>					
 					</table>
 				</td>
