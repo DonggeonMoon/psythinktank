@@ -38,16 +38,13 @@
 					<table class="table">
 						<c:forEach var="i" items="${share}" varStatus="svs">
 							<tr>
-								<td class="table-light text-center"><c:if test="${i.date != temp}">${i.date}</c:if></td>
+								<td class="table-light text-center"><c:if test="${i.date != temp}">${i.date}<c:set var="currentShare" value="${i.share}"/></c:if></td>
 								<td>
 									${i.holderName}
 								</td>
 								<td>${i.share}</td>
 							</tr>
 							<c:set var="temp" value="${i.date}"/>
-							<c:if test="${svs.last}">
-								<c:set var="currentShare" value="${i.share}"/>
-							</c:if>
 						</c:forEach>						
 					</table>
 				</td>
