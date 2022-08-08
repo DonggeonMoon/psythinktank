@@ -16,6 +16,5 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/stock")
                 .addPathPatterns("/board");
     }
-
 }
 	

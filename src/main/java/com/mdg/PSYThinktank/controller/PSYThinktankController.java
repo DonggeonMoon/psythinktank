@@ -22,7 +22,6 @@ import java.util.UUID;
 
 @Controller
 public class PSYThinktankController {
-
 	@Autowired
 	PSYThinktankService service;
 

@@ -30,7 +30,6 @@ import java.util.Random;
 
 @Service
 public class PSYThinktankService {
-	
 	@Autowired
 	BoardRepository bdao;
 

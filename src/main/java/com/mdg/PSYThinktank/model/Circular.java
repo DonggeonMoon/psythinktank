@@ -1,9 +1,6 @@
 package com.mdg.PSYThinktank.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -12,7 +9,8 @@ import java.sql.Timestamp;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 public class Circular {	
 	@Id

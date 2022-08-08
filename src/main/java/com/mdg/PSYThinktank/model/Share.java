@@ -1,9 +1,6 @@
 package com.mdg.PSYThinktank.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -11,7 +8,8 @@ import java.sql.Date;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 public class Share {
 	@Id
