@@ -2,7 +2,7 @@ package com.mdg.PSYThinktank.service;
 
 import com.mdg.PSYThinktank.model.*;
 import com.mdg.PSYThinktank.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -29,359 +28,319 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class PSYThinktankService {
-	@Autowired
-	BoardRepository bdao;
+    private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
+    private final MemberRepository memberRepository;
+    private final StockInfoRepository stockInfoRepository;
+    private final ShareRepository shareRepository;
+    private final HRRRepository hrrRepository;
+    private final DividendRepository dividendRepository;
+    private final CircularRepository circularRepository;
+    private final JavaMailSender javaMailSender;
 
-	@Autowired
-	CommentRepository cdao;
+    @Transactional
+    public boolean checkId(String memberId) {
+        return (memberRepository.findById(memberId).isPresent());
+    }
 
-	@Autowired
-	MemberRepository mdao;
+    @Transactional
+    public boolean checkPw(String memberId, String memberPw) {
+        return BCrypt.checkpw(memberPw, memberRepository.findById(memberId).orElse(new Member()).getMemberPw());
+    }
 
-	@Autowired
-	StockInfoRepository sidao;
+    @Transactional
+    public boolean checkEmail(String memberEmail) {
+        return (memberRepository.findByMemberEmail(memberEmail) != null);
+    }
 
-	@Autowired
-	ShareRepository sdao;
+    @Transactional
+    public Map<String, Object> login(String memberId, String memberPw, HttpSession session) {
+        Map<String, Object> map = new HashMap<>();
+        if (!"".equals(memberId) && !"".equals(memberPw)) {
+            if (checkId(memberId)) {
+                Member member = memberRepository.findById(memberId).orElse(new Member());
+                // 5회 이상 틀렸을 경우
+                if (member.getLoginTryCount() < 5) {
+                    if (checkPw(memberId, memberPw)) {
+                        member.setLoginTryCount(0);
+                        session.setAttribute("member", memberRepository.findById(memberId).orElse(new Member()));
+                        map.put("isSucceeded", true);
+                        map.put("error", -1);
+                    } else {
+                        member.setLoginTryCount(member.getLoginTryCount() + 1);
+                        map.put("isSucceeded", false);
+                        map.put("error", 3);
+                    }
+                    map.put("loginTryCount", member.getLoginTryCount());
+                } else {
+                    map.put("isSucceeded", false);
+                    map.put("error", 4);
+                }
+                return map;
+            } else
+                map.put("isSucceeded", false);
+            map.put("error", 2);
+            return map;
+        }
+        map.put("isSucceeded", false);
+        map.put("error", 1);
+        return map;
+    }
 
-	@Autowired
-	HRRRepository hdao;
-	
-	@Autowired
-	DividendRepository ddao;
-	
-	@Autowired
-	CircularRepository crdao;
-	
-	@Autowired
-	JavaMailSender mailSender;
+    @Transactional
+    public void join(Member member) {
+        member.setMemberPw(BCrypt.hashpw(member.getMemberPw(), BCrypt.gensalt()));
+        memberRepository.save(member);
+    }
 
-	@Transactional
-	public boolean checkId(String memberId) {
-		return ((mdao.findById(memberId).isPresent()) ? true : false);
-	}
+    @Transactional
+    public Member getMemberInfo(HttpSession session) {
+        return memberRepository.findById(((Member) session.getAttribute("member")).getMemberId()).orElse(null);
+    }
 
-	@Transactional
-	public boolean checkPw(String memberId, String memberPw) {
-		return (BCrypt.checkpw(memberPw, mdao.findById(memberId).orElse(null).getMemberPw())) ? true : false;
-	}
-	
-	@Transactional
-	public boolean checkEmail(String memberEmail) {
-		return ((mdao.findByMemberEmail(memberEmail) != null) ? true : false);
-	}
+    @Transactional
+    public void editMemberInfo(Member member) {
+        Member newMember = memberRepository.findById(member.getMemberId()).orElse(new Member());
+        newMember.setMemberPw(BCrypt.hashpw(member.getMemberPw(), BCrypt.gensalt()));
+        newMember.setMemberEmail(member.getMemberEmail());
+    }
 
-	@Transactional
-	public Map<String, Object> login(String memberId, String memberPw, HttpSession session) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (memberId != "" && memberPw != "") {
-			if (checkId(memberId) == true) {
-				Member member = mdao.findById(memberId).get();
-				if (member.getLoginTryCount() < 5) {
-					if (checkPw(memberId, memberPw)) {
-						member.setLoginTryCount(0);
-						session.setAttribute("member", mdao.findById(memberId).get());
-						map.put("isSucceeded", true);
-						map.put("error", -1);
-						map.put("loginTryCount", member.getLoginTryCount());
-						return map;
-					} else {
-						member.setLoginTryCount(member.getLoginTryCount() + 1);
-						map.put("isSucceeded", false);
-						map.put("error", 3);
-						map.put("loginTryCount", member.getLoginTryCount());
-						return map;
-					}					
-				} else {
-					map.put("isSucceeded", false);
-					map.put("error", 4);
-					return map;// 5회 이상 틀렸을 경우
-				}
-			} else
-				map.put("isSucceeded", false);
-				map.put("error", 2);
-				return map;
-		}
-		map.put("isSucceeded", false);
-		map.put("error", 1);
-		return map;
-	}
-	
-	@Transactional
-	public int getLoginTryCount(String memberId) {
-		return mdao.findById(memberId).get().getLoginTryCount();
-	}
+    @Transactional
+    public void changeUserLevel(Member member) {
+        Member newMember = memberRepository.findById(member.getMemberId()).orElse(new Member());
+        newMember.setUserLevel(member.getUserLevel());
+    }
 
-	@Transactional
-	public Boolean checkLogin(HttpSession session) {
-		return (session.getAttribute("member") != null) ? true : false;
-	}
+    @Transactional
+    public void deleteMemberInfo(String memberId) {
+        memberRepository.deleteById(memberId);
+    }
 
-	@Transactional
-	public void join(Member member) {
-		member.setMemberPw(BCrypt.hashpw(member.getMemberPw(), BCrypt.gensalt()));
-		mdao.save(member);
-	}
+    @Transactional
+    public Page<Member> selectAllMember(int page) {
+        return memberRepository.findAll(PageRequest.of(page, 50, Sort.by("userLevel").descending().and(Sort.by("memberId").ascending())));
+    }
 
-	@Transactional
-	public Member getMemberInfo(HttpSession session) {
-		return mdao.findById(((Member) session.getAttribute("member")).getMemberId()).orElse(null);
-	}
+    @Transactional
+    public Member selectOneMemberByEmail(String memberEmail) {
+        return memberRepository.findByMemberEmail(memberEmail);
+    }
 
-	@Transactional
-	public void editMemberInfo(Member member) {
-		Member newMember = mdao.findById(member.getMemberId()).get();
-		newMember.setMemberPw(BCrypt.hashpw(member.getMemberPw(), BCrypt.gensalt()));
-		newMember.setMemberEmail(member.getMemberEmail());
-	}
+    @Transactional
+    public Member selectOneMemberByEmailAndId(String memberEmail, String memberId) {
+        return memberRepository.findByMemberEmailAndMemberId(memberEmail, memberId);
+    }
 
-	@Transactional
-	public void changeUserLevel(Member member) {
-		Member newMember = mdao.findById(member.getMemberId()).get();
-		newMember.setUserLevel(member.getUserLevel());
-	}
+    @Transactional
+    public Page<Board> selectAllBoard(int page) {
+        return boardRepository.findAll(PageRequest.of(page, 10, Sort.by("isNotice").descending().and(Sort.by("boardNo").descending())));
+    }
 
-	@Transactional
-	public void deleteMemberInfo(String memberId) {
-		mdao.deleteById(memberId);
-	}
+    @Transactional
+    public Board selectOneBoard(int boardNo) {
+        return boardRepository.findById(boardNo).orElse(null);
+    }
 
-	@Transactional
-	public Page<Member> selectAllMember(int page) {
-		return mdao.findAll(PageRequest.of(page, 50, Sort.by("userLevel").descending().and(Sort.by("memberId").ascending())));
-	}
-	
-	@Transactional
-	public Member selectOneMemberByEmail(String memberEmail) {
-		return mdao.findByMemberEmail(memberEmail);
-	}
-	
-	@Transactional
-	public Member selectOneMemberByEmailAndId(String memberEmail, String memberId) {
-		return mdao.findByMemberEmailAndMemberId(memberEmail, memberId);
-	}
+    @Transactional
+    public List<Board> searchBoardByBoardTitle(String boardTitle) {
+        return boardRepository.findByBoardTitleContainingOrderByBoardNoDesc(boardTitle);
+    }
 
-	@Transactional
-	public Page<Board> selectAllBoard(int page) {
-		return bdao.findAll(PageRequest.of(page, 10, Sort.by("isNotice").descending().and(Sort.by("boardNo").descending())));
-	}
-	@Transactional
-	public Board selectOneBoard(int boardNo) {
-		return bdao.findById(boardNo).orElse(null);
-	}
-	
-	@Transactional
-	public List<Board> searchBoardByBoardTitle(String boardTitle) {
-		return bdao.findByBoardTitleContainingOrderByBoardNoDesc(boardTitle);
-	}
-	
-	@Transactional
-	public List<Board> searchBoardByBoardContent(String boardContent) {
-		return bdao.findByBoardContentContainingOrderByBoardNoDesc(boardContent);
-	}
-	
-	@Transactional
-	public List<Board> searchBoardByMemberId(String memberId) {
-		return bdao.findByMemberIdOrderByBoardNoDesc(memberId);
-	}
+    @Transactional
+    public List<Board> searchBoardByBoardContent(String boardContent) {
+        return boardRepository.findByBoardContentContainingOrderByBoardNoDesc(boardContent);
+    }
 
-	@Transactional
-	public void insertOneBoard(Board board) {
-		bdao.save(board);
-	}
+    @Transactional
+    public List<Board> searchBoardByMemberId(String memberId) {
+        return boardRepository.findByMemberIdOrderByBoardNoDesc(memberId);
+    }
 
-	@Transactional
-	public void updateOneBoard(Board board) {
-		bdao.save(board);
-	}
+    @Transactional
+    public void insertOneBoard(Board board) {
+        boardRepository.save(board);
+    }
 
-	@Transactional
-	public void deleteOneBoard(int boardNo) {
-		bdao.deleteById(boardNo);
-	}
+    @Transactional
+    public void updateOneBoard(Board board) {
+        boardRepository.save(board);
+    }
 
-	@Transactional
-	public List<Comment> selectAllComment() {
-		return cdao.findAll();
-	}
+    @Transactional
+    public void deleteOneBoard(int boardNo) {
+        boardRepository.deleteById(boardNo);
+    }
 
-	@Transactional
-	public List<Comment> selectAllCommentByBoardNo(int boardNo) {
-		return cdao.findAllByBoardNo(boardNo);
-	}
+    @Transactional
+    public List<Comment> selectAllCommentByBoardNo(int boardNo) {
+        return commentRepository.findAllByBoardNo(boardNo);
+    }
 
-	@Transactional
-	public Comment selectOneComment(int commentNo) {
-		return cdao.findById(commentNo).orElse(null);
-	}
+    @Transactional
+    public Comment selectOneComment(int commentNo) {
+        return commentRepository.findById(commentNo).orElse(null);
+    }
 
-	@Transactional
-	public void insertOneComment(Comment comment) {
-		cdao.save(comment);
-	}
+    @Transactional
+    public void insertOneComment(Comment comment) {
+        commentRepository.save(comment);
+    }
 
-	@Transactional
-	public void updateOneComment(Comment comment) {
-		cdao.save(comment);
-	}
+    @Transactional
+    public void updateOneComment(Comment comment) {
+        commentRepository.save(comment);
+    }
 
-	@Transactional
-	public void deleteOneComment(int commentNo) {
-		cdao.deleteById(commentNo);
-	}
+    @Transactional
+    public void deleteOneComment(int commentNo) {
+        commentRepository.deleteById(commentNo);
+    }
 
-	@Transactional
-	public void addHit(int board_no) {
-		Board board = (Board) bdao.findById(board_no).orElse(null);
-		board.setBoardHit(board.getBoardHit() + 1);
-		bdao.save(board);
-	}
+    @Transactional
+    public void addHit(int board_no) {
+        Board board = boardRepository.findById(board_no).orElse(new Board());
+        board.setBoardHit(board.getBoardHit() + 1);
+        boardRepository.save(board);
+    }
 
-	@Transactional
-	public void addComment(Comment comment) {
-		cdao.save(comment);
-	}
+    @Transactional
+    public void addComment(Comment comment) {
+        commentRepository.save(comment);
+    }
 
-	@Transactional
-	public void updateComment(Comment comment) {
-		cdao.save(comment);
-	}
+    @Transactional
+    public void updateComment(Comment comment) {
+        commentRepository.save(comment);
+    }
 
-	@Transactional
-	public void deleteComment(int comment_no) {
-		cdao.deleteById(comment_no);
-	}
+    @Transactional
+    public void deleteComment(int comment_no) {
+        commentRepository.deleteById(comment_no);
+    }
 
-	@Transactional
-	public Page<StockInfo> selectAllStockInfo(int page) {
-		return sidao.findAll(PageRequest.of(page, 10, Sort.by("stockCode").ascending()));
-	}
+    @Transactional
+    public Page<StockInfo> selectAllStockInfo(int page) {
+        return stockInfoRepository.findAll(PageRequest.of(page, 10, Sort.by("stockCode").ascending()));
+    }
 
-	@Transactional
-	public List<StockInfo> selectAllStockInfoByStockCode(String stockCode) {
-		return sidao.findByStockCodeLike("%" + stockCode + "%");
-	}
+    @Transactional
+    public List<StockInfo> selectAllStockInfoByStockCode(String stockCode) {
+        return stockInfoRepository.findByStockCodeLike("%" + stockCode + "%");
+    }
 
-	@Transactional
-	public List<StockInfo> selectAllStockInfoByStockName(String stockName) {
-		return sidao.findByStockNameLike("%" + stockName + "%");
-	}
+    @Transactional
+    public List<StockInfo> selectAllStockInfoByStockName(String stockName) {
+        return stockInfoRepository.findByStockNameLike("%" + stockName + "%");
+    }
 
-	@Transactional
-	public List<Share> selectAllShareByStockCode(String stockCode) {
-		return sdao.findByStockCode(stockCode);
-	}
+    @Transactional
+    public List<Share> selectAllShareByStockCode(String stockCode) {
+        return shareRepository.findByStockCode(stockCode);
+    }
 
-	@Transactional
-	public List<HRR> selectAllHRRByStockCode(String stockCode) {
-		return hdao.findByStockCode(stockCode);
-	}
+    @Transactional
+    public StockInfo selectOneStockInfoByStockCode(String stockCode) {
+        return stockInfoRepository.findById(stockCode).orElse(new StockInfo());
+    }
 
-	@Transactional
-	public StockInfo selectOneStockInfoByStockCode(String stockCode) {
-		return sidao.findById(stockCode).get();
-	}
+    @Transactional
+    public HRR selectOneHRRByStockCode(String stockCode) {
+        return hrrRepository.findByStockCodeAndBsnsYearAndReprtCode(stockCode, "2021", "11011");
+    }
 
-	@Transactional
-	public HRR selectOneHRRByStockCode(String stockCode) {
-		return hdao.findByStockCodeAndBsnsYearAndReprtCode(stockCode, "2021", "11011");
-	}
-	
-	@Transactional
-	public Dividend selectOneDividendByStockCode(String StockCode) {
-		return ddao.findById(StockCode).get();
-	}
-	
-	@Transactional
-	public void sendVerificationEmail(String id, String email) {
-		final MimeMessagePreparator preparator = new MimeMessagePreparator() {
-			@Override
-			public void prepare(MimeMessage mimeMessage) throws Exception {
-				final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-				helper.setFrom("officialpsythinktank@gmail.com");
-				helper.setTo(email);
-				helper.setSubject("PSYThinktank 이메일 인증 메일입니다.");
-				helper.setText("", true);		
-			}
-		};
-		mailSender.send(preparator);
-	}
-	
-	@Transactional
-	public void sendTempPwEmail(String id, String email) {
-		StringBuffer sb = new StringBuffer();
-		Random random = new Random();
-		for(int i = 0; i < 11; i++) {
-			sb.append((char) (random.nextInt(57) + 'A'));
-		}
-		String randomizedStr = sb.toString();
-		Member member = mdao.findByMemberEmail(email);
-		member.setMemberPw(BCrypt.hashpw(randomizedStr, BCrypt.gensalt()));
-		member.setLoginTryCount(0);
-		final MimeMessagePreparator preparator = new MimeMessagePreparator() {
-			@Override
-			public void prepare(MimeMessage mimeMessage) throws Exception {
-				final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-				helper.setFrom("officialpsythinktank@gmail.com");
-				helper.setTo(email);
-				helper.setSubject("임시 비밀번호를 보내드립니다.");
-				helper.setText("임시비밀번호는 "+ randomizedStr +"입니다.", true);
-			}
-		};
-		mailSender.send(preparator);
-	}
-	
-	@Transactional
-	public Page<Circular> selectAllCircular(int page) {
-		return crdao.findAll(PageRequest.of(page, 10, Sort.by("circularId").ascending()));
-	}
-	
-	@Transactional
-	public Circular selectOneCircular(int circularId) {
-		return crdao.findById(circularId).get();
-	}
-	
-	@Transactional
-	public void insertOneCircular(Circular circular, HttpServletRequest request, MultipartFile file) {
-		String realPath = request.getServletContext().getRealPath("/uploadfile");
-		String filePath = realPath + "/" + circular.getFileName();
-		System.out.println("경로: " + filePath);
-		try {
-			file.transferTo(new File(filePath));
-			crdao.save(circular);	
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Transactional
-	public void deleteOneCircular(int circularId, HttpServletRequest request) {
-		String realPath = request.getServletContext().getRealPath("/uploadfile");
-		Circular circular = selectOneCircular(circularId);
-		String filePath = realPath + "/" + circular.getFileName();
-		try {
-			new File(filePath).delete();
-			crdao.deleteById(circularId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Transactional
-	public Resource downloadCircular(int circularId, HttpServletRequest request) {
-		try {
-			String realPath = request.getServletContext().getRealPath("/uploadfile");
-			Circular circular = selectOneCircular(circularId);
-			Path filePath = Paths.get(realPath + "/" + circular.getFileName());
-			Resource resource = new UrlResource(filePath.toUri());
-			System.out.println("uri: "+ filePath.toUri());
-			if (resource.exists() || resource.isReadable()) {
-				return resource;
-			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    @Transactional
+    public Dividend selectOneDividendByStockCode(String StockCode) {
+        return dividendRepository.findById(StockCode).orElse(new Dividend());
+    }
+
+    @Transactional
+    public void sendVerificationEmail(String email) {
+        final MimeMessagePreparator preparator = mimeMessage -> {
+            final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+            helper.setFrom("officialpsythinktank@gmail.com");
+            helper.setTo(email);
+            helper.setSubject("PSYThinktank 이메일 인증 메일입니다.");
+            helper.setText("", true);
+        };
+        javaMailSender.send(preparator);
+    }
+
+    @Transactional
+    public void sendTempPwEmail(String email) {
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 11; i++) {
+            sb.append((char) (random.nextInt(57) + 'A'));
+        }
+        String randomizedStr = sb.toString();
+        Member member = memberRepository.findByMemberEmail(email);
+        member.setMemberPw(BCrypt.hashpw(randomizedStr, BCrypt.gensalt()));
+        member.setLoginTryCount(0);
+        final MimeMessagePreparator preparator = mimeMessage -> {
+            final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+            helper.setFrom("officialpsythinktank@gmail.com");
+            helper.setTo(email);
+            helper.setSubject("임시 비밀번호를 보내드립니다.");
+            helper.setText("임시비밀번호는 " + randomizedStr + "입니다.", true);
+        };
+        javaMailSender.send(preparator);
+    }
+
+    @Transactional
+    public Page<Circular> selectAllCircular(int page) {
+        return circularRepository.findAll(PageRequest.of(page, 10, Sort.by("circularId").ascending()));
+    }
+
+    @Transactional
+    public Circular selectOneCircular(int circularId) {
+        return circularRepository.findById(circularId).orElse(new Circular());
+    }
+
+    @Transactional
+    @SuppressWarnings("SpellCheckingInspection")
+    public void insertOneCircular(Circular circular, HttpServletRequest request, MultipartFile file) {
+        String realPath = request.getServletContext().getRealPath("/uploadfile");
+        String filePath = realPath + "/" + circular.getFileName();
+        try {
+            file.transferTo(new File(filePath));
+            circularRepository.save(circular);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Transactional
+    @SuppressWarnings("SpellCheckingInspection")
+    public void deleteOneCircular(int circularId, HttpServletRequest request) {
+        String realPath = request.getServletContext().getRealPath("/uploadfile");
+        Circular circular = selectOneCircular(circularId);
+        String filePath = realPath + "/" + circular.getFileName();
+        try {
+            if (new File(filePath).delete()) {
+                circularRepository.deleteById(circularId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Transactional
+    public Resource downloadCircular(int circularId, HttpServletRequest request) {
+        try {
+            String realPath = request.getServletContext().getRealPath("/uploadfile");
+            Circular circular = selectOneCircular(circularId);
+            Path filePath = Paths.get(realPath + "/" + circular.getFileName());
+            Resource resource = new UrlResource(filePath.toUri());
+            System.out.println("uri: " + filePath.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

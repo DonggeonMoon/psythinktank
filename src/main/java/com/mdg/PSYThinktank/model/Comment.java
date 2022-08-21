@@ -23,7 +23,7 @@ public class Comment {
 	@Column(name = "comment_no")
 	private int commentNo;
 
-	@Column(name = "comment_parent", nullable = true)
+	@Column(name = "comment_parent")
 	private int commentParent;
 
 	@Column(name = "comment_depth", nullable = false)

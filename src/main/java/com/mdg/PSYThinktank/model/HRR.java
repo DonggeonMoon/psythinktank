@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@SuppressWarnings("SpellCheckingInspection")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,12 +32,12 @@ public class HRR {
     @Column(name = "reprt_code", nullable = false, length = 5)
     private String reprtCode;
 
-    @Column(name = "total_emp", nullable = true)
+    @Column(name = "total_emp")
     private String totalEmp;
 
-    @Column(name = "total_emp_chg", nullable = true)
+    @Column(name = "total_emp_chg")
     private String totalEmpChg;
 
-    @Column(name = "hrr", nullable = true)
+    @Column(name = "hrr")
     private Double hrr;
 }
