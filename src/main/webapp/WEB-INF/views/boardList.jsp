@@ -193,17 +193,17 @@
 </head>
 <body>
 	<c:import url="header.jsp" />
-	<div class="container-fluid">
+	<div class="container-fluid py-5" style="min-height:800px;">
 		<h2 class="m-2">게시판</h2>
 		<table class="table text-center">
 			<thead class="table-dark">
-				<tr>
-					<td>번호</td>
-					<td class="w-50">제목</td>
-					<td>작성자</td>
-					<td>조회수</td>
-					<td>작성일</td>
-				</tr>
+			<tr>
+				<td>번호</td>
+				<td class="w-50">제목</td>
+				<td>작성자</td>
+				<td>조회수</td>
+				<td>작성일</td>
+			</tr>
 			</thead>
 			<tbody id="result">
 				<c:forEach var="i" items="${boardList.getContent()}">

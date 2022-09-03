@@ -35,7 +35,7 @@
 </head>
 <body>
 <c:import url="header.jsp"/>
-<div class="container-fluid">
+<div class="container-fluid py-5" style="min-height:800px;">
     <h2 class="m-2">게시글 작성</h2>
     <div class="border rounded-3 m-2 p-3">
         <form id="form" action="board" method="post">

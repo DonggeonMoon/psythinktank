@@ -27,7 +27,7 @@
 </head>
 <body>
 <c:import url="header.jsp"/>
-<div class="container-fluid">
+<div class="container-fluid py-5" style="min-height:800px;">
     <h2 class="m-2">게시글 보기</h2>
     <table class="table text-center">
         <colgroup>

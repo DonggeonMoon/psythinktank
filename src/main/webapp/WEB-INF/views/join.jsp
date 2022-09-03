@@ -117,17 +117,17 @@
 </head>
 <body>
 	<c:import url="header.jsp" />
-	<div class="container-fluid" style="height:80vh">
-		<div class="text-center">
-			<h2 class="m-2">회원 가입</h2>
-			<div class="w-75 mx-auto">
-				<form id="form" class="text-start" action="member" method="post">
-					<div>
-						<div>
-							<label class="d-inline-block w-25">아이디</label>
-							<div class="d-inline">
-								<input class="d-inline-block form-control w-50 my-2" type="text" id="memberId" name="memberId" maxlength="50" required>
-								<button type="button" id="checkIdBtn" class="btn btn-secondary d-inline">아이디 중복 확인</button>
+    <div class="container-fluid py-5" style="min-height:800px;">
+        <div class="text-center">
+            <h2 class="m-2">회원 가입</h2>
+            <div class="w-75 mx-auto">
+                <form id="form" class="text-start" action="member" method="post">
+                    <div>
+                        <div>
+                            <label class="d-inline-block w-25">아이디</label>
+                            <div class="d-inline">
+                                <input class="d-inline-block form-control w-50 my-2" type="text" id="memberId" name="memberId" maxlength="50" required>
+                                <button type="button" id="checkIdBtn" class="btn btn-secondary d-inline">아이디 중복 확인</button>
 							</div>
 						</div>
 						<div>

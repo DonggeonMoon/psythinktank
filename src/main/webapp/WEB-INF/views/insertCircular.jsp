@@ -18,7 +18,7 @@
 </head>
 <body>
 <c:import url="header.jsp"/>
-<div class="container-fluid">
+<div class="container-fluid py-5" style="min-height:800px;">
     <h2 class="m-2">회보 올리기</h2>
     <div class="border rounded-3 m-2 p-3">
         <form action="circular" method="post" enctype="multipart/form-data">

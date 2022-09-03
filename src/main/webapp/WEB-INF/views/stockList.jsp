@@ -97,7 +97,7 @@
 </head>
 <body>
 <c:import url="header.jsp"/>
-<div class="container-fluid">
+<div class="container-fluid py-5" style="min-height:800px;">
     <h2 class="m-2">주식 종목</h2>
     <div class="d-flex justify-content-center m-2">
         <input type="text" id="searchText" class="form-control mx-2" name="searchText" placeholder="종목명 또는 종목코드"> <input type="button" id="searchBtn" class="btn btn-secondary mx-2" name="searchBtn" value="검색">
