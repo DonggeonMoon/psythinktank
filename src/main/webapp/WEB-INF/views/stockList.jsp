@@ -30,7 +30,7 @@
                                             "<tr><td>"
                                             + list[i].stockCode
                                             + "</td>"
-                                            + "<td><a href='viewStock?stockCode="
+                                            + "<td><a href='stock?stockCode="
                                             + list[i].stockCode
                                             + "'>"
                                             + list[i].stockName
@@ -64,7 +64,7 @@
                                             "<tr><td>"
                                             + list[i].stockCode
                                             + "</td>"
-                                            + "<td><a href='viewStock?stockCode="
+                                            + "<td><a href='stock?stockCode="
                                             + list[i].stockCode
                                             + "'>"
                                             + list[i].stockName
@@ -113,7 +113,7 @@
         <tbody id="result">
         <c:forEach var="i" items="${stockList.getContent()}">
             <tr>
-                <c:url var="link" value="/viewStock">
+                <c:url var="link" value="/stock">
                     <c:param name="stockCode" value="${i.stockCode}"/>
                 </c:url>
                 <td><c:out value="${i.stockCode}"/></td>
