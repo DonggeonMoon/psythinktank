@@ -103,13 +103,32 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="table-light text-center w-25">이사회 독립성(Board Independence)</td>
-							<td>준비 중</td>
+							<td class="table-light text-center w-25">이사회 안정성(Board Stability)</td>
+							<td>
+								<del>
+									<c:choose>
+										<c:when test="${empty corporateBoardStability.boardStability}">데이터 준비 중</c:when>
+										<c:when test="${corporateBoardStability.boardStability >= 10}">
+											A
+										</c:when>
+										<c:when test="${corporateBoardStability.boardStability >= 8}">
+											B
+										</c:when>
+										<c:when test="${corporateBoardStability.boardStability >= 4}">
+											C
+										</c:when>
+										<c:otherwise>
+											D
+										</c:otherwise>
+									</c:choose>
+								</del>
+								(준비 중입니다.)
+							</td>
 						</tr>
 						<tr>
 							<td class="table-light text-center w-25">대외 환경(External Environment)</td>
 							<td>준비 중</td>
-						</tr>					
+						</tr>
 					</table>
 				</td>
 			</tr>

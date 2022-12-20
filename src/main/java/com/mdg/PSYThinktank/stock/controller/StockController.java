@@ -1,16 +1,22 @@
 package com.mdg.PSYThinktank.stock.controller;
 
-import com.mdg.PSYThinktank.stock.model.StockInfo;
-import com.mdg.PSYThinktank.stock.service.StockService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.mdg.PSYThinktank.stock.model.StockInfo;
+import com.mdg.PSYThinktank.stock.service.StockService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
@@ -42,11 +48,12 @@ public class StockController {
     }
 
     @GetMapping("/stock")
-    public String viewStock(String stockCode, Model model) {
+    public String viewStock(String stockCode, Model model) throws Exception {
         model.addAttribute("stock", stockService.selectOneStockInfoByStockCode(stockCode));
         model.addAttribute("share", stockService.selectAllShareByStockCode(stockCode));
         model.addAttribute("hrr", stockService.selectOneHRRByStockCode(stockCode));
         model.addAttribute("dividend", stockService.selectOneDividendByStockCode(stockCode));
+        model.addAttribute("corporateBoardStability", stockService.selectOneCorporateBoardStabilityByStockCode(stockCode));
         return "viewStock";
     }
 }
