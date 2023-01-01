@@ -105,24 +105,21 @@
 						<tr>
 							<td class="table-light text-center w-25">이사회 안정성(Board Stability)</td>
 							<td>
-								<del>
-									<c:choose>
-										<c:when test="${empty corporateBoardStability.boardStability}">데이터 준비 중</c:when>
-										<c:when test="${corporateBoardStability.boardStability >= 10}">
-											A
-										</c:when>
-										<c:when test="${corporateBoardStability.boardStability >= 8}">
-											B
-										</c:when>
-										<c:when test="${corporateBoardStability.boardStability >= 4}">
-											C
-										</c:when>
-										<c:otherwise>
-											D
-										</c:otherwise>
-									</c:choose>
-								</del>
-								(준비 중입니다.)
+								<c:choose>
+									<c:when test="${empty corporateBoardStability.boardStability}">데이터 준비 중</c:when>
+									<c:when test="${corporateBoardStability.boardStability >= 14}">
+										A
+									</c:when>
+									<c:when test="${corporateBoardStability.boardStability >= 9}">
+										B
+									</c:when>
+									<c:when test="${corporateBoardStability.boardStability >= 4}">
+										C
+									</c:when>
+									<c:otherwise>
+										D
+									</c:otherwise>
+								</c:choose>
 							</td>
 						</tr>
 						<tr>
