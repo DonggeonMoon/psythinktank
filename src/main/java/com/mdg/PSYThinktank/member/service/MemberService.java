@@ -2,6 +2,9 @@ package com.mdg.PSYThinktank.member.service;
 
 import com.mdg.PSYThinktank.member.model.Member;
 import com.mdg.PSYThinktank.member.repository.MemberRepository;
+import java.util.Random;
+import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,10 +14,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +34,7 @@ public class MemberService {
 
     @Transactional
     public void editMemberInfo(Member member) {
-        Member newMember = memberRepository.findById(member.getMemberId()).orElse(new Member());
+        Member newMember = memberRepository.findById(member.getMemberId()).orElse(Member.builder().build());
         newMember.setMemberPw(BCrypt.hashpw(member.getMemberPw(), BCrypt.gensalt()));
         newMember.setMemberEmail(member.getMemberEmail());
     }
@@ -95,7 +94,7 @@ public class MemberService {
 
     @Transactional
     public void changeUserLevel(Member member) {
-        Member newMember = memberRepository.findById(member.getMemberId()).orElse(new Member());
+        Member newMember = memberRepository.findById(member.getMemberId()).orElse(Member.builder().build());
         newMember.setUserLevel(member.getUserLevel());
     }
 }

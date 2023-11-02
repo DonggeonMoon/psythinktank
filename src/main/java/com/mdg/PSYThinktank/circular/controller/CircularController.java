@@ -2,19 +2,26 @@ package com.mdg.PSYThinktank.circular.controller;
 
 import com.mdg.PSYThinktank.circular.model.Circular;
 import com.mdg.PSYThinktank.circular.service.CircularService;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,10 +29,20 @@ public class CircularController {
     private final CircularService circularService;
 
     @GetMapping("/circularList")
-    public String circularList(@RequestParam(defaultValue = "1") int page, Model model) {
-        Page<Circular> circularPage = circularService.selectAllCircular(page - 1);
-        model.addAttribute("circularList", circularPage);
-        model.addAttribute("currentBlock", circularPage.getNumber() / circularPage.getSize());
+    public String circularList(Pageable pageable, Model model) {
+        Page<Circular> circulars = circularService.selectAllCircular(pageable.getPageNumber());
+
+        int startNumber = (pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1;
+        int endNumber =
+                (pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + pageable.getPageSize();
+
+        List<Pageable> pages = IntStream.rangeClosed(startNumber, endNumber)
+                .mapToObj(i -> circulars.getPageable().withPage(i))
+                .collect(Collectors.toList());
+
+        model.addAttribute("circulars", circulars);
+        model.addAttribute("currentBlock", circulars.getNumber() / circulars.getSize());
+        model.addAttribute("pages", pages);
         return "circularList";
     }
 
