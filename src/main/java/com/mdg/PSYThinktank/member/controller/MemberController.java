@@ -1,5 +1,6 @@
 package com.mdg.PSYThinktank.member.controller;
 
+import com.mdg.PSYThinktank.member.dto.MemberDto;
 import com.mdg.PSYThinktank.member.model.Member;
 import com.mdg.PSYThinktank.member.service.LoginService;
 import com.mdg.PSYThinktank.member.service.MemberService;
@@ -10,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +51,7 @@ public class MemberController {
 
     @PostMapping("/member")
     public String insertMemberInfo2(HttpSession session, Member member) {
-        Member sessionInfo = (Member) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             memberService.join(member);
         } else {
@@ -106,7 +106,7 @@ public class MemberController {
 
     @PutMapping("/member")
     public String editMemberInfo2(HttpSession session, Member member) {
-        Member sessionInfo = (Member) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {
@@ -120,8 +120,8 @@ public class MemberController {
     }
 
     @DeleteMapping("/member")
-    public String deleteMemberInfo(HttpSession session, String memberId) throws IOException {
-        Member sessionInfo = (Member) session.getAttribute("member");
+    public String deleteMemberInfo(HttpSession session, String memberId) {
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {
@@ -142,14 +142,14 @@ public class MemberController {
 
     @GetMapping("/managerPage")
     public String managerPage(HttpSession session, @RequestParam(defaultValue = "1") int page, Model model) {
-        Member sessionInfo = (Member) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {
             if (sessionInfo.getUserLevel() == 3) {
-                Page<Member> memberPage = memberService.selectAllMember(page - 1);
-                model.addAttribute("memberList", memberPage);
-                model.addAttribute("currentBlock", memberPage.getNumber() / memberPage.getSize());
+                Page<Member> members = memberService.selectAllMember(page - 1);
+                model.addAttribute("members", members);
+
                 return "managerPage";
             } else {
                 return "redirect:/login";
@@ -159,7 +159,7 @@ public class MemberController {
 
     @PostMapping("/changeUserLevel")
     public String changeUserLevel(HttpSession session, Member member) {
-        Member sessionInfo = (Member) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {

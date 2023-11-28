@@ -1,12 +1,8 @@
 package com.mdg.PSYThinktank.stock.controller;
 
+import com.mdg.PSYThinktank.stock.model.Share;
 import com.mdg.PSYThinktank.stock.model.StockInfo;
 import com.mdg.PSYThinktank.stock.service.StockService;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.*;
+
 @Controller
 @RequiredArgsConstructor
 public class StockController {
@@ -25,18 +23,8 @@ public class StockController {
     @GetMapping("/stockList")
     public String stockList(Pageable pageable, Model model) {
         Page<StockInfo> stocks = stockService.selectAllStockInfo(pageable.getPageNumber());
+        model.addAttribute("stocks", stocks);
 
-        int startNumber = (pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1;
-        int endNumber =
-                (pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + pageable.getPageSize();
-
-        List<Pageable> pages = IntStream.rangeClosed(startNumber, endNumber)
-                .mapToObj(i -> stocks.getPageable().withPage(i))
-                .collect(Collectors.toList());
-
-        model.addAttribute("stockList", stocks);
-        model.addAttribute("currentBlock", stocks.getNumber() / stocks.getSize());
-        model.addAttribute("pages", pages);
         return "stockList";
     }
 
@@ -58,11 +46,64 @@ public class StockController {
 
     @GetMapping("/stock")
     public String viewStock(String stockCode, Model model) throws Exception {
+
+        List<Share> shares = stockService.selectAllShareByStockCode(stockCode);
         model.addAttribute("stock", stockService.selectOneStockInfoByStockCode(stockCode));
-        model.addAttribute("share", stockService.selectAllShareByStockCode(stockCode));
-        model.addAttribute("hrr", stockService.selectOneHRRByStockCode(stockCode));
+        model.addAttribute("hrr", calculateGrowthPotential(stockCode));
+        model.addAttribute("share", shares);
         model.addAttribute("dividend", stockService.selectOneDividendByStockCode(stockCode));
-        model.addAttribute("corporateBoardStability", stockService.selectOneCorporateBoardStabilityByStockCode(stockCode));
+        model.addAttribute("governance", calculateGovernance(shares));
+        model.addAttribute("corporateBoardStability", calculateBoardStability(stockCode));
         return "viewStock";
     }
+
+    private String calculateBoardStability(final String stockCode) throws Exception {
+        Double boardStability = stockService.selectOneCorporateBoardStabilityByStockCode(stockCode)
+                .getBoardStability();
+
+        if (boardStability >= 14) {
+            return "A";
+        }
+        if (boardStability >= 9) {
+            return "B";
+        }
+        if (boardStability >= 4) {
+            return "C";
+        }
+        return "D";
+    }
+
+    private String calculateGrowthPotential(String stockCode) {
+        Double hrr = stockService.selectOneHRRByStockCode(stockCode).getHrr();
+        if (hrr >= 10) {
+            return "A";
+        }
+        if (hrr >= 5) {
+            return "B";
+        }
+        if (hrr >= 0) {
+            return "C";
+        }
+        return "D";
+    }
+
+    private String calculateGovernance(final List<Share> shares) {
+        Double currentShare = shares
+                .stream()
+                .max(Comparator.comparing(Share::getDate))
+                .map(Share::getShare)
+                .orElseThrow(NoSuchElementException::new);
+        System.out.println("currentShare = " + currentShare);
+        if (currentShare >= 10) {
+            return "A";
+        }
+        if (currentShare >= 5) {
+            return "B";
+        }
+        if (currentShare >= 0) {
+            return "C";
+        }
+        return "D";
+    }
 }
+

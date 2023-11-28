@@ -1,10 +1,8 @@
 package com.mdg.PSYThinktank.member.service;
 
+import com.mdg.PSYThinktank.member.dto.MemberDto;
 import com.mdg.PSYThinktank.member.model.Member;
 import com.mdg.PSYThinktank.member.repository.MemberRepository;
-import java.util.Random;
-import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +12,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class MemberService {
 
     @Transactional
     public Member getMemberInfo(HttpSession session) {
-        return memberRepository.findById(((Member) session.getAttribute("member")).getMemberId()).orElse(null);
+        return memberRepository.findById(((MemberDto) session.getAttribute("member")).getMemberId()).orElse(null);
     }
 
     @Transactional
