@@ -2,7 +2,7 @@ package com.mdg.PSYThinktank.comment.controller;
 
 import com.mdg.PSYThinktank.comment.model.Comment;
 import com.mdg.PSYThinktank.comment.service.CommentService;
-import com.mdg.PSYThinktank.member.model.Member;
+import com.mdg.PSYThinktank.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +18,7 @@ public class CommentController {
 
     @PostMapping("comment")
     public String addComment(HttpSession session, Comment comment) {
-        Member sessionInfo = (Member) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {
@@ -33,7 +33,7 @@ public class CommentController {
 
     @PutMapping("comment")
     public String updateComment(HttpSession session, Comment comment) {
-        Member sessionInfo = (Member) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {
@@ -48,7 +48,7 @@ public class CommentController {
 
     @DeleteMapping("comment")
     public String deleteComment(HttpSession session, int commentNo, int boardNo) {
-        Member sessionInfo = (Member) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {

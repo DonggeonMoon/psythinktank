@@ -10,10 +10,10 @@
 	</parent>
 	<groupId>com.mdg</groupId>
 	<artifactId>PSYThinktank</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>PSYThinktank</name>
 	<description>PSYThinktank website</description>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
@@ -42,6 +42,10 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mustache</artifactId>
+        </dependency>
+        <dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
@@ -90,14 +94,6 @@
 		    <artifactId>commons-fileupload</artifactId>
 		    <version>1.4</version>
 		</dependency>
-						
-		<!-- 		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		 -->
 		
 	</dependencies>
 	<build>

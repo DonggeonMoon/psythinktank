@@ -3,9 +3,10 @@ package com.mdg.PSYThinktank.board.controller;
 import com.mdg.PSYThinktank.board.model.Board;
 import com.mdg.PSYThinktank.board.service.BoardService;
 import com.mdg.PSYThinktank.comment.service.CommentService;
-import com.mdg.PSYThinktank.member.model.Member;
+import com.mdg.PSYThinktank.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +21,12 @@ public class BoardController {
     private final BoardService boardService;
     private final CommentService commentService;
 
+
     @GetMapping("/boardList")
-    public String boardList(@RequestParam(defaultValue = "1") int page, Model model) {
-        Page<Board> boardPage = boardService.selectAllBoard(page - 1);
-        model.addAttribute("boardList", boardPage);
-        model.addAttribute("currentBlock", boardPage.getNumber() / boardPage.getSize());
+    public String boardList(Pageable pageable, Model model) {
+        Page<Board> boards = boardService.selectAllBoard(pageable.getPageNumber());
+
+        model.addAttribute("boards", boards);
         return "boardList";
     }
 
@@ -70,7 +72,7 @@ public class BoardController {
 
     @PostMapping("/board")
     public String insertBoard2(HttpSession session, Board board) {
-        Member sessionInfo = (Member) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {
@@ -85,7 +87,7 @@ public class BoardController {
 
     @GetMapping("/updateBoard")
     public String updateBoard(HttpSession session, int boardNo, Model model) {
-        Member sessionInfo = (Member) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {
@@ -101,7 +103,7 @@ public class BoardController {
 
     @PutMapping("/board")
     public String updateBoard2(HttpSession session, Board board) {
-        Member sessionInfo = (Member) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {
@@ -116,7 +118,7 @@ public class BoardController {
 
     @DeleteMapping("/board")
     public String deleteBoard(HttpSession session, int boardNo, String memberId) {
-        Member sessionInfo = (Member) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {

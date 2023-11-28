@@ -1,5 +1,6 @@
 package com.mdg.PSYThinktank.member.service;
 
+import com.mdg.PSYThinktank.member.dto.MemberDto;
 import com.mdg.PSYThinktank.member.model.Member;
 import com.mdg.PSYThinktank.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +31,12 @@ public class MemberService {
 
     @Transactional
     public Member getMemberInfo(HttpSession session) {
-        return memberRepository.findById(((Member) session.getAttribute("member")).getMemberId()).orElse(null);
+        return memberRepository.findById(((MemberDto) session.getAttribute("member")).getMemberId()).orElse(null);
     }
 
     @Transactional
     public void editMemberInfo(Member member) {
-        Member newMember = memberRepository.findById(member.getMemberId()).orElse(new Member());
+        Member newMember = memberRepository.findById(member.getMemberId()).orElse(Member.builder().build());
         newMember.setMemberPw(BCrypt.hashpw(member.getMemberPw(), BCrypt.gensalt()));
         newMember.setMemberEmail(member.getMemberEmail());
     }
@@ -95,7 +96,7 @@ public class MemberService {
 
     @Transactional
     public void changeUserLevel(Member member) {
-        Member newMember = memberRepository.findById(member.getMemberId()).orElse(new Member());
+        Member newMember = memberRepository.findById(member.getMemberId()).orElse(Member.builder().build());
         newMember.setUserLevel(member.getUserLevel());
     }
 }

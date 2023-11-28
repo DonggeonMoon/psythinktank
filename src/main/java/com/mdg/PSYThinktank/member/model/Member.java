@@ -1,20 +1,25 @@
 package com.mdg.PSYThinktank.member.model;
 
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-
+import com.mdg.PSYThinktank.member.dto.MemberDto;
+import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.sql.Date;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class Member {
     @Id
     @Column(name = "member_id", nullable = false, length = 50)
@@ -36,4 +41,15 @@ public class Member {
     @Column(name = "login_try_count")
     @ColumnDefault(value = "0")
     private int loginTryCount;
+
+    public MemberDto toDto() {
+        return MemberDto.builder()
+                .memberId(memberId)
+                .memberPw(memberPw)
+                .memberEmail(memberEmail)
+                .registerDate(registerDate)
+                .userLevel(userLevel)
+                .loginTryCount(loginTryCount)
+                .build();
+    }
 }

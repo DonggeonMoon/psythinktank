@@ -3,6 +3,7 @@ package com.mdg.PSYThinktank.circular.service;
 import com.mdg.PSYThinktank.circular.model.Circular;
 import com.mdg.PSYThinktank.circular.repository.CircularRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -22,14 +23,17 @@ import java.nio.file.Paths;
 @RequiredArgsConstructor
 public class CircularService {
     private final CircularRepository circularRepository;
+    private final MultipartProperties multipartProperties;
 
     @Transactional
     @SuppressWarnings("SpellCheckingInspection")
     public void insertOneCircular(Circular circular, HttpServletRequest request, MultipartFile file) {
-        String realPath = request.getServletContext().getRealPath("/uploadfile");
-        String filePath = realPath + "/" + circular.getFileName();
+//        String realPath = request.getServletContext().getRealPath("/uploadfile");
+//        String filePath = realPath + "/" + circular.getFileName();
+
         try {
-            file.transferTo(new File(filePath));
+            File file1 = new File(circular.getFileName());
+            file.transferTo(file1);
             circularRepository.save(circular);
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,11 +53,11 @@ public class CircularService {
     @Transactional
     @SuppressWarnings("SpellCheckingInspection")
     public void deleteOneCircular(int circularId, HttpServletRequest request) {
-        String realPath = request.getServletContext().getRealPath("/uploadfile");
+//        String realPath = request.getServletContext().getRealPath("/uploadfile");
+//        String filePath = realPath + "/" + circular.getFileName();
         Circular circular = selectOneCircular(circularId);
-        String filePath = realPath + "/" + circular.getFileName();
         try {
-            if (new File(filePath).delete()) {
+            if (new File(multipartProperties.getLocation() + circular.getFileName()).delete()) {
                 circularRepository.deleteById(circularId);
             }
         } catch (Exception e) {

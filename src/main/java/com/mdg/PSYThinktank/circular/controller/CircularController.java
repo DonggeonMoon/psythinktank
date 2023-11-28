@@ -5,6 +5,7 @@ import com.mdg.PSYThinktank.circular.service.CircularService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,10 +23,10 @@ public class CircularController {
     private final CircularService circularService;
 
     @GetMapping("/circularList")
-    public String circularList(@RequestParam(defaultValue = "1") int page, Model model) {
-        Page<Circular> circularPage = circularService.selectAllCircular(page - 1);
-        model.addAttribute("circularList", circularPage);
-        model.addAttribute("currentBlock", circularPage.getNumber() / circularPage.getSize());
+    public String circularList(Pageable pageable, Model model) {
+        Page<Circular> circulars = circularService.selectAllCircular(pageable.getPageNumber());
+        model.addAttribute("circulars", circulars);
+
         return "circularList";
     }
 
