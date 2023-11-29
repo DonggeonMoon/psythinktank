@@ -8,7 +8,7 @@
 		<version>2.6.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.mdg</groupId>
+	<groupId>com.dgmoonlabs</groupId>
 	<artifactId>PSYThinktank</artifactId>
 	<version>0.0.1</version>
 	<name>PSYThinktank</name>
@@ -112,5 +112,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
