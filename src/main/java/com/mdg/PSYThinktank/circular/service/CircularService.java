@@ -71,7 +71,7 @@ public class CircularService {
         try {
             String realPath = request.getServletContext().getRealPath("/uploadfile");
             Circular circular = selectOneCircular(circularId);
-            Path filePath = Paths.get(realPath + "/" + circular.getFileName());
+            Path filePath = Paths.get(multipartProperties.getLocation() + "/" + circular.getFileName());
             Resource resource = new UrlResource(filePath.toUri());
             System.out.println("uri: " + filePath.toUri());
             if (resource.exists() || resource.isReadable()) {
