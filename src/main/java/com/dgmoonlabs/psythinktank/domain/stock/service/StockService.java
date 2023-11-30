@@ -22,41 +22,41 @@ public class StockService {
 
     @Transactional
     public Page<StockInfo> selectAllStockInfo(int page) {
-        return stockInfoRepository.findAll(PageRequest.of(page, 10, Sort.by("stockCode").ascending()));
+        return stockInfoRepository.findAll(PageRequest.of(page, 10, Sort.by("symbol").ascending()));
     }
 
     @Transactional
-    public List<StockInfo> selectAllStockInfoByStockCode(String stockCode) {
-        return stockInfoRepository.findByStockCodeLike("%" + stockCode + "%");
+    public List<StockInfo> selectAllStockInfoBySymbol(String symbol) {
+        return stockInfoRepository.findBySymbolLike("%" + symbol + "%");
     }
 
     @Transactional
-    public List<StockInfo> selectAllStockInfoByStockName(String stockName) {
-        return stockInfoRepository.findByStockNameLike("%" + stockName + "%");
+    public List<StockInfo> selectAllStockInfoByName(String name) {
+        return stockInfoRepository.findByNameLike("%" + name + "%");
     }
 
     @Transactional
-    public List<Share> selectAllShareByStockCode(String stockCode) {
-        return shareRepository.findByStockCode(stockCode);
+    public List<Share> selectAllShareBySymbol(String symbol) {
+        return shareRepository.findBySymbol(symbol);
     }
 
     @Transactional
-    public StockInfo selectOneStockInfoByStockCode(String stockCode) {
-        return stockInfoRepository.findById(stockCode).orElseGet(StockInfo::new);
+    public StockInfo selectOneStockInfoBySymbol(String symbol) {
+        return stockInfoRepository.findById(symbol).orElseGet(StockInfo::new);
     }
 
     @Transactional
-    public HRR selectOneHRRByStockCode(String stockCode) {
-        return hrrRepository.findByStockCodeAndBsnsYearAndReprtCode(stockCode, "2021", "11011");
+    public HRR selectOneHRRBySymbol(String symbol) {
+        return hrrRepository.findBySymbolAndBusinessYearAndReportCode(symbol, "2021", "11011");
     }
 
     @Transactional
-    public Dividend selectOneDividendByStockCode(String stockCode) {
-        return dividendRepository.findById(stockCode).orElseGet(Dividend::new);
+    public Dividend selectOneDividendBySymbol(String symbol) {
+        return dividendRepository.findById(symbol).orElseGet(Dividend::new);
     }
 
     @Transactional
-    public CorporateBoardStability selectOneCorporateBoardStabilityByStockCode(String stockCode) throws Exception {
-        return corporateBoardStabilityRepository.findByStockCode(stockCode).orElseThrow(Exception::new);
+    public CorporateBoardStability selectOneCorporateBoardStabilityBySymbol(String symbol) throws Exception {
+        return corporateBoardStabilityRepository.findBySymbol(symbol).orElseThrow(Exception::new);
     }
 }

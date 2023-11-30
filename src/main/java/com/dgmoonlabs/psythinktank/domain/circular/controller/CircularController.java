@@ -13,8 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.UUID;
 
 @Controller
@@ -32,10 +30,10 @@ public class CircularController {
 
     @GetMapping("/circular")
     @ResponseBody
-    public ResponseEntity<Resource> viewCircular(@RequestParam(defaultValue = "1") int circularId, Model model, HttpServletRequest request) {
-        Resource file = circularService.downloadCircular(circularId, request);
+    public ResponseEntity<Resource> viewCircular(@RequestParam(defaultValue = "1") int id, Model model) {
+        Resource file = circularService.downloadCircular(id);
         ResponseEntity<Resource> response = ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "application/pdf").body(file);
-        model.addAttribute("circular", circularService.selectOneCircular(circularId));
+        model.addAttribute("circular", circularService.selectOneCircular(id));
         return response;
     }
 
@@ -45,21 +43,21 @@ public class CircularController {
     }
 
     @PostMapping("/circular")
-    public String insertCircular2(Circular circular, @RequestParam("file") MultipartFile file, HttpServletRequest request) throws IllegalStateException, IOException {
+    public String insertCircular2(Circular circular, @RequestParam("file") MultipartFile file) throws IllegalStateException {
         if (!file.isEmpty()) {
             String originalFilename = file.getOriginalFilename();
             assert originalFilename != null;
             String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
             String fileName = UUID.randomUUID() + "." + extension;
             circular.setFileName(fileName);
-            circularService.insertOneCircular(circular, request, file);
+            circularService.insertOneCircular(circular, file);
         }
         return "redirect:/circularList";
     }
 
     @DeleteMapping("/circular")
-    public String deleteCircular(int circularId, HttpServletRequest request) {
-        circularService.deleteOneCircular(circularId, request);
+    public String deleteCircular(int id) {
+        circularService.deleteOneCircular(id);
         return "redirect:/circularList";
     }
 }

@@ -23,27 +23,27 @@ public class BoardService {
 
     @Transactional
     public Page<Board> selectAllBoard(int page) {
-        return boardRepository.findAll(PageRequest.of(page, 10, Sort.by("isNotice").descending().and(Sort.by("boardNo").descending())));
+        return boardRepository.findAll(PageRequest.of(page, 10, Sort.by("isNotice").descending().and(Sort.by("id").descending())));
     }
 
     @Transactional
-    public Board selectOneBoard(int boardNo) {
-        return boardRepository.findById(boardNo).orElse(null);
+    public Board selectOneBoard(Long id) {
+        return boardRepository.findById(id).orElse(null);
     }
 
     @Transactional
-    public List<Board> searchBoardByBoardTitle(String boardTitle) {
-        return boardRepository.findByBoardTitleContainingOrderByBoardNoDesc(boardTitle);
+    public List<Board> searchBoardByTitle(String title) {
+        return boardRepository.findByTitleContainingOrderByIdDesc(title);
     }
 
     @Transactional
-    public List<Board> searchBoardByBoardContent(String boardContent) {
-        return boardRepository.findByBoardContentContainingOrderByBoardNoDesc(boardContent);
+    public List<Board> searchBoardByContent(String content) {
+        return boardRepository.findByContentContainingOrderByIdDesc(content);
     }
 
     @Transactional
     public List<Board> searchBoardByMemberId(String memberId) {
-        return boardRepository.findByMemberIdOrderByBoardNoDesc(memberId);
+        return boardRepository.findByMemberIdOrderByIdDesc(memberId);
     }
 
     @Transactional
@@ -52,14 +52,14 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteOneBoard(int boardNo) {
-        boardRepository.deleteById(boardNo);
+    public void deleteOneBoard(long id) {
+        boardRepository.deleteById(id);
     }
 
     @Transactional
-    public void addHit(int board_no) {
-        Board board = boardRepository.findById(board_no).orElse(new Board());
-        board.setBoardHit(board.getBoardHit() + 1);
+    public void addHit(long id) {
+        Board board = boardRepository.findById(id).orElse(new Board());
+        board.setHit(board.getHit() + 1);
         boardRepository.save(board);
     }
 }

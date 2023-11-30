@@ -5,7 +5,6 @@ import com.dgmoonlabs.psythinktank.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -18,14 +17,14 @@ public class LoginService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Map<String, Object> login(String memberId, String memberPw, HttpSession session, Model model) {
+    public Map<String, Object> login(String memberId, String password, HttpSession session) {
         Map<String, Object> map = new HashMap<>();
-        if (!"".equals(memberId) && !"".equals(memberPw)) {
+        if (!"".equals(memberId) && !"".equals(password)) {
             if (checkId(memberId)) {
                 Member member = memberRepository.findById(memberId).orElse(Member.builder().build());
                 // 5회 이상 틀렸을 경우
                 if (member.getLoginTryCount() < 5) {
-                    if (checkPw(memberId, memberPw)) {
+                    if (checkPw(memberId, password)) {
                         member.setLoginTryCount(0);
                         session.setAttribute("member",
                                 memberRepository.findById(memberId).orElse(Member.builder().build()).toDto());
@@ -58,13 +57,13 @@ public class LoginService {
     }
 
     @Transactional
-    public boolean checkPw(String memberId, String memberPw) {
-        return BCrypt.checkpw(memberPw,
-                memberRepository.findById(memberId).orElse(Member.builder().build()).getMemberPw());
+    public boolean checkPw(String memberId, String password) {
+        return BCrypt.checkpw(password,
+                memberRepository.findById(memberId).orElse(Member.builder().build()).getPassword());
     }
 
     @Transactional
-    public boolean checkEmail(String memberEmail) {
-        return (memberRepository.findByMemberEmail(memberEmail) != null);
+    public boolean checkEmail(String email) {
+        return (memberRepository.findByEmail(email) != null);
     }
 }

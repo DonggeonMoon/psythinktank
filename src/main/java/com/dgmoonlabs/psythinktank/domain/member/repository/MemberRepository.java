@@ -4,7 +4,7 @@ import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, String> {
-    Member findByMemberEmail(String memberEmail);
+    Member findByEmail(String email);
 
-    Member findByMemberEmailAndMemberId(String memberEmail, String memberId);
+    Member findByEmailAndMemberId(String email, String memberId);
 }

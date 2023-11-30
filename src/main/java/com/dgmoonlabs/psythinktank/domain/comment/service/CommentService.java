@@ -14,28 +14,13 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public void insertOneComment(Comment comment) {
-        commentRepository.save(comment);
+    public List<Comment> selectAllCommentByBoardId(long boardId) {
+        return commentRepository.findAllById(boardId);
     }
 
     @Transactional
-    public List<Comment> selectAllCommentByBoardNo(int boardNo) {
-        return commentRepository.findAllByBoardNo(boardNo);
-    }
-
-    @Transactional
-    public Comment selectOneComment(int commentNo) {
-        return commentRepository.findById(commentNo).orElse(null);
-    }
-
-    @Transactional
-    public void updateOneComment(Comment comment) {
-        commentRepository.save(comment);
-    }
-
-    @Transactional
-    public void deleteOneComment(int commentNo) {
-        commentRepository.deleteById(commentNo);
+    public Comment selectOneComment(long id) {
+        return commentRepository.findById(id).orElse(null);
     }
 
     @Transactional
@@ -49,7 +34,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(int comment_no) {
-        commentRepository.deleteById(comment_no);
+    public void deleteComment(long id) {
+        commentRepository.deleteById(id);
     }
 }

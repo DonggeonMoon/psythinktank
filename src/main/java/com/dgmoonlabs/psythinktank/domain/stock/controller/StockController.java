@@ -28,11 +28,11 @@ public class StockController {
         return "stockList";
     }
 
-    @PostMapping("/searchByStockCode")
+    @PostMapping("/searchBySymbol")
     @ResponseBody
-    public Map<String, Object> searchByStockCode(@RequestBody String searchText) {
+    public Map<String, Object> searchBySymbol(@RequestBody String searchText) {
         Map<String, Object> map = new HashMap<>();
-        map.put("result", stockService.selectAllStockInfoByStockCode(searchText));
+        map.put("result", stockService.selectAllStockInfoBySymbol(searchText));
         return map;
     }
 
@@ -40,25 +40,24 @@ public class StockController {
     @ResponseBody
     public Map<String, List<StockInfo>> searchByStockName(@RequestBody String searchText) {
         Map<String, List<StockInfo>> map = new HashMap<>();
-        map.put("result", stockService.selectAllStockInfoByStockName(searchText));
+        map.put("result", stockService.selectAllStockInfoByName(searchText));
         return map;
     }
 
     @GetMapping("/stock")
-    public String viewStock(String stockCode, Model model) throws Exception {
-
-        List<Share> shares = stockService.selectAllShareByStockCode(stockCode);
-        model.addAttribute("stock", stockService.selectOneStockInfoByStockCode(stockCode));
-        model.addAttribute("hrr", calculateGrowthPotential(stockCode));
+    public String viewStock(String symbol, Model model) throws Exception {
+        List<Share> shares = stockService.selectAllShareBySymbol(symbol);
+        model.addAttribute("stock", stockService.selectOneStockInfoBySymbol(symbol));
+        model.addAttribute("hrr", calculateGrowthPotential(symbol));
         model.addAttribute("share", shares);
-        model.addAttribute("dividend", stockService.selectOneDividendByStockCode(stockCode));
+        model.addAttribute("dividend", stockService.selectOneDividendBySymbol(symbol));
         model.addAttribute("governance", calculateGovernance(shares));
-        model.addAttribute("corporateBoardStability", calculateBoardStability(stockCode));
+        model.addAttribute("corporateBoardStability", calculateBoardStability(symbol));
         return "viewStock";
     }
 
-    private String calculateBoardStability(final String stockCode) throws Exception {
-        Double boardStability = stockService.selectOneCorporateBoardStabilityByStockCode(stockCode)
+    private String calculateBoardStability(final String symbol) throws Exception {
+        Double boardStability = stockService.selectOneCorporateBoardStabilityBySymbol(symbol)
                 .getBoardStability();
 
         if (boardStability >= 14) {
@@ -73,8 +72,8 @@ public class StockController {
         return "D";
     }
 
-    private String calculateGrowthPotential(String stockCode) {
-        Double hrr = stockService.selectOneHRRByStockCode(stockCode).getHrr();
+    private String calculateGrowthPotential(String symbol) {
+        Double hrr = stockService.selectOneHRRBySymbol(symbol).getValue();
         if (hrr >= 10) {
             return "A";
         }
@@ -91,7 +90,7 @@ public class StockController {
         Double currentShare = shares
                 .stream()
                 .max(Comparator.comparing(Share::getDate))
-                .map(Share::getShare)
+                .map(Share::getValue)
                 .orElseThrow(NoSuchElementException::new);
         if (currentShare >= 10) {
             return "A";

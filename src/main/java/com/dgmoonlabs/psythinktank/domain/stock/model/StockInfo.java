@@ -14,16 +14,16 @@ public class StockInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stock_code", nullable = false, length = 6)
-    private String stockCode;
+    private String symbol;
 
     @Column(name = "stock_name", nullable = false, length = 40)
-    private String stockName;
+    private String name;
 
     @Column(name = "corp_cls", nullable = false, length = 10)
-    private String corpCls;
+    private String corporationClass;
 
     @Column(name = "corp_code", nullable = false, length = 8)
-    private String corpCode;
+    private String corporationCode;
 
     @Column(name = "overview", columnDefinition = "TEXT")
     private String overview;

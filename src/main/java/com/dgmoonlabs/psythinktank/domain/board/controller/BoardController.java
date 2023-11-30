@@ -32,9 +32,9 @@ public class BoardController {
 
     @PostMapping("/searchByBoardTitle")
     @ResponseBody
-    public Map<String, Object> searchBoardByBoardTitle(@RequestBody String searchText) {
+    public Map<String, Object> searchBoardByTitle(@RequestBody String searchText) {
         Map<String, Object> map = new HashMap<>();
-        map.put("result", boardService.searchBoardByBoardTitle(searchText));
+        map.put("result", boardService.searchBoardByTitle(searchText));
         return map;
     }
 
@@ -42,7 +42,7 @@ public class BoardController {
     @ResponseBody
     public Map<String, Object> searchBoardByBoardContent(@RequestBody String searchText) {
         Map<String, Object> map = new HashMap<>();
-        map.put("result", boardService.searchBoardByBoardContent(searchText));
+        map.put("result", boardService.searchBoardByContent(searchText));
         return map;
     }
 
@@ -55,10 +55,10 @@ public class BoardController {
     }
 
     @GetMapping("/board")
-    public String viewBoard(int boardNo, Model model) {
-        boardService.addHit(boardNo);
-        model.addAttribute("board", boardService.selectOneBoard(boardNo));
-        model.addAttribute("commentList", commentService.selectAllCommentByBoardNo(boardNo));
+    public String viewBoard(long id, Model model) {
+        boardService.addHit(id);
+        model.addAttribute("board", boardService.selectOneBoard(id));
+        model.addAttribute("commentList", commentService.selectAllCommentByBoardId(id));
         return "viewBoard";
     }
 
@@ -86,14 +86,14 @@ public class BoardController {
     }
 
     @GetMapping("/updateBoard")
-    public String updateBoard(HttpSession session, int boardNo, Model model) {
+    public String updateBoard(HttpSession session, long id, Model model) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {
-            Board board = boardService.selectOneBoard(boardNo);
+            Board board = boardService.selectOneBoard(id);
             if (sessionInfo.getMemberId().equals(board.getMemberId())) {
-                model.addAttribute("board", boardService.selectOneBoard(boardNo));
+                model.addAttribute("board", boardService.selectOneBoard(id));
                 return "updateBoard";
             } else {
                 return "redirect:/login";
@@ -109,7 +109,7 @@ public class BoardController {
         } else {
             if (sessionInfo.getMemberId().equals(board.getMemberId())) {
                 boardService.updateOneBoard(board);
-                return "redirect:/board?boardNo=" + board.getBoardNo();
+                return "redirect:/board?id=" + board.getId();
             } else {
                 return "redirect:/login";
             }
@@ -117,13 +117,13 @@ public class BoardController {
     }
 
     @DeleteMapping("/board")
-    public String deleteBoard(HttpSession session, int boardNo, String memberId) {
+    public String deleteBoard(HttpSession session, int id, String memberId) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {
             if (sessionInfo.getMemberId().equals(memberId)) {
-                boardService.deleteOneBoard(boardNo);
+                boardService.deleteOneBoard(id);
                 return "redirect:/boardList";
             } else {
                 return "redirect:/login";

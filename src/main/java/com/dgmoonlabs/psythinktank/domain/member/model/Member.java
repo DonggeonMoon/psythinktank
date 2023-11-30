@@ -22,14 +22,14 @@ public class Member {
     private String memberId;
 
     @Column(name = "member_pw", nullable = false, length = 100)
-    private String memberPw;
+    private String password;
 
     @Column(name = "member_email", nullable = false, length = 100)
-    private String memberEmail;
+    private String email;
 
     @CreationTimestamp
     @Column(name = "register_date", nullable = false, length = 50)
-    private Date registerDate;
+    private Date createdAt;
 
     @Column(name = "user_level", nullable = false)
     private int userLevel;
@@ -41,9 +41,9 @@ public class Member {
     public MemberDto toDto() {
         return MemberDto.builder()
                 .memberId(memberId)
-                .memberPw(memberPw)
-                .memberEmail(memberEmail)
-                .registerDate(registerDate)
+                .password(password)
+                .email(email)
+                .createdAt(createdAt)
                 .userLevel(userLevel)
                 .loginTryCount(loginTryCount)
                 .build();
