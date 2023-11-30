@@ -25,7 +25,7 @@ public class MemberService {
 
     @Transactional
     public void join(Member member) {
-        member.setMemberPw(BCrypt.hashpw(member.getMemberPw(), BCrypt.gensalt()));
+        member.setPassword(BCrypt.hashpw(member.getPassword(), BCrypt.gensalt()));
         memberRepository.save(member);
     }
 
@@ -37,8 +37,8 @@ public class MemberService {
     @Transactional
     public void editMemberInfo(Member member) {
         Member newMember = memberRepository.findById(member.getMemberId()).orElse(Member.builder().build());
-        newMember.setMemberPw(BCrypt.hashpw(member.getMemberPw(), BCrypt.gensalt()));
-        newMember.setMemberEmail(member.getMemberEmail());
+        newMember.setPassword(BCrypt.hashpw(member.getPassword(), BCrypt.gensalt()));
+        newMember.setEmail(member.getEmail());
     }
 
     @Transactional
@@ -53,12 +53,12 @@ public class MemberService {
 
     @Transactional
     public Member selectOneMemberByEmail(String memberEmail) {
-        return memberRepository.findByMemberEmail(memberEmail);
+        return memberRepository.findByEmail(memberEmail);
     }
 
     @Transactional
     public Member selectOneMemberByEmailAndId(String memberEmail, String memberId) {
-        return memberRepository.findByMemberEmailAndMemberId(memberEmail, memberId);
+        return memberRepository.findByEmailAndMemberId(memberEmail, memberId);
     }
 
     @Transactional
@@ -81,8 +81,8 @@ public class MemberService {
             sb.append((char) (random.nextInt(57) + 'A'));
         }
         String randomizedStr = sb.toString();
-        Member member = memberRepository.findByMemberEmail(email);
-        member.setMemberPw(BCrypt.hashpw(randomizedStr, BCrypt.gensalt()));
+        Member member = memberRepository.findByEmail(email);
+        member.setPassword(BCrypt.hashpw(randomizedStr, BCrypt.gensalt()));
         member.setLoginTryCount(0);
         final MimeMessagePreparator preparator = mimeMessage -> {
             final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");

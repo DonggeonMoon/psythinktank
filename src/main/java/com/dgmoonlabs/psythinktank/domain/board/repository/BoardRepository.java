@@ -5,10 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BoardRepository extends JpaRepository<Board, Integer> {
-    List<Board> findByBoardTitleContainingOrderByBoardNoDesc(String boardTitle);
+public interface BoardRepository extends JpaRepository<Board, Long> {
+    List<Board> findByTitleContainingOrderByIdDesc(String title);
 
-    List<Board> findByBoardContentContainingOrderByBoardNoDesc(String boardContent);
+    List<Board> findByContentContainingOrderByIdDesc(String content);
 
-    List<Board> findByMemberIdOrderByBoardNoDesc(String memberId);
+    List<Board> findByMemberIdOrderByIdDesc(String memberId);
 }

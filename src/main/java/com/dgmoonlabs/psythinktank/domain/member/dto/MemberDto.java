@@ -11,9 +11,9 @@ import java.sql.Date;
 @Getter
 public class MemberDto {
     private String memberId;
-    private String memberPw;
-    private String memberEmail;
-    private Date registerDate;
+    private String password;
+    private String email;
+    private Date createdAt;
     private int userLevel;
     private int loginTryCount;
 

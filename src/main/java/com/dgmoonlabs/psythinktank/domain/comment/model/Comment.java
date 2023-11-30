@@ -16,29 +16,29 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class Comment {
     @Column(name = "board_no")
-    private int boardNo;
+    private Long boardId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_no")
-    private int commentNo;
+    private Long id;
 
     @Column(name = "comment_parent")
-    private int commentParent;
+    private int parent;
 
     @Column(name = "comment_depth", nullable = false)
-    private int commentDepth;
+    private int depth;
 
     @Column(name = "comment_seq", nullable = false)
-    private int commentSeq;
+    private int sequence;
 
     @Column(name = "member_id", nullable = false)
     private String memberId;
 
     @Column(name = "comment_content", columnDefinition = "TEXT")
-    private String commentContent;
+    private String content;
 
     @CreationTimestamp
     @Column(name = "comment_date")
-    private Timestamp commentDate;
+    private Timestamp createdAt;
 }

@@ -17,20 +17,20 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_no")
-    private int boardNo;
+    private Long id;
 
     @Column(name = "member_id", nullable = false)
     private String memberId;
 
     @Column(name = "board_title", nullable = false, length = 200)
-    private String boardTitle;
+    private String title;
 
     @Column(name = "board_content", columnDefinition = "TEXT")
-    private String boardContent;
+    private String content;
 
     @ColumnDefault("0")
     @Column(name = "board_hit")
-    private int boardHit;
+    private int hit;
 
     @Builder.Default
     @Column(name = "is_notice")
@@ -38,5 +38,5 @@ public class Board {
 
     @CreationTimestamp
     @Column(name = "write_date")
-    private Timestamp writeDate;
+    private Timestamp createdAt;
 }

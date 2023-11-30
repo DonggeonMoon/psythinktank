@@ -87,7 +87,7 @@ public class MemberController {
         Member result = memberService.selectOneMemberByEmailAndId(member.get("memberEmail"), member.get("memberId"));
         if (result != null) {
             map.put("exists", true);
-            memberService.sendTempPwEmail(result.getMemberEmail());
+            memberService.sendTempPwEmail(result.getEmail());
         } else {
             map.put("exists", false);
 

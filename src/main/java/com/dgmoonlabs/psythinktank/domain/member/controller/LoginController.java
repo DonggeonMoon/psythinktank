@@ -26,7 +26,7 @@ public class LoginController {
     @PostMapping("/login")
     @ResponseBody
     public Map<String, Object> login2(@RequestBody HashMap<String, String> map, HttpSession session, Model model) {
-        return loginService.login(map.get("memberId"), map.get("memberPw"), session, model);
+        return loginService.login(map.get("memberId"), map.get("memberPw"), session);
     }
 
     @GetMapping("/logout")

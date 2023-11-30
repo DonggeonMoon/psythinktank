@@ -15,29 +15,29 @@ public class HRR {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hrr_id")
-    private int hrrId;
+    private Long id;
 
     @Column(name = "stock_code", nullable = false, length = 6)
-    private String stockCode;
+    private String symbol;
 
     @Column(name = "stock_name", nullable = false, length = 40)
     private String stockName;
 
     @Column(name = "corp_cls", nullable = false, length = 10)
-    private String corpCls;
+    private String corporationClass;
 
     @Column(name = "bsns_year", nullable = false, length = 4)
-    private String bsnsYear;
+    private String businessYear;
 
     @Column(name = "reprt_code", nullable = false, length = 5)
-    private String reprtCode;
+    private String reportCode;
 
     @Column(name = "total_emp")
-    private String totalEmp;
+    private String totalEmployee;
 
     @Column(name = "total_emp_chg")
-    private String totalEmpChg;
+    private String totalEmployeeChange;
 
     @Column(name = "hrr")
-    private Double hrr;
+    private Double value;
 }

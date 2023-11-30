@@ -24,7 +24,7 @@ public class CommentController {
         } else {
             if (sessionInfo.getMemberId().equals(comment.getMemberId())) {
                 commentService.addComment(comment);
-                return "redirect:/board?boardNo=" + comment.getBoardNo();
+                return "redirect:/board?id=" + comment.getBoardId();
             } else {
                 return "redirect:/login";
             }
@@ -39,7 +39,7 @@ public class CommentController {
         } else {
             if (sessionInfo.getMemberId().equals(comment.getMemberId())) {
                 commentService.updateComment(comment);
-                return "redirect:/board?boardNo=" + comment.getBoardNo();
+                return "redirect:/board?id=" + comment.getBoardId();
             } else {
                 return "redirect:/login";
             }
@@ -47,14 +47,14 @@ public class CommentController {
     }
 
     @DeleteMapping("comment")
-    public String deleteComment(HttpSession session, int commentNo, int boardNo) {
+    public String deleteComment(HttpSession session, int id, int boardId) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
         } else {
-            if (sessionInfo.getMemberId().equals(commentService.selectOneComment(commentNo).getMemberId())) {
-                commentService.deleteComment(commentNo);
-                return "redirect:/board?boardNo=" + boardNo;
+            if (sessionInfo.getMemberId().equals(commentService.selectOneComment(id).getMemberId())) {
+                commentService.deleteComment(id);
+                return "redirect:/board?id=" + boardId;
             } else {
                 return "redirect:/login";
             }
