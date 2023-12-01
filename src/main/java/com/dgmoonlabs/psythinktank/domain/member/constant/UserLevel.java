@@ -1,4 +1,4 @@
-package com.dgmoonlabs.psythinktank.domain.member.enums;
+package com.dgmoonlabs.psythinktank.domain.member.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

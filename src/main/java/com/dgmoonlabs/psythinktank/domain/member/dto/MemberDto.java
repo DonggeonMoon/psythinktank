@@ -1,6 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.member.dto;
 
-import com.dgmoonlabs.psythinktank.domain.member.enums.UserLevel;
+import com.dgmoonlabs.psythinktank.domain.member.constant.UserLevel;
 import lombok.*;
 
 import java.sql.Date;
