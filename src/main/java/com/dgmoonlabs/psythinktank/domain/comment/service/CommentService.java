@@ -4,8 +4,8 @@ import com.dgmoonlabs.psythinktank.domain.comment.model.Comment;
 import com.dgmoonlabs.psythinktank.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -14,13 +14,14 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public List<Comment> selectAllCommentByBoardId(long boardId) {
+    public List<Comment> selectCommentsByBoardId(long boardId) {
         return commentRepository.findAllById(boardId);
     }
 
     @Transactional
-    public Comment selectOneComment(long id) {
-        return commentRepository.findById(id).orElse(null);
+    public Comment selectComment(long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(IllegalStateException::new);
     }
 
     @Transactional

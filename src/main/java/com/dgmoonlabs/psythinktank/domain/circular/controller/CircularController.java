@@ -4,7 +4,6 @@ import com.dgmoonlabs.psythinktank.domain.circular.model.Circular;
 import com.dgmoonlabs.psythinktank.domain.circular.service.CircularService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.UUID;
 
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.CIRCULARS_KEY;
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.CIRCULAR_KEY;
@@ -28,19 +25,17 @@ public class CircularController {
 
     @GetMapping("/circularList")
     public String getCirculars(Pageable pageable, Model model) {
-        Page<Circular> circulars = circularService.selectAllCircular(pageable.getPageNumber());
-        model.addAttribute(CIRCULARS_KEY.getText(), circulars);
-
+        model.addAttribute(CIRCULARS_KEY.getText(), circularService.selectCirculars(pageable.getPageNumber()));
         return CIRCULAR_LIST.getText();
     }
 
     @GetMapping("/circular")
     @ResponseBody
-    public ResponseEntity<Resource> getCircular(@RequestParam(defaultValue = "1") int id, Model model) {
-        Resource file = circularService.downloadCircular(id);
-        ResponseEntity<Resource> response = ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE).body(file);
-        model.addAttribute(CIRCULAR_KEY.getText(), circularService.selectOneCircular(id));
-        return response;
+    public ResponseEntity<Resource> getCircular(@RequestParam(defaultValue = "1") long id, Model model) {
+        model.addAttribute(CIRCULAR_KEY.getText(), circularService.selectCircular(id));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+                .body(circularService.downloadCircular(id));
     }
 
     @GetMapping("/insertCircular")
@@ -49,22 +44,14 @@ public class CircularController {
     }
 
     @PostMapping("/circular")
-    public String insertCircular(Circular circular, @RequestParam("file") MultipartFile file) throws IllegalStateException {
-        if (!file.isEmpty()) {
-            String originalFilename = file.getOriginalFilename();
-            assert originalFilename != null;
-            int dotIndex = originalFilename.lastIndexOf(".");
-            String extension = originalFilename.substring(++dotIndex);
-            String fileName = UUID.randomUUID() + "." + extension;
-            circular.setFileName(fileName);
-            circularService.insertOneCircular(circular, file);
-        }
+    public String insertCircular(Circular circular, @RequestParam("file") MultipartFile multipartFile) {
+        circularService.addCircular(circular, multipartFile);
         return CIRCULAR_LIST.redirect();
     }
 
     @DeleteMapping("/circular")
-    public String deleteCircular(int id) {
-        circularService.deleteOneCircular(id);
+    public String deleteCircular(long id) {
+        circularService.deleteCircular(id);
         return CIRCULAR_LIST.redirect();
     }
 }

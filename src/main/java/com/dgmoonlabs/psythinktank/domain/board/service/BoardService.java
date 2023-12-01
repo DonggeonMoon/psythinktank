@@ -9,8 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -19,18 +19,23 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public void insertOneBoard(Board board) {
-        boardRepository.save(board);
+    public Page<Board> selectBoards(int page) {
+        return boardRepository.findAll(
+                PageRequest.of(
+                        page,
+                        Pagination.SIZE.getValue(),
+                        Sort.by(CriteriaField.IS_NOTICE.getName())
+                                .descending()
+                                .and(Sort.by(CriteriaField.ID.getName())
+                                        .descending())
+                )
+        );
     }
 
     @Transactional
-    public Page<Board> selectAllBoard(int page) {
-        return boardRepository.findAll(PageRequest.of(page, Pagination.SIZE.getValue(), Sort.by(CriteriaField.IS_NOTICE.getName()).descending().and(Sort.by(CriteriaField.ID.getName()).descending())));
-    }
-
-    @Transactional
-    public Board selectOneBoard(Long id) {
-        return boardRepository.findById(id).orElse(null);
+    public Board selectBoards(long id) {
+        return boardRepository.findById(id)
+                .orElseThrow(IllegalStateException::new);
     }
 
     @Transactional
@@ -49,18 +54,24 @@ public class BoardService {
     }
 
     @Transactional
-    public void updateOneBoard(Board board) {
+    public void addBoard(Board board) {
         boardRepository.save(board);
     }
 
     @Transactional
-    public void deleteOneBoard(long id) {
+    public void updateBoard(Board board) {
+        boardRepository.save(board);
+    }
+
+    @Transactional
+    public void deleteBoard(long id) {
         boardRepository.deleteById(id);
     }
 
     @Transactional
     public void addHit(long id) {
-        Board board = boardRepository.findById(id).orElse(new Board());
+        Board board = boardRepository.findById(id)
+                .orElseThrow(IllegalStateException::new);
         int currentHit = board.getHit();
         board.setHit(++currentHit);
         boardRepository.save(board);

@@ -31,9 +31,8 @@ public class MemberController {
             return LOGIN.redirect();
         } else {
             if (UserLevel.ADMIN.isSame(sessionInfo.getUserLevel())) {
-                Page<Member> members = memberService.selectAllMember(--page);
+                Page<Member> members = memberService.selectMembers(--page);
                 model.addAttribute(MEMBERS_KEY.getText(), members);
-
                 return MANAGER_PAGE.getText();
             } else {
                 return LOGIN.redirect();
@@ -50,11 +49,7 @@ public class MemberController {
     @ResponseBody
     public Map<Object, Object> checkId(@RequestBody String memberId) {
         HashMap<Object, Object> map = new HashMap<>();
-        if (!loginService.checkId(memberId)) {
-            map.put(IS_UNIQUE_KEY.getText(), true);
-        } else {
-            map.put(IS_UNIQUE_KEY.getText(), false);
-        }
+        map.put(IS_UNIQUE_KEY.getText(), !loginService.checkId(memberId));
         return map;
     }
 
@@ -62,11 +57,7 @@ public class MemberController {
     @ResponseBody
     public Map<Object, Object> checkEmail(@RequestBody String memberEmail) {
         HashMap<Object, Object> map = new HashMap<>();
-        if (!loginService.checkEmail(memberEmail)) {
-            map.put(IS_UNIQUE_KEY2.getText(), true);
-        } else {
-            map.put(IS_UNIQUE_KEY2.getText(), false);
-        }
+        map.put(IS_UNIQUE_KEY2.getText(), !loginService.checkEmail(memberEmail));
         return map;
     }
 
@@ -74,9 +65,9 @@ public class MemberController {
     public String insertMember(HttpSession session, Member member) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            memberService.join(member);
+            memberService.addMember(member);
         } else {
-            session.removeAttribute(null);
+            session.removeAttribute(SESSION_KEY.getText());
         }
         return LOGIN.redirect();
     }
@@ -90,14 +81,9 @@ public class MemberController {
     @ResponseBody
     public Map<String, Object> findId(@RequestBody HashMap<String, String> member) {
         Map<String, Object> map = new HashMap<>();
-        Member result = memberService.selectOneMemberByEmail(member.get(MEMBER_EMAIL_KEY.getText()));
-        if (result != null) {
-            map.put(EXISTS_KEY.getText(), true);
-            map.put(ID_KEY.getText(), result.getMemberId());
-        } else {
-            map.put(EXISTS_KEY.getText(), false);
-            map.put(ID_KEY.getText(), null);
-        }
+        Member result = memberService.selectMemberByEmail(member.get(MEMBER_EMAIL_KEY.getText()));
+        map.put(EXISTS_KEY.getText(), result != null);
+        map.put(ID_KEY.getText(), (result != null) ? result.getMemberId() : null);
         return map;
     }
 
@@ -105,14 +91,9 @@ public class MemberController {
     @ResponseBody
     public Map<String, Object> findPassword(@RequestBody HashMap<String, String> member) {
         Map<String, Object> map = new HashMap<>();
-        Member result = memberService.selectOneMemberByEmailAndId(member.get(MEMBER_EMAIL_KEY.getText()), member.get(MEMBER_ID_KEY.getText()));
-        if (result != null) {
-            map.put(EXISTS_KEY.getText(), true);
-            memberService.sendTempPwEmail(result.getEmail());
-        } else {
-            map.put(EXISTS_KEY.getText(), false);
-
-        }
+        Member result = memberService.selectMemberByEmailAndMemberId(member.get(MEMBER_EMAIL_KEY.getText()), member.get(MEMBER_ID_KEY.getText()));
+        map.put(EXISTS_KEY.getText(), result != null);
+        memberService.sendTemporaryPasswordEmail(result);
         return map;
     }
 
@@ -121,7 +102,7 @@ public class MemberController {
         if (session.getAttribute(SESSION_KEY.getText()) == null) {
             return LOGIN.redirect();
         }
-        model.addAttribute(MEMBER_KEY.getText(), memberService.getMemberInfo(session));
+        model.addAttribute(MEMBER_KEY.getText(), memberService.getMember(session));
         return EDIT_MEMBER_INFO.getText();
     }
 
@@ -132,8 +113,8 @@ public class MemberController {
             return LOGIN.redirect();
         } else {
             if (sessionInfo.getMemberId().equals(member.getMemberId())) {
-                memberService.editMemberInfo(member);
-                return BOARD.redirect();
+                memberService.editMember(member);
+                return BOARD_LIST.redirect();
             } else {
                 return LOGIN.redirect();
             }
@@ -147,7 +128,7 @@ public class MemberController {
             return LOGIN.redirect();
         } else {
             if (sessionInfo.getMemberId().equals(memberId)) {
-                memberService.deleteMemberInfo(memberId);
+                memberService.deleteMember(memberId);
                 session.removeAttribute(SESSION_KEY.getText());
                 return GOOD_BYE.redirect();
             } else {

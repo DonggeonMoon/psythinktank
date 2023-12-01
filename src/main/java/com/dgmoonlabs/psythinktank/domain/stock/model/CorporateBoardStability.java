@@ -41,5 +41,5 @@ public class CorporateBoardStability {
     private Long esta;
 
     @Column(name = "board_stability")
-    private Double boardStability;
+    private Double value;
 }

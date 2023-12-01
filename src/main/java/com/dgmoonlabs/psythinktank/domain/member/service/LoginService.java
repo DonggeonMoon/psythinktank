@@ -6,9 +6,9 @@ import com.dgmoonlabs.psythinktank.global.constant.LoginTry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,13 +25,15 @@ public class LoginService {
         Map<String, Object> map = new HashMap<>();
         if (!"".equals(memberId) && !"".equals(password)) {
             if (checkId(memberId)) {
-                Member member = memberRepository.findById(memberId).orElse(Member.builder().build());
+                Member member = memberRepository.findById(memberId)
+                        .orElseThrow(IllegalStateException::new);
                 // 5회 이상 틀렸을 경우
                 if (LoginTry.includes(member.getLoginTryCount())) {
-                    if (checkPw(memberId, password)) {
+                    if (checkPassword(memberId, password)) {
                         member.setLoginTryCount(LoginTry.COUNT_RANGE.getStart());
                         session.setAttribute(SESSION_KEY.getText(),
-                                memberRepository.findById(memberId).orElse(Member.builder().build()).toDto());
+                                memberRepository.findById(memberId)
+                                        .orElseThrow(IllegalStateException::new));
                         map.put(IS_SUCCEEDED_KEY.getText(), true);
                         map.put(ERROR_KEY.getText(), SUCCESS.getCode());
                     } else {
@@ -47,23 +49,24 @@ public class LoginService {
                 return map;
             } else
                 map.put(IS_SUCCEEDED_KEY.getText(), false);
-            map.put(ERROR_KEY.getText(), ABSENT_ID);
+            map.put(ERROR_KEY.getText(), ABSENT_ID.getCode());
             return map;
         }
         map.put(IS_SUCCEEDED_KEY.getText(), false);
-        map.put(ERROR_KEY.getText(), BLANK_ID_AND_PASSWORD);
+        map.put(ERROR_KEY.getText(), BLANK_ID_AND_PASSWORD.getCode());
         return map;
+    }
+
+    private boolean checkPassword(String memberId, String password) {
+        return BCrypt.checkpw(password,
+                memberRepository.findById(memberId)
+                        .orElseThrow(IllegalStateException::new)
+                        .getPassword());
     }
 
     @Transactional
     public boolean checkId(String memberId) {
         return (memberRepository.findById(memberId).isPresent());
-    }
-
-    @Transactional
-    public boolean checkPw(String memberId, String password) {
-        return BCrypt.checkpw(password,
-                memberRepository.findById(memberId).orElse(Member.builder().build()).getPassword());
     }
 
     @Transactional

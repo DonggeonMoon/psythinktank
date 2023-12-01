@@ -12,6 +12,6 @@ public enum LoginTry {
     private final int end;
 
     public static boolean includes(int count) {
-        return COUNT_RANGE.start < count && count < COUNT_RANGE.end;
+        return COUNT_RANGE.start <= count && count < COUNT_RANGE.end;
     }
 }

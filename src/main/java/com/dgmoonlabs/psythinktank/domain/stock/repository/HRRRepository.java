@@ -4,6 +4,5 @@ import com.dgmoonlabs.psythinktank.domain.stock.model.HRR;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HRRRepository extends JpaRepository<HRR, Long> {
-
-    HRR findBySymbolAndBusinessYearAndReportCode(String stockCode, String bsnsYear, String reprtCode);
+    HRR findBySymbolAndBusinessYearAndReportCode(String symbol, String businessYear, String reportCode);
 }

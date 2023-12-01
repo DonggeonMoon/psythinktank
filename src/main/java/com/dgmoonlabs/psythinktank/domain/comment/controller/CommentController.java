@@ -57,7 +57,7 @@ public class CommentController {
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(commentService.selectOneComment(id).getMemberId())) {
+            if (sessionInfo.getMemberId().equals(commentService.selectComment(id).getMemberId())) {
                 commentService.deleteComment(id);
                 return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, boardId);
             } else {
