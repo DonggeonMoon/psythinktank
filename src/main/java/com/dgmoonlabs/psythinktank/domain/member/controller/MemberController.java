@@ -1,5 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.member.controller;
 
+import com.dgmoonlabs.psythinktank.domain.member.constant.UserLevel;
 import com.dgmoonlabs.psythinktank.domain.member.dto.MemberDto;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.service.LoginService;
@@ -14,6 +15,9 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
+
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
@@ -22,24 +26,24 @@ public class MemberController {
 
     @GetMapping("/managerPage")
     public String getMembers(HttpSession session, @RequestParam(defaultValue = "1") int page, Model model) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            return "redirect:/login";
+            return LOGIN.redirect();
         } else {
-            if (sessionInfo.getUserLevel() == 3) {
-                Page<Member> members = memberService.selectAllMember(page - 1);
-                model.addAttribute("members", members);
+            if (UserLevel.ADMIN.isSame(sessionInfo.getUserLevel())) {
+                Page<Member> members = memberService.selectAllMember(--page);
+                model.addAttribute(MEMBERS_KEY.getText(), members);
 
-                return "managerPage";
+                return MANAGER_PAGE.getText();
             } else {
-                return "redirect:/login";
+                return LOGIN.redirect();
             }
         }
     }
 
     @GetMapping("/member")
     public String getAddMemberForm() {
-        return "join";
+        return JOIN.getText();
     }
 
     @PostMapping("/checkId")
@@ -47,9 +51,9 @@ public class MemberController {
     public Map<Object, Object> checkId(@RequestBody String memberId) {
         HashMap<Object, Object> map = new HashMap<>();
         if (!loginService.checkId(memberId)) {
-            map.put("isUnique", true);
+            map.put(IS_UNIQUE_KEY.getText(), true);
         } else {
-            map.put("isUnique", false);
+            map.put(IS_UNIQUE_KEY.getText(), false);
         }
         return map;
     }
@@ -59,40 +63,40 @@ public class MemberController {
     public Map<Object, Object> checkEmail(@RequestBody String memberEmail) {
         HashMap<Object, Object> map = new HashMap<>();
         if (!loginService.checkEmail(memberEmail)) {
-            map.put("isUnique2", true);
+            map.put(IS_UNIQUE_KEY2.getText(), true);
         } else {
-            map.put("isUnique2", false);
+            map.put(IS_UNIQUE_KEY2.getText(), false);
         }
         return map;
     }
 
     @PostMapping("/member")
     public String insertMember(HttpSession session, Member member) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             memberService.join(member);
         } else {
             session.removeAttribute(null);
         }
-        return "redirect:/login";
+        return LOGIN.redirect();
     }
 
     @GetMapping("/findIdAndPw")
     public String findIdAndPassword() {
-        return "findIdAndPw";
+        return FIND_ID_AND_PASSWORD.getText();
     }
 
     @PostMapping("/findId")
     @ResponseBody
     public Map<String, Object> findId(@RequestBody HashMap<String, String> member) {
         Map<String, Object> map = new HashMap<>();
-        Member result = memberService.selectOneMemberByEmail(member.get("memberEmail"));
+        Member result = memberService.selectOneMemberByEmail(member.get(MEMBER_EMAIL_KEY.getText()));
         if (result != null) {
-            map.put("exists", true);
-            map.put("id", result.getMemberId());
+            map.put(EXISTS_KEY.getText(), true);
+            map.put(ID_KEY.getText(), result.getMemberId());
         } else {
-            map.put("exists", false);
-            map.put("id", null);
+            map.put(EXISTS_KEY.getText(), false);
+            map.put(ID_KEY.getText(), null);
         }
         return map;
     }
@@ -101,12 +105,12 @@ public class MemberController {
     @ResponseBody
     public Map<String, Object> findPassword(@RequestBody HashMap<String, String> member) {
         Map<String, Object> map = new HashMap<>();
-        Member result = memberService.selectOneMemberByEmailAndId(member.get("memberEmail"), member.get("memberId"));
+        Member result = memberService.selectOneMemberByEmailAndId(member.get(MEMBER_EMAIL_KEY.getText()), member.get(MEMBER_ID_KEY.getText()));
         if (result != null) {
-            map.put("exists", true);
+            map.put(EXISTS_KEY.getText(), true);
             memberService.sendTempPwEmail(result.getEmail());
         } else {
-            map.put("exists", false);
+            map.put(EXISTS_KEY.getText(), false);
 
         }
         return map;
@@ -114,60 +118,60 @@ public class MemberController {
 
     @GetMapping("/editMemberInfo")
     public String getModifyMemberForm(HttpSession session, Model model) {
-        if (session.getAttribute("member") == null) {
-            return "redirect:/login";
+        if (session.getAttribute(SESSION_KEY.getText()) == null) {
+            return LOGIN.redirect();
         }
-        model.addAttribute("memberInfo", memberService.getMemberInfo(session));
-        return "editMemberInfo";
+        model.addAttribute(MEMBER_KEY.getText(), memberService.getMemberInfo(session));
+        return EDIT_MEMBER_INFO.getText();
     }
 
     @PutMapping("/member")
     public String updateMember(HttpSession session, Member member) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            return "redirect:/login";
+            return LOGIN.redirect();
         } else {
             if (sessionInfo.getMemberId().equals(member.getMemberId())) {
                 memberService.editMemberInfo(member);
-                return "redirect:/boardList";
+                return BOARD.redirect();
             } else {
-                return "redirect:/login";
+                return LOGIN.redirect();
             }
         }
     }
 
     @DeleteMapping("/member")
     public String deleteMember(HttpSession session, String memberId) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            return "redirect:/login";
+            return LOGIN.redirect();
         } else {
             if (sessionInfo.getMemberId().equals(memberId)) {
                 memberService.deleteMemberInfo(memberId);
-                session.removeAttribute("member");
-                return "redirect:/goodBye";
+                session.removeAttribute(SESSION_KEY.getText());
+                return GOOD_BYE.redirect();
             } else {
-                return "redirect:/login";
+                return LOGIN.redirect();
             }
         }
     }
 
     @GetMapping("/goodBye")
     public String getGoodByePage() {
-        return "goodBye";
+        return GOOD_BYE.getText();
     }
 
     @PostMapping("/changeUserLevel")
     public String changeUserLevel(HttpSession session, Member member) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            return "redirect:/login";
+            return LOGIN.redirect();
         } else {
-            if (sessionInfo.getUserLevel() == 3) {
+            if (UserLevel.ADMIN.isSame(sessionInfo.getUserLevel())) {
                 memberService.changeUserLevel(member);
-                return "redirect:/managerPage";
+                return MANAGER_PAGE.redirect();
             } else {
-                return "redirect:/login";
+                return LOGIN.redirect();
             }
         }
     }

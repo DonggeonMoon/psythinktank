@@ -48,4 +48,8 @@ public class Member {
                 .loginTryCount(loginTryCount)
                 .build();
     }
+
+    public void increaseLoginTryCount() {
+        this.loginTryCount++;
+    }
 }

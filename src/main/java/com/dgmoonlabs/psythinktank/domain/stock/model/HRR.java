@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@SuppressWarnings("SpellCheckingInspection")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

@@ -2,6 +2,8 @@ package com.dgmoonlabs.psythinktank.domain.board.service;
 
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.repository.BoardRepository;
+import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
+import com.dgmoonlabs.psythinktank.global.constant.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +25,7 @@ public class BoardService {
 
     @Transactional
     public Page<Board> selectAllBoard(int page) {
-        return boardRepository.findAll(PageRequest.of(page, 10, Sort.by("isNotice").descending().and(Sort.by("id").descending())));
+        return boardRepository.findAll(PageRequest.of(page, Pagination.SIZE.getValue(), Sort.by(CriteriaField.IS_NOTICE.getName()).descending().and(Sort.by(CriteriaField.ID.getName()).descending())));
     }
 
     @Transactional
@@ -59,7 +61,8 @@ public class BoardService {
     @Transactional
     public void addHit(long id) {
         Board board = boardRepository.findById(id).orElse(new Board());
-        board.setHit(board.getHit() + 1);
+        int currentHit = board.getHit();
+        board.setHit(++currentHit);
         boardRepository.save(board);
     }
 }

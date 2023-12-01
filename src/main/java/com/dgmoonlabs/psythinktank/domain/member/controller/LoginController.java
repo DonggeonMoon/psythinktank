@@ -3,7 +3,6 @@ package com.dgmoonlabs.psythinktank.domain.member.controller;
 import com.dgmoonlabs.psythinktank.domain.member.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +12,10 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.LOGIN;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.ROOT;
+
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
@@ -20,18 +23,18 @@ public class LoginController {
 
     @GetMapping("/login")
     public String getLoginForm() {
-        return "login";
+        return LOGIN.getText();
     }
 
     @PostMapping("/login")
     @ResponseBody
-    public Map<String, Object> login(@RequestBody HashMap<String, String> map, HttpSession session, Model model) {
-        return loginService.login(map.get("memberId"), map.get("memberPw"), session);
+    public Map<String, Object> login(@RequestBody HashMap<String, String> map, HttpSession session) {
+        return loginService.login(map.get(MEMBER_ID_KEY.getText()), map.get(MEMBER_PASSWORD_KEY.getText()), session);
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("member");
-        return "redirect:/";
+        session.removeAttribute(SESSION_KEY.getText());
+        return ROOT.redirect();
     }
 }

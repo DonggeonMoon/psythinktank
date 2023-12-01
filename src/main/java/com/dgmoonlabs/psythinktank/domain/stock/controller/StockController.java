@@ -3,6 +3,7 @@ package com.dgmoonlabs.psythinktank.domain.stock.controller;
 import com.dgmoonlabs.psythinktank.domain.stock.model.Share;
 import com.dgmoonlabs.psythinktank.domain.stock.model.StockInfo;
 import com.dgmoonlabs.psythinktank.domain.stock.service.StockService;
+import com.dgmoonlabs.psythinktank.global.constant.Rating;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
 
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.STOCK;
+
 @Controller
 @RequiredArgsConstructor
 public class StockController {
@@ -23,16 +27,16 @@ public class StockController {
     @GetMapping("/stockList")
     public String getStocks(Pageable pageable, Model model) {
         Page<StockInfo> stocks = stockService.selectAllStockInfo(pageable.getPageNumber());
-        model.addAttribute("stocks", stocks);
+        model.addAttribute(STOCKS_KEY.getText(), stocks);
 
-        return "stockList";
+        return STOCK.getText();
     }
 
     @PostMapping("/searchBySymbol")
     @ResponseBody
     public Map<String, Object> searchBySymbol(@RequestBody String searchText) {
         Map<String, Object> map = new HashMap<>();
-        map.put("result", stockService.selectAllStockInfoBySymbol(searchText));
+        map.put(AJAX_RESPONSE_KEY.getText(), stockService.selectAllStockInfoBySymbol(searchText));
         return map;
     }
 
@@ -40,50 +44,31 @@ public class StockController {
     @ResponseBody
     public Map<String, List<StockInfo>> searchByName(@RequestBody String searchText) {
         Map<String, List<StockInfo>> map = new HashMap<>();
-        map.put("result", stockService.selectAllStockInfoByName(searchText));
+        map.put(AJAX_RESPONSE_KEY.getText(), stockService.selectAllStockInfoByName(searchText));
         return map;
     }
 
     @GetMapping("/stock")
     public String getStock(String symbol, Model model) throws Exception {
         List<Share> shares = stockService.selectAllShareBySymbol(symbol);
-        model.addAttribute("stock", stockService.selectOneStockInfoBySymbol(symbol));
-        model.addAttribute("hrr", calculateGrowthPotential(symbol));
-        model.addAttribute("share", shares);
-        model.addAttribute("dividend", stockService.selectOneDividendBySymbol(symbol));
-        model.addAttribute("governance", calculateGovernance(shares));
-        model.addAttribute("corporateBoardStability", calculateBoardStability(symbol));
-        return "viewStock";
+        model.addAttribute(STOCK_KEY.getText(), stockService.selectOneStockInfoBySymbol(symbol));
+        model.addAttribute(HRR_KEY.getText(), calculateGrowthPotential(symbol));
+        model.addAttribute(SHARE_KEY.getText(), shares);
+        model.addAttribute(DIVIDEND_KEY.getText(), stockService.selectOneDividendBySymbol(symbol));
+        model.addAttribute(GOVERNANCE_KEY.getText(), calculateGovernance(shares));
+        model.addAttribute(CORPORATE_BOARD_STABILITY.getText(), calculateBoardStability(symbol));
+        return STOCK.getText();
     }
 
     private String calculateBoardStability(final String symbol) throws Exception {
         Double boardStability = stockService.selectOneCorporateBoardStabilityBySymbol(symbol)
                 .getBoardStability();
-
-        if (boardStability >= 14) {
-            return "A";
-        }
-        if (boardStability >= 9) {
-            return "B";
-        }
-        if (boardStability >= 4) {
-            return "C";
-        }
-        return "D";
+        return Rating.evaluateBoardStability(boardStability);
     }
 
     private String calculateGrowthPotential(String symbol) {
         Double hrr = stockService.selectOneHRRBySymbol(symbol).getValue();
-        if (hrr >= 10) {
-            return "A";
-        }
-        if (hrr >= 5) {
-            return "B";
-        }
-        if (hrr >= 0) {
-            return "C";
-        }
-        return "D";
+        return Rating.evaluateGrowthPotential(hrr);
     }
 
     private String calculateGovernance(final List<Share> shares) {
@@ -92,16 +77,7 @@ public class StockController {
                 .max(Comparator.comparing(Share::getDate))
                 .map(Share::getValue)
                 .orElseThrow(NoSuchElementException::new);
-        if (currentShare >= 10) {
-            return "A";
-        }
-        if (currentShare >= 5) {
-            return "B";
-        }
-        if (currentShare >= 0) {
-            return "C";
-        }
-        return "D";
+        return Rating.evaluateGovernance(currentShare);
     }
 }
 

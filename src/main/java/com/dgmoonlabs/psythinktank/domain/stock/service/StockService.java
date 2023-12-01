@@ -2,6 +2,9 @@ package com.dgmoonlabs.psythinktank.domain.stock.service;
 
 import com.dgmoonlabs.psythinktank.domain.stock.model.*;
 import com.dgmoonlabs.psythinktank.domain.stock.repository.*;
+import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
+import com.dgmoonlabs.psythinktank.global.constant.Hrr;
+import com.dgmoonlabs.psythinktank.global.constant.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,17 +25,17 @@ public class StockService {
 
     @Transactional
     public Page<StockInfo> selectAllStockInfo(int page) {
-        return stockInfoRepository.findAll(PageRequest.of(page, 10, Sort.by("symbol").ascending()));
+        return stockInfoRepository.findAll(PageRequest.of(page, Pagination.SIZE.getValue(), Sort.by(CriteriaField.SYMBOL.getName()).ascending()));
     }
 
     @Transactional
     public List<StockInfo> selectAllStockInfoBySymbol(String symbol) {
-        return stockInfoRepository.findBySymbolLike("%" + symbol + "%");
+        return stockInfoRepository.findBySymbolContains(symbol);
     }
 
     @Transactional
     public List<StockInfo> selectAllStockInfoByName(String name) {
-        return stockInfoRepository.findByNameLike("%" + name + "%");
+        return stockInfoRepository.findByNameContains(name);
     }
 
     @Transactional
@@ -47,7 +50,7 @@ public class StockService {
 
     @Transactional
     public HRR selectOneHRRBySymbol(String symbol) {
-        return hrrRepository.findBySymbolAndBusinessYearAndReportCode(symbol, "2021", "11011");
+        return hrrRepository.findBySymbolAndBusinessYearAndReportCode(symbol, Hrr.BUSINESS_YEAR.getText(), Hrr.REPORT_CODE.getText());
     }
 
     @Transactional

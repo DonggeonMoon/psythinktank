@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface StockInfoRepository extends JpaRepository<StockInfo, String> {
 
-    List<StockInfo> findByNameLike(String stockName);
+    List<StockInfo> findByNameContains(String name);
 
-    List<StockInfo> findBySymbolLike(String stockCode);
+    List<StockInfo> findBySymbolContains(String symbol);
 }

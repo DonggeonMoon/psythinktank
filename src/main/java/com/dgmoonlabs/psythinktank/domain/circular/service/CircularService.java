@@ -2,6 +2,8 @@ package com.dgmoonlabs.psythinktank.domain.circular.service;
 
 import com.dgmoonlabs.psythinktank.domain.circular.model.Circular;
 import com.dgmoonlabs.psythinktank.domain.circular.repository.CircularRepository;
+import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
+import com.dgmoonlabs.psythinktank.global.constant.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.core.io.Resource;
@@ -25,10 +27,10 @@ public class CircularService {
     private final MultipartProperties multipartProperties;
 
     @Transactional
-    public void insertOneCircular(Circular circular, MultipartFile file) {
+    public void insertOneCircular(Circular circular, MultipartFile multipartFile) {
         try {
-            File file1 = new File(circular.getFileName());
-            file.transferTo(file1);
+            File file = new File(circular.getFileName());
+            multipartFile.transferTo(file);
             circularRepository.save(circular);
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,7 +39,7 @@ public class CircularService {
 
     @Transactional
     public Page<Circular> selectAllCircular(int page) {
-        return circularRepository.findAll(PageRequest.of(page, 10, Sort.by("id").ascending()));
+        return circularRepository.findAll(PageRequest.of(page, Pagination.SIZE.getValue(), Sort.by(CriteriaField.ID.getName()).ascending()));
     }
 
     @Transactional

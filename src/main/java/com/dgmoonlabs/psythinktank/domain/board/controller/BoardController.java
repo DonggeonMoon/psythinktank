@@ -4,6 +4,7 @@ import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.service.BoardService;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
 import com.dgmoonlabs.psythinktank.domain.member.dto.MemberDto;
+import com.dgmoonlabs.psythinktank.global.constant.QueryParameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,9 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
+
 @Controller
 @RequiredArgsConstructor
 public class BoardController {
@@ -25,15 +29,15 @@ public class BoardController {
     public String getBoards(Pageable pageable, Model model) {
         Page<Board> boards = boardService.selectAllBoard(pageable.getPageNumber());
 
-        model.addAttribute("boards", boards);
-        return "boardList";
+        model.addAttribute(BOARDS_KEY.getText(), boards);
+        return BOARD_LIST.getText();
     }
 
     @PostMapping("/searchByBoardTitle")
     @ResponseBody
     public Map<String, Object> searchBoardByTitle(@RequestBody String searchText) {
         Map<String, Object> map = new HashMap<>();
-        map.put("result", boardService.searchBoardByTitle(searchText));
+        map.put(AJAX_RESPONSE_KEY.getText(), boardService.searchBoardByTitle(searchText));
         return map;
     }
 
@@ -41,7 +45,7 @@ public class BoardController {
     @ResponseBody
     public Map<String, Object> searchBoardByContent(@RequestBody String searchText) {
         Map<String, Object> map = new HashMap<>();
-        map.put("result", boardService.searchBoardByContent(searchText));
+        map.put(AJAX_RESPONSE_KEY.getText(), boardService.searchBoardByContent(searchText));
         return map;
     }
 
@@ -49,83 +53,83 @@ public class BoardController {
     @ResponseBody
     public Map<String, Object> searchBoardByMemberId(@RequestBody String searchText) {
         Map<String, Object> map = new HashMap<>();
-        map.put("result", boardService.searchBoardByMemberId(searchText));
+        map.put(AJAX_RESPONSE_KEY.getText(), boardService.searchBoardByMemberId(searchText));
         return map;
     }
 
     @GetMapping("/board")
     public String getBoard(long id, Model model) {
         boardService.addHit(id);
-        model.addAttribute("board", boardService.selectOneBoard(id));
-        model.addAttribute("commentList", commentService.selectAllCommentByBoardId(id));
-        return "viewBoard";
+        model.addAttribute(BOARD_KEY.getText(), boardService.selectOneBoard(id));
+        model.addAttribute(COMMENTS_KEY.getText(), commentService.selectAllCommentByBoardId(id));
+        return BOARD.getText();
     }
 
     @GetMapping("/insertBoard")
     public String getAddBoardForm(HttpSession session) {
-        if (session.getAttribute("member") == null) {
-            return "redirect:/login";
+        if (session.getAttribute(SESSION_KEY.getText()) == null) {
+            return LOGIN.redirect();
         }
-        return "insertBoard";
+        return INSERT_BOARD.getText();
     }
 
     @PostMapping("/board")
     public String insertBoard(HttpSession session, Board board) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            return "redirect:/login";
+            return LOGIN.redirect();
         } else {
             if (sessionInfo.getMemberId().equals(board.getMemberId())) {
                 boardService.insertOneBoard(board);
-                return "redirect:/boardList";
+                return BOARD_LIST.redirect();
             } else {
-                return "redirect:/login";
+                return LOGIN.redirect();
             }
         }
     }
 
     @GetMapping("/updateBoard")
     public String getModifyBoardForm(HttpSession session, long id, Model model) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            return "redirect:/login";
+            return LOGIN.redirect();
         } else {
             Board board = boardService.selectOneBoard(id);
             if (sessionInfo.getMemberId().equals(board.getMemberId())) {
-                model.addAttribute("board", boardService.selectOneBoard(id));
-                return "updateBoard";
+                model.addAttribute(BOARD_KEY.getText(), boardService.selectOneBoard(id));
+                return UPDATE_BOARD.getText();
             } else {
-                return "redirect:/login";
+                return LOGIN.redirect();
             }
         }
     }
 
     @PutMapping("/board")
     public String updateBoard(HttpSession session, Board board) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            return "redirect:/login";
+            return LOGIN.redirect();
         } else {
             if (sessionInfo.getMemberId().equals(board.getMemberId())) {
                 boardService.updateOneBoard(board);
-                return "redirect:/board?id=" + board.getId();
+                return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, board.getId());
             } else {
-                return "redirect:/login";
+                return LOGIN.redirect();
             }
         }
     }
 
     @DeleteMapping("/board")
     public String deleteBoard(HttpSession session, int id, String memberId) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            return "redirect:/login";
+            return LOGIN.redirect();
         } else {
             if (sessionInfo.getMemberId().equals(memberId)) {
                 boardService.deleteOneBoard(id);
-                return "redirect:/boardList";
+                return BOARD.redirect();
             } else {
-                return "redirect:/login";
+                return LOGIN.redirect();
             }
         }
     }
