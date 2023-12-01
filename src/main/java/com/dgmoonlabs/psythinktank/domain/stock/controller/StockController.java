@@ -21,7 +21,7 @@ public class StockController {
     private final StockService stockService;
 
     @GetMapping("/stockList")
-    public String stockList(Pageable pageable, Model model) {
+    public String getStocks(Pageable pageable, Model model) {
         Page<StockInfo> stocks = stockService.selectAllStockInfo(pageable.getPageNumber());
         model.addAttribute("stocks", stocks);
 
@@ -38,14 +38,14 @@ public class StockController {
 
     @PostMapping("/searchByStockName")
     @ResponseBody
-    public Map<String, List<StockInfo>> searchByStockName(@RequestBody String searchText) {
+    public Map<String, List<StockInfo>> searchByName(@RequestBody String searchText) {
         Map<String, List<StockInfo>> map = new HashMap<>();
         map.put("result", stockService.selectAllStockInfoByName(searchText));
         return map;
     }
 
     @GetMapping("/stock")
-    public String viewStock(String symbol, Model model) throws Exception {
+    public String getStock(String symbol, Model model) throws Exception {
         List<Share> shares = stockService.selectAllShareBySymbol(symbol);
         model.addAttribute("stock", stockService.selectOneStockInfoBySymbol(symbol));
         model.addAttribute("hrr", calculateGrowthPotential(symbol));
