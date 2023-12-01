@@ -79,7 +79,7 @@ public class MemberController {
 
     @PostMapping("/findId")
     @ResponseBody
-    public Map<String, Object> findId(@RequestBody HashMap<String, String> member) {
+    public Map<String, Object> findId(@RequestBody Map<String, String> member) {
         Map<String, Object> map = new HashMap<>();
         Member result = memberService.selectMemberByEmail(member.get(MEMBER_EMAIL_KEY.getText()));
         map.put(EXISTS_KEY.getText(), result != null);
@@ -89,10 +89,11 @@ public class MemberController {
 
     @PostMapping("/findPw")
     @ResponseBody
-    public Map<String, Object> findPassword(@RequestBody HashMap<String, String> member) {
+    public Map<String, Object> findPassword(@RequestBody Map<String, String> member) {
         Map<String, Object> map = new HashMap<>();
         Member result = memberService.selectMemberByEmailAndMemberId(member.get(MEMBER_EMAIL_KEY.getText()), member.get(MEMBER_ID_KEY.getText()));
         map.put(EXISTS_KEY.getText(), result != null);
+        assert result != null;
         memberService.sendTemporaryPasswordEmail(result);
         return map;
     }

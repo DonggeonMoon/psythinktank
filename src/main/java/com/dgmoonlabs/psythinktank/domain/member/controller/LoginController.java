@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
@@ -28,7 +27,7 @@ public class LoginController {
 
     @PostMapping("/login")
     @ResponseBody
-    public Map<String, Object> login(@RequestBody HashMap<String, String> map, HttpSession session) {
+    public Map<String, Object> login(@RequestBody Map<String, String> map, HttpSession session) {
         return loginService.login(map.get(MEMBER_ID_KEY.getText()), map.get(MEMBER_PASSWORD_KEY.getText()), session);
     }
 

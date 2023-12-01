@@ -5,6 +5,7 @@ import com.dgmoonlabs.psythinktank.domain.circular.repository.CircularRepository
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
 import com.dgmoonlabs.psythinktank.global.constant.Pagination;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CircularService {
     private final CircularRepository circularRepository;
     private final MultipartProperties multipartProperties;
@@ -39,23 +41,24 @@ public class CircularService {
     }
 
     @Transactional
-    public Circular selectCircular(long circularId) {
-        return circularRepository.findById(circularId)
+    public Circular selectCircular(long id) {
+        return circularRepository.findById(id)
                 .orElseThrow(IllegalStateException::new);
     }
 
     @Transactional
     public Resource downloadCircular(long id) {
         try {
-            Circular circular = selectCircular(id);
+            Circular circular = circularRepository.findById(id)
+                    .orElseThrow(IllegalStateException::new);
             Path filePath = Paths.get(multipartProperties.getLocation() + "/" + circular.getFileName());
             Resource resource = new UrlResource(filePath.toUri());
-            System.out.println("uri: " + filePath.toUri());
+            log.info("uri: " + filePath.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             }
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            log.info(e.getMessage());
         }
         return null;
     }
@@ -76,19 +79,20 @@ public class CircularService {
             multipartFile.transferTo(file);
             circularRepository.save(circular);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info(e.getMessage());
         }
     }
 
     @Transactional
     public void deleteCircular(long id) {
-        Circular circular = selectCircular(id);
+        Circular circular = circularRepository.findById(id)
+                .orElseThrow(IllegalStateException::new);
         try {
             if (new File(multipartProperties.getLocation() + circular.getFileName()).delete()) {
                 circularRepository.deleteById(id);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info(e.getMessage());
         }
     }
 }
