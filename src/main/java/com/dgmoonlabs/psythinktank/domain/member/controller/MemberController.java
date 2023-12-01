@@ -20,8 +20,25 @@ public class MemberController {
     private final LoginService loginService;
     private final MemberService memberService;
 
+    @GetMapping("/managerPage")
+    public String getMembers(HttpSession session, @RequestParam(defaultValue = "1") int page, Model model) {
+        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+        if (sessionInfo == null) {
+            return "redirect:/login";
+        } else {
+            if (sessionInfo.getUserLevel() == 3) {
+                Page<Member> members = memberService.selectAllMember(page - 1);
+                model.addAttribute("members", members);
+
+                return "managerPage";
+            } else {
+                return "redirect:/login";
+            }
+        }
+    }
+
     @GetMapping("/member")
-    public String insertMemberInfo() {
+    public String getAddMemberForm() {
         return "join";
     }
 
@@ -50,7 +67,7 @@ public class MemberController {
     }
 
     @PostMapping("/member")
-    public String insertMemberInfo2(HttpSession session, Member member) {
+    public String insertMember(HttpSession session, Member member) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             memberService.join(member);
@@ -61,7 +78,7 @@ public class MemberController {
     }
 
     @GetMapping("/findIdAndPw")
-    public String findIdAndPw() {
+    public String findIdAndPassword() {
         return "findIdAndPw";
     }
 
@@ -82,7 +99,7 @@ public class MemberController {
 
     @PostMapping("/findPw")
     @ResponseBody
-    public Map<String, Object> findPw(@RequestBody HashMap<String, String> member) {
+    public Map<String, Object> findPassword(@RequestBody HashMap<String, String> member) {
         Map<String, Object> map = new HashMap<>();
         Member result = memberService.selectOneMemberByEmailAndId(member.get("memberEmail"), member.get("memberId"));
         if (result != null) {
@@ -96,7 +113,7 @@ public class MemberController {
     }
 
     @GetMapping("/editMemberInfo")
-    public String editMemberInfo(HttpSession session, Model model) {
+    public String getModifyMemberForm(HttpSession session, Model model) {
         if (session.getAttribute("member") == null) {
             return "redirect:/login";
         }
@@ -105,7 +122,7 @@ public class MemberController {
     }
 
     @PutMapping("/member")
-    public String editMemberInfo2(HttpSession session, Member member) {
+    public String updateMember(HttpSession session, Member member) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
@@ -120,7 +137,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/member")
-    public String deleteMemberInfo(HttpSession session, String memberId) {
+    public String deleteMember(HttpSession session, String memberId) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
@@ -136,25 +153,8 @@ public class MemberController {
     }
 
     @GetMapping("/goodBye")
-    public String goodBye() {
+    public String getGoodByePage() {
         return "goodBye";
-    }
-
-    @GetMapping("/managerPage")
-    public String managerPage(HttpSession session, @RequestParam(defaultValue = "1") int page, Model model) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
-        if (sessionInfo == null) {
-            return "redirect:/login";
-        } else {
-            if (sessionInfo.getUserLevel() == 3) {
-                Page<Member> members = memberService.selectAllMember(page - 1);
-                model.addAttribute("members", members);
-
-                return "managerPage";
-            } else {
-                return "redirect:/login";
-            }
-        }
     }
 
     @PostMapping("/changeUserLevel")

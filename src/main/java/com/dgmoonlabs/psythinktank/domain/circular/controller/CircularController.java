@@ -21,7 +21,7 @@ public class CircularController {
     private final CircularService circularService;
 
     @GetMapping("/circularList")
-    public String circularList(Pageable pageable, Model model) {
+    public String getCirculars(Pageable pageable, Model model) {
         Page<Circular> circulars = circularService.selectAllCircular(pageable.getPageNumber());
         model.addAttribute("circulars", circulars);
 
@@ -30,7 +30,7 @@ public class CircularController {
 
     @GetMapping("/circular")
     @ResponseBody
-    public ResponseEntity<Resource> viewCircular(@RequestParam(defaultValue = "1") int id, Model model) {
+    public ResponseEntity<Resource> getCircular(@RequestParam(defaultValue = "1") int id, Model model) {
         Resource file = circularService.downloadCircular(id);
         ResponseEntity<Resource> response = ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "application/pdf").body(file);
         model.addAttribute("circular", circularService.selectOneCircular(id));
@@ -38,12 +38,12 @@ public class CircularController {
     }
 
     @GetMapping("/insertCircular")
-    public String insertCircular() {
+    public String getAddCircularForm() {
         return "insertCircular";
     }
 
     @PostMapping("/circular")
-    public String insertCircular2(Circular circular, @RequestParam("file") MultipartFile file) throws IllegalStateException {
+    public String insertCircular(Circular circular, @RequestParam("file") MultipartFile file) throws IllegalStateException {
         if (!file.isEmpty()) {
             String originalFilename = file.getOriginalFilename();
             assert originalFilename != null;

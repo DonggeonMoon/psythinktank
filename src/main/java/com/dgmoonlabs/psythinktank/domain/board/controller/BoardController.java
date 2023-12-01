@@ -21,9 +21,8 @@ public class BoardController {
     private final BoardService boardService;
     private final CommentService commentService;
 
-
     @GetMapping("/boardList")
-    public String boardList(Pageable pageable, Model model) {
+    public String getBoards(Pageable pageable, Model model) {
         Page<Board> boards = boardService.selectAllBoard(pageable.getPageNumber());
 
         model.addAttribute("boards", boards);
@@ -40,7 +39,7 @@ public class BoardController {
 
     @PostMapping("/searchByBoardContent")
     @ResponseBody
-    public Map<String, Object> searchBoardByBoardContent(@RequestBody String searchText) {
+    public Map<String, Object> searchBoardByContent(@RequestBody String searchText) {
         Map<String, Object> map = new HashMap<>();
         map.put("result", boardService.searchBoardByContent(searchText));
         return map;
@@ -55,7 +54,7 @@ public class BoardController {
     }
 
     @GetMapping("/board")
-    public String viewBoard(long id, Model model) {
+    public String getBoard(long id, Model model) {
         boardService.addHit(id);
         model.addAttribute("board", boardService.selectOneBoard(id));
         model.addAttribute("commentList", commentService.selectAllCommentByBoardId(id));
@@ -63,7 +62,7 @@ public class BoardController {
     }
 
     @GetMapping("/insertBoard")
-    public String insertBoard(HttpSession session) {
+    public String getAddBoardForm(HttpSession session) {
         if (session.getAttribute("member") == null) {
             return "redirect:/login";
         }
@@ -71,7 +70,7 @@ public class BoardController {
     }
 
     @PostMapping("/board")
-    public String insertBoard2(HttpSession session, Board board) {
+    public String insertBoard(HttpSession session, Board board) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
@@ -86,7 +85,7 @@ public class BoardController {
     }
 
     @GetMapping("/updateBoard")
-    public String updateBoard(HttpSession session, long id, Model model) {
+    public String getModifyBoardForm(HttpSession session, long id, Model model) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";
@@ -102,7 +101,7 @@ public class BoardController {
     }
 
     @PutMapping("/board")
-    public String updateBoard2(HttpSession session, Board board) {
+    public String updateBoard(HttpSession session, Board board) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";

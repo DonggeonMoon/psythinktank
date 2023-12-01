@@ -17,7 +17,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("comment")
-    public String addComment(HttpSession session, Comment comment) {
+    public String insertComment(HttpSession session, Comment comment) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
         if (sessionInfo == null) {
             return "redirect:/login";

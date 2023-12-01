@@ -19,13 +19,13 @@ public class LoginController {
     private final LoginService loginService;
 
     @GetMapping("/login")
-    public String login() {
+    public String getLoginForm() {
         return "login";
     }
 
     @PostMapping("/login")
     @ResponseBody
-    public Map<String, Object> login2(@RequestBody HashMap<String, String> map, HttpSession session, Model model) {
+    public Map<String, Object> login(@RequestBody HashMap<String, String> map, HttpSession session, Model model) {
         return loginService.login(map.get("memberId"), map.get("memberPw"), session);
     }
 
