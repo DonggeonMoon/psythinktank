@@ -1,8 +1,10 @@
 package com.dgmoonlabs.psythinktank.global.constant;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Getter
 public enum ViewName {
     ROOT(""),
     BOARD_LIST("boardList"),
@@ -26,9 +28,5 @@ public enum ViewName {
 
     public String redirect() {
         return REDIRECTION_PREFIX + this.text;
-    }
-
-    public String getText() {
-        return text;
     }
 }
