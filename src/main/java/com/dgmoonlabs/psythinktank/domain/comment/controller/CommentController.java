@@ -2,7 +2,7 @@ package com.dgmoonlabs.psythinktank.domain.comment.controller;
 
 import com.dgmoonlabs.psythinktank.domain.comment.dto.CommentRequest;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
-import com.dgmoonlabs.psythinktank.domain.member.dto.MemberDto;
+import com.dgmoonlabs.psythinktank.domain.member.dto.MemberResponse;
 import com.dgmoonlabs.psythinktank.global.constant.QueryParameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ public class CommentController {
 
     @PostMapping("comment")
     public String insertComment(CommentRequest commentRequest, HttpSession session) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
+        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
@@ -38,7 +38,7 @@ public class CommentController {
 
     @PutMapping("comment")
     public String updateComment(CommentRequest commentRequest, HttpSession session) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
+        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
@@ -53,11 +53,11 @@ public class CommentController {
 
     @DeleteMapping("comment")
     public String deleteComment(CommentRequest commentRequest, HttpSession session) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
+        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(commentService.selectComment(commentRequest.id()).getMemberId())) {
+            if (sessionInfo.getMemberId().equals(commentService.selectComment(commentRequest.id()).memberId())) {
                 commentService.deleteComment(commentRequest.id());
                 return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
             } else {

@@ -6,19 +6,12 @@ import java.sql.Timestamp;
 
 public record CommentRequest(
         Long boardId,
-
         Long id,
-
         Long parent,
-
         int depth,
-
         long sequence,
-
         String memberId,
-
         String content,
-
         Timestamp createdAt
 ) {
     public Comment toEntity() {
