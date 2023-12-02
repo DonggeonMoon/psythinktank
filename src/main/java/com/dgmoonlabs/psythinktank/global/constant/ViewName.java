@@ -22,7 +22,6 @@ public enum ViewName {
     STOCK_LIST("stockList"),
     STOCK("viewStock");
 
-
     private static final String REDIRECTION_PREFIX = "redirect:/";
     private final String text;
 

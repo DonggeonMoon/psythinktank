@@ -39,13 +39,13 @@ public class StockController {
 
     @PostMapping("/searchByStockName")
     @ResponseBody
-    public ResponseEntity<StockSearchResponse> searchByName(@RequestBody StockSearchRequest searchText) {
-        return ResponseEntity.ok(stockService.selectStocksByName(searchText));
+    public ResponseEntity<StockSearchResponse> searchByName(@RequestBody StockSearchRequest stockSearchRequest) {
+        return ResponseEntity.ok(stockService.selectStocksByName(stockSearchRequest));
     }
 
     @GetMapping("/stock")
     public String getStock(String symbol, Model model) {
-        model.addAttribute(STOCK_KEY.getText(), stockService.selectStocksBySymbol(symbol));
+        model.addAttribute(STOCK_KEY.getText(), stockService.selectStock(symbol));
         model.addAttribute(HRR_KEY.getText(), stockService.calculateGrowthPotential(symbol));
         model.addAttribute(SHARE_KEY.getText(), stockService.selectSharesBySymbol(symbol));
         model.addAttribute(DIVIDEND_KEY.getText(), stockService.selectDividendBySymbol(symbol));

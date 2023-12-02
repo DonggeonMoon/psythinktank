@@ -40,6 +40,13 @@ public class StockService {
     }
 
     @Transactional
+    public StockResponse selectStock(String stockCode) {
+        return StockResponse.from(
+                stockInfoRepository.findById(stockCode).orElseGet(StockInfo::new)
+        );
+    }
+
+    @Transactional
     public StockSearchResponse selectStocksBySymbol(StockSearchRequest stockSearchRequest) {
         return StockSearchResponse.from(
                 stockInfoRepository.findBySymbolContains(stockSearchRequest.searchText())
