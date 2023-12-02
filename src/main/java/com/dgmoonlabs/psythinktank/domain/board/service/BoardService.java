@@ -1,7 +1,9 @@
 package com.dgmoonlabs.psythinktank.domain.board.service;
 
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
+import com.dgmoonlabs.psythinktank.domain.board.dto.BoardResponse;
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardSearchRequest;
+import com.dgmoonlabs.psythinktank.domain.board.dto.BoardSearchResponse;
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.repository.BoardRepository;
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
@@ -13,8 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,24 +36,42 @@ public class BoardService {
     }
 
     @Transactional
-    public Board selectBoards(BoardRequest boardRequest) {
-        return boardRepository.findById(boardRequest.id())
-                .orElseThrow(IllegalStateException::new);
+    public BoardResponse selectBoards(BoardRequest boardRequest) {
+        return BoardResponse.from(
+                boardRepository.findById(boardRequest.id())
+                        .orElseThrow(IllegalStateException::new)
+        );
     }
 
     @Transactional
-    public List<Board> searchBoardByTitle(BoardSearchRequest boardSearchRequest) {
-        return boardRepository.findByTitleContainingOrderByIdDesc(boardSearchRequest.searchText());
+    public BoardSearchResponse searchBoardByTitle(BoardSearchRequest boardSearchRequest) {
+        return new BoardSearchResponse(
+                boardRepository
+                        .findByTitleContainingOrderByIdDesc(boardSearchRequest.searchText())
+                        .stream()
+                        .map(BoardResponse::from)
+                        .toList()
+        );
     }
 
     @Transactional
-    public List<Board> searchBoardByContent(BoardSearchRequest boardSearchRequest) {
-        return boardRepository.findByContentContainingOrderByIdDesc(boardSearchRequest.searchText());
+    public BoardSearchResponse searchBoardByContent(BoardSearchRequest boardSearchRequest) {
+        return new BoardSearchResponse(
+                boardRepository.findByContentContainingOrderByIdDesc(boardSearchRequest.searchText())
+                        .stream()
+                        .map(BoardResponse::from)
+                        .toList()
+        );
     }
 
     @Transactional
-    public List<Board> searchBoardByMemberId(BoardSearchRequest boardSearchRequest) {
-        return boardRepository.findByMemberIdOrderByIdDesc(boardSearchRequest.searchText());
+    public BoardSearchResponse searchBoardByMemberId(BoardSearchRequest boardSearchRequest) {
+        return new BoardSearchResponse(
+                boardRepository.findByMemberIdOrderByIdDesc(boardSearchRequest.searchText())
+                        .stream()
+                        .map(BoardResponse::from)
+                        .toList()
+        );
     }
 
     @Transactional

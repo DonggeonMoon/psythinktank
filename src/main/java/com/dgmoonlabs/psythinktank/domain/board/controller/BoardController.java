@@ -1,22 +1,23 @@
 package com.dgmoonlabs.psythinktank.domain.board.controller;
 
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
+import com.dgmoonlabs.psythinktank.domain.board.dto.BoardResponse;
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardSearchRequest;
+import com.dgmoonlabs.psythinktank.domain.board.dto.BoardSearchResponse;
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.service.BoardService;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
-import com.dgmoonlabs.psythinktank.domain.member.dto.MemberDto;
+import com.dgmoonlabs.psythinktank.domain.member.dto.MemberResponse;
 import com.dgmoonlabs.psythinktank.global.constant.QueryParameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
@@ -36,26 +37,20 @@ public class BoardController {
 
     @PostMapping("/searchByBoardTitle")
     @ResponseBody
-    public Map<String, Object> searchBoardByTitle(@RequestBody BoardSearchRequest boardSearchRequest) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(AJAX_RESPONSE_KEY.getText(), boardService.searchBoardByTitle(boardSearchRequest));
-        return map;
+    public ResponseEntity<BoardSearchResponse> searchBoardByTitle(@RequestBody BoardSearchRequest boardSearchRequest) {
+        return ResponseEntity.ok(boardService.searchBoardByTitle(boardSearchRequest));
     }
 
     @PostMapping("/searchByBoardContent")
     @ResponseBody
-    public Map<String, Object> searchBoardByContent(@RequestBody BoardSearchRequest boardSearchRequest) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(AJAX_RESPONSE_KEY.getText(), boardService.searchBoardByContent(boardSearchRequest));
-        return map;
+    public ResponseEntity<BoardSearchResponse> searchBoardByContent(@RequestBody BoardSearchRequest boardSearchRequest) {
+        return ResponseEntity.ok(boardService.searchBoardByContent(boardSearchRequest));
     }
 
     @PostMapping("/searchByMemberId")
     @ResponseBody
-    public Map<String, Object> searchBoardByMemberId(@RequestBody BoardSearchRequest boardSearchRequest) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(AJAX_RESPONSE_KEY.getText(), boardService.searchBoardByMemberId(boardSearchRequest));
-        return map;
+    public ResponseEntity<BoardSearchResponse> searchBoardByMemberId(@RequestBody BoardSearchRequest boardSearchRequest) {
+        return ResponseEntity.ok(boardService.searchBoardByMemberId(boardSearchRequest));
     }
 
     @GetMapping("/board")
@@ -76,11 +71,11 @@ public class BoardController {
 
     @PostMapping("/board")
     public String insertBoard(BoardRequest boardRequest, HttpSession session) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
+        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(boardRequest.memberId())) {
+            if (sessionInfo.memberId().equals(boardRequest.memberId())) {
                 boardService.addBoard(boardRequest);
                 return BOARD_LIST.redirect();
             } else {
@@ -91,12 +86,12 @@ public class BoardController {
 
     @GetMapping("/updateBoard")
     public String getModifyBoardForm(BoardRequest boardRequest, HttpSession session, Model model) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
+        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            Board board = boardService.selectBoards(boardRequest);
-            if (sessionInfo.getMemberId().equals(board.getMemberId())) {
+            BoardResponse boardResponse = boardService.selectBoards(boardRequest);
+            if (sessionInfo.memberId().equals(boardResponse.memberId())) {
                 model.addAttribute(BOARD_KEY.getText(), boardService.selectBoards(boardRequest));
                 return UPDATE_BOARD.getText();
             } else {
@@ -107,11 +102,11 @@ public class BoardController {
 
     @PutMapping("/board")
     public String updateBoard(BoardRequest boardRequest, HttpSession session) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
+        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(boardRequest.memberId())) {
+            if (sessionInfo.memberId().equals(boardRequest.memberId())) {
                 boardService.updateBoard(boardRequest);
                 return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, boardRequest.id());
             } else {
@@ -122,11 +117,11 @@ public class BoardController {
 
     @DeleteMapping("/board")
     public String deleteBoard(BoardRequest boardRequest, HttpSession session) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
+        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(boardRequest.memberId())) {
+            if (sessionInfo.memberId().equals(boardRequest.memberId())) {
                 boardService.deleteBoard(boardRequest.id());
                 return BOARD_LIST.redirect();
             } else {
