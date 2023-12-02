@@ -1,5 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.stock.service;
 
+import com.dgmoonlabs.psythinktank.domain.stock.dto.StockSearchRequest;
 import com.dgmoonlabs.psythinktank.domain.stock.model.Dividend;
 import com.dgmoonlabs.psythinktank.domain.stock.model.Share;
 import com.dgmoonlabs.psythinktank.domain.stock.model.StockInfo;
@@ -11,6 +12,7 @@ import com.dgmoonlabs.psythinktank.global.constant.Rating;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +31,10 @@ public class StockService {
     private final CorporateBoardStabilityRepository corporateBoardStabilityRepository;
 
     @Transactional
-    public Page<StockInfo> selectStocks(int page) {
+    public Page<StockInfo> selectStocks(Pageable pageable) {
         return stockInfoRepository.findAll(
                 PageRequest.of(
-                        page,
+                        pageable.getPageNumber(),
                         Pagination.SIZE.getValue(),
                         Sort.by(CriteriaField.SYMBOL.getName()).ascending()
                 )
@@ -40,13 +42,18 @@ public class StockService {
     }
 
     @Transactional
-    public List<StockInfo> selectStocksBySymbol(String symbol) {
-        return stockInfoRepository.findBySymbolContains(symbol);
+    public List<StockInfo> selectStocksBySymbol(StockSearchRequest stockSearchRequest) {
+        return stockInfoRepository.findBySymbolContains(stockSearchRequest.searchText());
     }
 
     @Transactional
-    public List<StockInfo> selectStocksByName(String name) {
-        return stockInfoRepository.findByNameContains(name);
+    public List<StockInfo> selectStocksBySymbol(String searchText) {
+        return stockInfoRepository.findBySymbolContains(searchText);
+    }
+
+    @Transactional
+    public List<StockInfo> selectStocksByName(StockSearchRequest stockSearchRequest) {
+        return stockInfoRepository.findByNameContains(stockSearchRequest.searchText());
     }
 
     @Transactional

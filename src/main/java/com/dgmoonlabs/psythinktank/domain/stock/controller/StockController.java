@@ -1,5 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.stock.controller;
 
+import com.dgmoonlabs.psythinktank.domain.stock.dto.StockSearchRequest;
 import com.dgmoonlabs.psythinktank.domain.stock.model.StockInfo;
 import com.dgmoonlabs.psythinktank.domain.stock.service.StockService;
 import lombok.RequiredArgsConstructor;
@@ -27,22 +28,22 @@ public class StockController {
 
     @GetMapping("/stockList")
     public String getStocks(Pageable pageable, Model model) {
-        Page<StockInfo> stocks = stockService.selectStocks(pageable.getPageNumber());
+        Page<StockInfo> stocks = stockService.selectStocks(pageable);
         model.addAttribute(STOCKS_KEY.getText(), stocks);
         return STOCK_LIST.getText();
     }
 
     @PostMapping("/searchBySymbol")
     @ResponseBody
-    public Map<String, Object> searchBySymbol(@RequestBody String searchText) {
+    public Map<String, Object> searchBySymbol(@RequestBody StockSearchRequest stockSearchRequest) {
         Map<String, Object> map = new HashMap<>();
-        map.put(AJAX_RESPONSE_KEY.getText(), stockService.selectStocksBySymbol(searchText));
+        map.put(AJAX_RESPONSE_KEY.getText(), stockService.selectStocksBySymbol(stockSearchRequest));
         return map;
     }
 
     @PostMapping("/searchByStockName")
     @ResponseBody
-    public Map<String, List<StockInfo>> searchByName(@RequestBody String searchText) {
+    public Map<String, List<StockInfo>> searchByName(@RequestBody StockSearchRequest searchText) {
         Map<String, List<StockInfo>> map = new HashMap<>();
         map.put(AJAX_RESPONSE_KEY.getText(), stockService.selectStocksByName(searchText));
         return map;
