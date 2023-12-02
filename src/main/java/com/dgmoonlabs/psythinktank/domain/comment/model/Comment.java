@@ -24,13 +24,13 @@ public class Comment {
     private Long id;
 
     @Column(name = "comment_parent")
-    private int parent;
+    private Long parent;
 
     @Column(name = "comment_depth", nullable = false)
     private int depth;
 
     @Column(name = "comment_seq", nullable = false)
-    private int sequence;
+    private long sequence;
 
     @Column(name = "member_id", nullable = false)
     private String memberId;
