@@ -1,11 +1,13 @@
 package com.dgmoonlabs.psythinktank.domain.comment.service;
 
+import com.dgmoonlabs.psythinktank.domain.comment.dto.CommentRequest;
+import com.dgmoonlabs.psythinktank.domain.comment.dto.CommentResponse;
 import com.dgmoonlabs.psythinktank.domain.comment.model.Comment;
 import com.dgmoonlabs.psythinktank.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -14,23 +16,26 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public List<Comment> selectAllCommentByBoardId(long boardId) {
+    public List<Comment> selectCommentsByBoardId(long boardId) {
         return commentRepository.findAllById(boardId);
     }
 
     @Transactional
-    public Comment selectOneComment(long id) {
-        return commentRepository.findById(id).orElse(null);
+    public CommentResponse selectComment(long id) {
+        return CommentResponse.from(
+                commentRepository.findById(id)
+                        .orElseThrow(IllegalStateException::new)
+        );
     }
 
     @Transactional
-    public void addComment(Comment comment) {
-        commentRepository.save(comment);
+    public void addComment(CommentRequest commentRequest) {
+        commentRepository.save(commentRequest.toEntity());
     }
 
     @Transactional
-    public void updateComment(Comment comment) {
-        commentRepository.save(comment);
+    public void updateComment(CommentRequest commentRequest) {
+        commentRepository.save(commentRequest.toEntity());
     }
 
     @Transactional

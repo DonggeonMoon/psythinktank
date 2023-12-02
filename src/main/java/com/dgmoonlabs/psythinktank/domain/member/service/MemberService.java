@@ -1,102 +1,119 @@
 package com.dgmoonlabs.psythinktank.domain.member.service;
 
-import com.dgmoonlabs.psythinktank.domain.member.dto.MemberDto;
+import com.dgmoonlabs.psythinktank.domain.mail.service.MailService;
+import com.dgmoonlabs.psythinktank.domain.member.dto.*;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.repository.MemberRepository;
+import com.dgmoonlabs.psythinktank.global.constant.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
+    private final MailService mailService;
     private final MemberRepository memberRepository;
-    private final JavaMailSender javaMailSender;
+    private final Random random;
 
     @Transactional
-    public void join(Member member) {
-        member.setPassword(BCrypt.hashpw(member.getPassword(), BCrypt.gensalt()));
+    public Page<Member> selectMembers(Pageable pageable) {
+        return memberRepository.findAll(
+                PageRequest.of(
+                        pageable.getPageNumber(), Pagination.MEMBER_SIZE.getValue(),
+                        Sort.by(CriteriaField.USER_LEVEL.getName())
+                                .descending()
+                                .and(Sort.by("memberId").ascending())
+                )
+        );
+    }
+
+    @Transactional
+    public MemberResponse getMember(String memberId) {
+        return MemberResponse.from(
+                memberRepository.findById(memberId)
+                        .orElseThrow(IllegalStateException::new)
+        );
+    }
+
+    @Transactional
+    public void addMember(MemberRequest memberRequest) {
+        Member member = memberRequest.toEntity();
+        member.setPassword(BCrypt.hashpw(memberRequest.password(), BCrypt.gensalt()));
         memberRepository.save(member);
     }
 
     @Transactional
-    public Member getMemberInfo(HttpSession session) {
-        return memberRepository.findById(((MemberDto) session.getAttribute("member")).getMemberId()).orElse(null);
+    public void editMember(MemberRequest memberRequest) {
+        Member newMember = memberRepository.findById(memberRequest.memberId()).orElse(Member.builder().build());
+        newMember.setPassword(BCrypt.hashpw(memberRequest.password(), BCrypt.gensalt()));
+        newMember.setEmail(memberRequest.email());
     }
 
     @Transactional
-    public void editMemberInfo(Member member) {
-        Member newMember = memberRepository.findById(member.getMemberId()).orElse(Member.builder().build());
-        newMember.setPassword(BCrypt.hashpw(member.getPassword(), BCrypt.gensalt()));
-        newMember.setEmail(member.getEmail());
-    }
-
-    @Transactional
-    public void deleteMemberInfo(String memberId) {
+    public void deleteMember(String memberId) {
         memberRepository.deleteById(memberId);
     }
 
     @Transactional
-    public Page<Member> selectAllMember(int page) {
-        return memberRepository.findAll(PageRequest.of(page, 50, Sort.by("userLevel").descending().and(Sort.by("memberId").ascending())));
+    public FindIdResponse selectMemberByEmail(String memberEmail) {
+        Optional<Member> memberToFind = memberRepository.findByEmail(memberEmail);
+        return memberToFind.map(
+                member -> FindIdResponse.of(true, member.getMemberId())
+        ).orElseGet(() ->
+                FindIdResponse.of(false, null)
+        );
     }
 
     @Transactional
-    public Member selectOneMemberByEmail(String memberEmail) {
-        return memberRepository.findByEmail(memberEmail);
-    }
-
-    @Transactional
-    public Member selectOneMemberByEmailAndId(String memberEmail, String memberId) {
-        return memberRepository.findByEmailAndMemberId(memberEmail, memberId);
-    }
-
-    @Transactional
-    public void sendVerificationEmail(String email) {
-        final MimeMessagePreparator preparator = mimeMessage -> {
-            final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-            helper.setFrom("officialpsythinktank@gmail.com");
-            helper.setTo(email);
-            helper.setSubject("PSYThinktank 이메일 인증 메일입니다.");
-            helper.setText("", true);
-        };
-        javaMailSender.send(preparator);
-    }
-
-    @Transactional
-    public void sendTempPwEmail(String email) {
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 11; i++) {
-            sb.append((char) (random.nextInt(57) + 'A'));
+    public FindPasswordResponse selectMemberByEmailAndMemberId(FindPasswordRequest request) {
+        Optional<Member> memberToFind = memberRepository.findByEmailAndMemberId(request.memberEmail(), request.memberId());
+        if (memberToFind.isEmpty()) {
+            return FindPasswordResponse.from(false);
         }
-        String randomizedStr = sb.toString();
-        Member member = memberRepository.findByEmail(email);
-        member.setPassword(BCrypt.hashpw(randomizedStr, BCrypt.gensalt()));
-        member.setLoginTryCount(0);
-        final MimeMessagePreparator preparator = mimeMessage -> {
-            final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-            helper.setFrom("officialpsythinktank@gmail.com");
-            helper.setTo(email);
-            helper.setSubject("임시 비밀번호를 보내드립니다.");
-            helper.setText("임시비밀번호는 " + randomizedStr + "입니다.", true);
-        };
-        javaMailSender.send(preparator);
+        Member member = memberToFind.get();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        IntStream.range(0, TemporaryPassword.LENGTH.getValue())
+                .forEach(it -> stringBuilder.append((char) (random.nextInt(RandomNumber.BOUND.getValue()) + 'A')));
+        String randomizedLetters = stringBuilder.toString();
+        member.setPassword(BCrypt.hashpw(randomizedLetters, BCrypt.gensalt()));
+        member.setLoginTryCount(LoginTry.COUNT_RANGE.getStart());
+        mailService.sendMail(mimeMessage -> {
+            final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, StandardCharsets.UTF_8.name());
+            helper.setFrom(EmailForm.SENDER_ADDRESS.getText());
+            helper.setTo(member.getEmail());
+            helper.setSubject(EmailForm.TEMPORARY_PASSWORD_TITLE.getText());
+            helper.setText(String.format(EmailForm.TEMPORARY_PASSWORD_TEXT.getText(), randomizedLetters), true);
+        });
+
+        return FindPasswordResponse.from(true);
     }
 
     @Transactional
-    public void changeUserLevel(Member member) {
-        Member newMember = memberRepository.findById(member.getMemberId()).orElse(Member.builder().build());
-        newMember.setUserLevel(member.getUserLevel());
+    public void changeUserLevel(MemberRequest memberRequest) {
+        Member newMember = memberRepository.findById(memberRequest.memberId()).orElse(Member.builder().build());
+        newMember.setUserLevel(memberRequest.userLevel());
+    }
+
+    @Transactional
+    public CheckIdResponse checkId(String memberId) {
+        return CheckIdResponse.from(memberRepository.findById(memberId).isEmpty());
+    }
+
+    @Transactional
+    public CheckEmailResponse checkEmail(String email) {
+        return CheckEmailResponse.from(memberRepository.findByEmail(email).isEmpty());
     }
 }

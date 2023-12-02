@@ -1,17 +1,21 @@
 package com.dgmoonlabs.psythinktank.domain.member.controller;
 
+import com.dgmoonlabs.psythinktank.domain.member.dto.LoginRequest;
+import com.dgmoonlabs.psythinktank.domain.member.dto.LoginResponse;
 import com.dgmoonlabs.psythinktank.domain.member.service.LoginService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
+
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.LOGIN;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.ROOT;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,19 +23,21 @@ public class LoginController {
     private final LoginService loginService;
 
     @GetMapping("/login")
-    public String login() {
-        return "login";
+    public String getLoginForm() {
+        return LOGIN.getText();
     }
 
     @PostMapping("/login")
     @ResponseBody
-    public Map<String, Object> login2(@RequestBody HashMap<String, String> map, HttpSession session, Model model) {
-        return loginService.login(map.get("memberId"), map.get("memberPw"), session);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
+        return ResponseEntity.ok(
+                loginService.login(loginRequest, session)
+        );
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("member");
-        return "redirect:/";
+        session.removeAttribute(SESSION_KEY.getText());
+        return ROOT.redirect();
     }
 }

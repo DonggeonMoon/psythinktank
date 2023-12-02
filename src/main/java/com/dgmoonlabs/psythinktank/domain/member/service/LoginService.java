@@ -1,15 +1,21 @@
 package com.dgmoonlabs.psythinktank.domain.member.service;
 
+import com.dgmoonlabs.psythinktank.domain.member.dto.LoginRequest;
+import com.dgmoonlabs.psythinktank.domain.member.dto.LoginResponse;
+import com.dgmoonlabs.psythinktank.domain.member.dto.MemberResponse;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.repository.MemberRepository;
+import com.dgmoonlabs.psythinktank.global.constant.LoginTry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
+
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
+import static com.dgmoonlabs.psythinktank.global.constant.LoginResult.*;
 
 @Service
 @RequiredArgsConstructor
@@ -17,53 +23,37 @@ public class LoginService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Map<String, Object> login(String memberId, String password, HttpSession session) {
-        Map<String, Object> map = new HashMap<>();
-        if (!"".equals(memberId) && !"".equals(password)) {
-            if (checkId(memberId)) {
-                Member member = memberRepository.findById(memberId).orElse(Member.builder().build());
-                // 5회 이상 틀렸을 경우
-                if (member.getLoginTryCount() < 5) {
-                    if (checkPw(memberId, password)) {
-                        member.setLoginTryCount(0);
-                        session.setAttribute("member",
-                                memberRepository.findById(memberId).orElse(Member.builder().build()).toDto());
-                        map.put("isSucceeded", true);
-                        map.put("error", -1);
-                    } else {
-                        member.setLoginTryCount(member.getLoginTryCount() + 1);
-                        map.put("isSucceeded", false);
-                        map.put("error", 3);
-                    }
-                    map.put("loginTryCount", member.getLoginTryCount());
-                } else {
-                    map.put("isSucceeded", false);
-                    map.put("error", 4);
-                }
-                return map;
-            } else
-                map.put("isSucceeded", false);
-            map.put("error", 2);
-            return map;
+    public LoginResponse login(LoginRequest loginRequest, HttpSession session) {
+        if ("".equals(loginRequest.memberId()) || "".equals(loginRequest.memberPw())) {
+            return new LoginResponse(false, BLANK_ID_AND_PASSWORD.getCode(), null);
         }
-        map.put("isSucceeded", false);
-        map.put("error", 1);
-        return map;
+        Optional<Member> memberToCheck = memberRepository.findById(loginRequest.memberId());
+        if (memberToCheck.isEmpty()) {
+            return new LoginResponse(false, ABSENT_ID.getCode(), null);
+        }
+        Member member = memberToCheck.get();
+        if (!LoginTry.includes(member.getLoginTryCount())) {
+            return new LoginResponse(false, LOGIN_TRY_EXCEEDING.getCode(), null);
+        }
+        if (!checkPassword(loginRequest)) {
+            member.increaseLoginTryCount();
+            return new LoginResponse(false, WRONG_PASSWORD.getCode(), member.getLoginTryCount());
+        }
+        member.setLoginTryCount(LoginTry.COUNT_RANGE.getStart());
+        session.setAttribute(SESSION_KEY.getText(),
+                MemberResponse.from(
+                        memberRepository.findById(loginRequest.memberId())
+                                .orElseThrow(IllegalStateException::new)
+                ));
+        return new LoginResponse(true, SUCCESS.getCode(), member.getLoginTryCount());
     }
 
-    @Transactional
-    public boolean checkId(String memberId) {
-        return (memberRepository.findById(memberId).isPresent());
-    }
-
-    @Transactional
-    public boolean checkPw(String memberId, String password) {
-        return BCrypt.checkpw(password,
-                memberRepository.findById(memberId).orElse(Member.builder().build()).getPassword());
-    }
-
-    @Transactional
-    public boolean checkEmail(String email) {
-        return (memberRepository.findByEmail(email) != null);
+    private boolean checkPassword(LoginRequest loginRequest) {
+        return BCrypt.checkpw(
+                loginRequest.memberPw(),
+                memberRepository.findById(loginRequest.memberId())
+                        .orElseThrow(IllegalStateException::new)
+                        .getPassword()
+        );
     }
 }

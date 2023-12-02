@@ -1,6 +1,5 @@
 package com.dgmoonlabs.psythinktank.domain.member.model;
 
-import com.dgmoonlabs.psythinktank.domain.member.dto.MemberDto;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.sql.Date;
 
 @Entity
@@ -16,7 +16,7 @@ import java.sql.Date;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-public class Member {
+public class Member implements Serializable {
     @Id
     @Column(name = "member_id", nullable = false, length = 50)
     private String memberId;
@@ -38,14 +38,7 @@ public class Member {
     @ColumnDefault(value = "0")
     private int loginTryCount;
 
-    public MemberDto toDto() {
-        return MemberDto.builder()
-                .memberId(memberId)
-                .password(password)
-                .email(email)
-                .createdAt(createdAt)
-                .userLevel(userLevel)
-                .loginTryCount(loginTryCount)
-                .build();
+    public void increaseLoginTryCount() {
+        this.loginTryCount++;
     }
 }

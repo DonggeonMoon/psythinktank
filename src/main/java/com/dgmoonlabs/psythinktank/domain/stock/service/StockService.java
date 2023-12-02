@@ -1,15 +1,23 @@
 package com.dgmoonlabs.psythinktank.domain.stock.service;
 
-import com.dgmoonlabs.psythinktank.domain.stock.model.*;
+import com.dgmoonlabs.psythinktank.domain.stock.dto.*;
+import com.dgmoonlabs.psythinktank.domain.stock.model.Share;
+import com.dgmoonlabs.psythinktank.domain.stock.model.StockInfo;
 import com.dgmoonlabs.psythinktank.domain.stock.repository.*;
+import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
+import com.dgmoonlabs.psythinktank.global.constant.Hrr;
+import com.dgmoonlabs.psythinktank.global.constant.Pagination;
+import com.dgmoonlabs.psythinktank.global.constant.Rating;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.util.List;
+import java.util.Comparator;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -21,42 +29,96 @@ public class StockService {
     private final CorporateBoardStabilityRepository corporateBoardStabilityRepository;
 
     @Transactional
-    public Page<StockInfo> selectAllStockInfo(int page) {
-        return stockInfoRepository.findAll(PageRequest.of(page, 10, Sort.by("symbol").ascending()));
+    public Page<StockInfo> selectStocks(Pageable pageable) {
+        return stockInfoRepository.findAll(
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        Pagination.SIZE.getValue(),
+                        Sort.by(CriteriaField.SYMBOL.getName()).ascending()
+                )
+        );
     }
 
     @Transactional
-    public List<StockInfo> selectAllStockInfoBySymbol(String symbol) {
-        return stockInfoRepository.findBySymbolLike("%" + symbol + "%");
+    public StockResponse selectStock(String stockCode) {
+        return StockResponse.from(
+                stockInfoRepository.findById(stockCode).orElseGet(StockInfo::new)
+        );
     }
 
     @Transactional
-    public List<StockInfo> selectAllStockInfoByName(String name) {
-        return stockInfoRepository.findByNameLike("%" + name + "%");
+    public StockSearchResponse selectStocksBySymbol(StockSearchRequest stockSearchRequest) {
+        return StockSearchResponse.from(
+                stockInfoRepository.findBySymbolContains(stockSearchRequest.searchText())
+                        .stream()
+                        .map(StockResponse::from)
+                        .toList()
+        );
     }
 
     @Transactional
-    public List<Share> selectAllShareBySymbol(String symbol) {
-        return shareRepository.findBySymbol(symbol);
+    public StockSearchResponse selectStocksBySymbol(String searchText) {
+        return StockSearchResponse.from(
+                stockInfoRepository.findBySymbolContains(searchText)
+                        .stream()
+                        .map(StockResponse::from)
+                        .toList()
+        );
     }
 
     @Transactional
-    public StockInfo selectOneStockInfoBySymbol(String symbol) {
-        return stockInfoRepository.findById(symbol).orElseGet(StockInfo::new);
+    public StockSearchResponse selectStocksByName(StockSearchRequest stockSearchRequest) {
+        return StockSearchResponse.from(
+                stockInfoRepository.findByNameContains(stockSearchRequest.searchText())
+                        .stream()
+                        .map(StockResponse::from)
+                        .toList()
+        );
     }
 
     @Transactional
-    public HRR selectOneHRRBySymbol(String symbol) {
-        return hrrRepository.findBySymbolAndBusinessYearAndReportCode(symbol, "2021", "11011");
+    public ShareSearchResponse selectSharesBySymbol(String symbol) {
+        return ShareSearchResponse.from(shareRepository.findBySymbol(symbol)
+                .stream()
+                .map(ShareResponse::from)
+                .toList()
+        );
     }
 
     @Transactional
-    public Dividend selectOneDividendBySymbol(String symbol) {
-        return dividendRepository.findById(symbol).orElseGet(Dividend::new);
+    public DividendResponse selectDividendBySymbol(String symbol) {
+        return DividendResponse.from(dividendRepository.findById(symbol)
+                .orElseThrow(IllegalStateException::new)
+        );
     }
 
     @Transactional
-    public CorporateBoardStability selectOneCorporateBoardStabilityBySymbol(String symbol) throws Exception {
-        return corporateBoardStabilityRepository.findBySymbol(symbol).orElseThrow(Exception::new);
+    public String calculateBoardStability(final String symbol) {
+        Double boardStability;
+        boardStability = corporateBoardStabilityRepository.findBySymbol(symbol)
+                .orElseThrow(IllegalStateException::new)
+                .getValue();
+
+        return Rating.evaluateBoardStability(boardStability);
+    }
+
+    @Transactional
+    public String calculateGrowthPotential(String symbol) {
+        Double hrr = hrrRepository.findBySymbolAndBusinessYearAndReportCode(
+                symbol,
+                Hrr.BUSINESS_YEAR.getText(),
+                Hrr.REPORT_CODE.getText()
+        ).getValue();
+        return Rating.evaluateGrowthPotential(hrr);
+    }
+
+    @Transactional
+    public String calculateGovernance(final String symbol) {
+        Double currentShare = shareRepository.findBySymbol(symbol)
+                .stream()
+                .max(Comparator.comparing(Share::getDate))
+                .map(Share::getValue)
+                .orElseThrow(NoSuchElementException::new);
+        return Rating.evaluateGovernance(currentShare);
     }
 }

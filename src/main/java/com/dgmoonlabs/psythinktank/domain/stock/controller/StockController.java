@@ -1,11 +1,13 @@
 package com.dgmoonlabs.psythinktank.domain.stock.controller;
 
-import com.dgmoonlabs.psythinktank.domain.stock.model.Share;
+import com.dgmoonlabs.psythinktank.domain.stock.dto.StockSearchRequest;
+import com.dgmoonlabs.psythinktank.domain.stock.dto.StockSearchResponse;
 import com.dgmoonlabs.psythinktank.domain.stock.model.StockInfo;
 import com.dgmoonlabs.psythinktank.domain.stock.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.STOCK;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.STOCK_LIST;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,87 +25,32 @@ public class StockController {
     private final StockService stockService;
 
     @GetMapping("/stockList")
-    public String stockList(Pageable pageable, Model model) {
-        Page<StockInfo> stocks = stockService.selectAllStockInfo(pageable.getPageNumber());
-        model.addAttribute("stocks", stocks);
-
-        return "stockList";
+    public String getStocks(Pageable pageable, Model model) {
+        Page<StockInfo> stocks = stockService.selectStocks(pageable);
+        model.addAttribute(STOCKS_KEY.getText(), stocks);
+        return STOCK_LIST.getText();
     }
 
     @PostMapping("/searchBySymbol")
     @ResponseBody
-    public Map<String, Object> searchBySymbol(@RequestBody String searchText) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("result", stockService.selectAllStockInfoBySymbol(searchText));
-        return map;
+    public ResponseEntity<StockSearchResponse> searchBySymbol(@RequestBody StockSearchRequest stockSearchRequest) {
+        return ResponseEntity.ok(stockService.selectStocksBySymbol(stockSearchRequest));
     }
 
     @PostMapping("/searchByStockName")
     @ResponseBody
-    public Map<String, List<StockInfo>> searchByStockName(@RequestBody String searchText) {
-        Map<String, List<StockInfo>> map = new HashMap<>();
-        map.put("result", stockService.selectAllStockInfoByName(searchText));
-        return map;
+    public ResponseEntity<StockSearchResponse> searchByName(@RequestBody StockSearchRequest stockSearchRequest) {
+        return ResponseEntity.ok(stockService.selectStocksByName(stockSearchRequest));
     }
 
     @GetMapping("/stock")
-    public String viewStock(String symbol, Model model) throws Exception {
-        List<Share> shares = stockService.selectAllShareBySymbol(symbol);
-        model.addAttribute("stock", stockService.selectOneStockInfoBySymbol(symbol));
-        model.addAttribute("hrr", calculateGrowthPotential(symbol));
-        model.addAttribute("share", shares);
-        model.addAttribute("dividend", stockService.selectOneDividendBySymbol(symbol));
-        model.addAttribute("governance", calculateGovernance(shares));
-        model.addAttribute("corporateBoardStability", calculateBoardStability(symbol));
-        return "viewStock";
-    }
-
-    private String calculateBoardStability(final String symbol) throws Exception {
-        Double boardStability = stockService.selectOneCorporateBoardStabilityBySymbol(symbol)
-                .getBoardStability();
-
-        if (boardStability >= 14) {
-            return "A";
-        }
-        if (boardStability >= 9) {
-            return "B";
-        }
-        if (boardStability >= 4) {
-            return "C";
-        }
-        return "D";
-    }
-
-    private String calculateGrowthPotential(String symbol) {
-        Double hrr = stockService.selectOneHRRBySymbol(symbol).getValue();
-        if (hrr >= 10) {
-            return "A";
-        }
-        if (hrr >= 5) {
-            return "B";
-        }
-        if (hrr >= 0) {
-            return "C";
-        }
-        return "D";
-    }
-
-    private String calculateGovernance(final List<Share> shares) {
-        Double currentShare = shares
-                .stream()
-                .max(Comparator.comparing(Share::getDate))
-                .map(Share::getValue)
-                .orElseThrow(NoSuchElementException::new);
-        if (currentShare >= 10) {
-            return "A";
-        }
-        if (currentShare >= 5) {
-            return "B";
-        }
-        if (currentShare >= 0) {
-            return "C";
-        }
-        return "D";
+    public String getStock(String symbol, Model model) {
+        model.addAttribute(STOCK_KEY.getText(), stockService.selectStock(symbol));
+        model.addAttribute(HRR_KEY.getText(), stockService.calculateGrowthPotential(symbol));
+        model.addAttribute(SHARE_KEY.getText(), stockService.selectSharesBySymbol(symbol));
+        model.addAttribute(DIVIDEND_KEY.getText(), stockService.selectDividendBySymbol(symbol));
+        model.addAttribute(GOVERNANCE_KEY.getText(), stockService.calculateGovernance(symbol));
+        model.addAttribute(CORPORATE_BOARD_STABILITY.getText(), stockService.calculateBoardStability(symbol));
+        return STOCK.getText();
     }
 }
-

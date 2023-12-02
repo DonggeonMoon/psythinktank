@@ -1,8 +1,9 @@
 package com.dgmoonlabs.psythinktank.domain.comment.controller;
 
-import com.dgmoonlabs.psythinktank.domain.comment.model.Comment;
+import com.dgmoonlabs.psythinktank.domain.comment.dto.CommentRequest;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
-import com.dgmoonlabs.psythinktank.domain.member.dto.MemberDto;
+import com.dgmoonlabs.psythinktank.domain.member.dto.MemberResponse;
+import com.dgmoonlabs.psythinktank.global.constant.QueryParameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,53 +12,51 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.servlet.http.HttpSession;
 
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.BOARD;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.LOGIN;
+
 @Controller
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("comment")
-    public String addComment(HttpSession session, Comment comment) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+    public String insertComment(CommentRequest commentRequest, HttpSession session) {
+        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            return "redirect:/login";
-        } else {
-            if (sessionInfo.getMemberId().equals(comment.getMemberId())) {
-                commentService.addComment(comment);
-                return "redirect:/board?id=" + comment.getBoardId();
-            } else {
-                return "redirect:/login";
-            }
+            return LOGIN.redirect();
         }
+        if (sessionInfo.memberId().equals(commentRequest.memberId())) {
+            commentService.addComment(commentRequest);
+            return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
+        }
+        return LOGIN.redirect();
     }
 
     @PutMapping("comment")
-    public String updateComment(HttpSession session, Comment comment) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+    public String updateComment(CommentRequest commentRequest, HttpSession session) {
+        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            return "redirect:/login";
-        } else {
-            if (sessionInfo.getMemberId().equals(comment.getMemberId())) {
-                commentService.updateComment(comment);
-                return "redirect:/board?id=" + comment.getBoardId();
-            } else {
-                return "redirect:/login";
-            }
+            return LOGIN.redirect();
         }
+        if (sessionInfo.memberId().equals(commentRequest.memberId())) {
+            commentService.updateComment(commentRequest);
+            return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
+        }
+        return LOGIN.redirect();
     }
 
     @DeleteMapping("comment")
-    public String deleteComment(HttpSession session, int id, int boardId) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute("member");
+    public String deleteComment(CommentRequest commentRequest, HttpSession session) {
+        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            return "redirect:/login";
-        } else {
-            if (sessionInfo.getMemberId().equals(commentService.selectOneComment(id).getMemberId())) {
-                commentService.deleteComment(id);
-                return "redirect:/board?id=" + boardId;
-            } else {
-                return "redirect:/login";
-            }
+            return LOGIN.redirect();
         }
+        if (sessionInfo.memberId().equals(commentService.selectComment(commentRequest.id()).memberId())) {
+            commentService.deleteComment(commentRequest.id());
+            return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
+        }
+        return LOGIN.redirect();
     }
 }
