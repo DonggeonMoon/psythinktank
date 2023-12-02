@@ -1,5 +1,7 @@
 package com.dgmoonlabs.psythinktank.domain.member.service;
 
+import com.dgmoonlabs.psythinktank.domain.member.dto.LoginRequest;
+import com.dgmoonlabs.psythinktank.domain.member.dto.LoginResponse;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.repository.MemberRepository;
 import com.dgmoonlabs.psythinktank.global.constant.LoginTry;
@@ -9,10 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
 
-import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
 import static com.dgmoonlabs.psythinktank.global.constant.LoginResult.*;
 
 @Service
@@ -21,40 +21,32 @@ public class LoginService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Map<String, Object> login(String memberId, String password, HttpSession session) {
-        Map<String, Object> map = new HashMap<>();
-        if (!"".equals(memberId) && !"".equals(password)) {
-            if (checkId(memberId)) {
-                Member member = memberRepository.findById(memberId)
+    public LoginResponse login(LoginRequest loginRequest, HttpSession session) {
+        if (!"".equals(loginRequest.memberId()) && !"".equals(loginRequest.password())) {
+            if (checkId(loginRequest.memberId())) {
+                Member member = memberRepository.findById(loginRequest.password())
                         .orElseThrow(IllegalStateException::new);
                 if (LoginTry.includes(member.getLoginTryCount())) {
-                    if (checkPassword(memberId, password)) {
+                    if (checkPassword(loginRequest.memberId(), loginRequest.password())) {
                         member.setLoginTryCount(LoginTry.COUNT_RANGE.getStart());
                         session.setAttribute(SESSION_KEY.getText(),
-                                memberRepository.findById(memberId)
+                                memberRepository.findById(loginRequest.memberId())
                                         .orElseThrow(IllegalStateException::new).toDto());
-                        map.put(IS_SUCCEEDED_KEY.getText(), true);
-                        map.put(ERROR_KEY.getText(), SUCCESS.getCode());
+                        return new LoginResponse(true, SUCCESS.getCode(), member.getLoginTryCount());
                     } else {
                         member.increaseLoginTryCount();
-                        map.put(IS_SUCCEEDED_KEY.getText(), false);
-                        map.put(ERROR_KEY.getText(), WRONG_PASSWORD.getCode());
+                        return new LoginResponse(false, WRONG_PASSWORD.getCode(), member.getLoginTryCount());
                     }
-                    map.put(LOGIN_TRY_COUNT_KEY.getText(), member.getLoginTryCount());
                 } else {
-                    map.put(IS_SUCCEEDED_KEY.getText(), false);
-                    map.put(ERROR_KEY.getText(), LOGIN_TRY_EXCEEDING.getCode());
+                    return new LoginResponse(false, LOGIN_TRY_EXCEEDING.getCode(), null);
                 }
-                return map;
-            } else
-                map.put(IS_SUCCEEDED_KEY.getText(), false);
-            map.put(ERROR_KEY.getText(), ABSENT_ID.getCode());
-            return map;
+            } else {
+                new LoginResponse(false, ABSENT_ID.getCode(), null);
+            }
         }
-        map.put(IS_SUCCEEDED_KEY.getText(), false);
-        map.put(ERROR_KEY.getText(), BLANK_ID_AND_PASSWORD.getCode());
-        return map;
+        return new LoginResponse(false, BLANK_ID_AND_PASSWORD.getCode(), null);
     }
+
 
     private boolean checkPassword(String memberId, String password) {
         return BCrypt.checkpw(password,
