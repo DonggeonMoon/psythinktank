@@ -1,5 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.circular.service;
 
+import com.dgmoonlabs.psythinktank.domain.circular.dto.CircularRequest;
 import com.dgmoonlabs.psythinktank.domain.circular.model.Circular;
 import com.dgmoonlabs.psythinktank.domain.circular.repository.CircularRepository;
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
@@ -11,6 +12,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,9 +33,10 @@ public class CircularService {
     private final MultipartProperties multipartProperties;
 
     @Transactional
-    public Page<Circular> selectCirculars(int page) {
+    public Page<Circular> selectCirculars(Pageable pageable) {
         return circularRepository.findAll(
-                PageRequest.of(page,
+                PageRequest.of(
+                        pageable.getPageNumber(),
                         Pagination.SIZE.getValue(),
                         Sort.by(CriteriaField.ID.getName())
                                 .ascending()
@@ -65,7 +68,9 @@ public class CircularService {
     }
 
     @Transactional
-    public void addCircular(Circular circular, MultipartFile multipartFile) {
+    public void addCircular(CircularRequest circularRequest) {
+        Circular circular = circularRequest.toEntity();
+        MultipartFile multipartFile = circularRequest.multipartFile();
         try {
             if (!multipartFile.isEmpty()) {
                 String originalFilename = multipartFile.getOriginalFilename();
@@ -75,7 +80,6 @@ public class CircularService {
                 String fileName = UUID.randomUUID() + "." + extension;
                 circular.setFileName(fileName);
             }
-
             File file = new File(circular.getFileName());
             multipartFile.transferTo(file);
             circularRepository.save(circular);
