@@ -1,5 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.board.controller;
 
+import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.service.BoardService;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
@@ -73,13 +74,13 @@ public class BoardController {
     }
 
     @PostMapping("/board")
-    public String insertBoard(HttpSession session, Board board) {
+    public String insertBoard(HttpSession session, BoardRequest boardRequest) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(board.getMemberId())) {
-                boardService.addBoard(board);
+            if (sessionInfo.getMemberId().equals(boardRequest.memberId())) {
+                boardService.addBoard(boardRequest);
                 return BOARD_LIST.redirect();
             } else {
                 return LOGIN.redirect();
@@ -104,14 +105,14 @@ public class BoardController {
     }
 
     @PutMapping("/board")
-    public String updateBoard(HttpSession session, Board board) {
+    public String updateBoard(HttpSession session, BoardRequest boardRequest) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(board.getMemberId())) {
-                boardService.updateBoard(board);
-                return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, board.getId());
+            if (sessionInfo.getMemberId().equals(boardRequest.memberId())) {
+                boardService.updateBoard(boardRequest);
+                return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, boardRequest.id());
             } else {
                 return LOGIN.redirect();
             }

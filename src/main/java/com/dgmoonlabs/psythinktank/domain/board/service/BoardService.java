@@ -1,5 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.board.service;
 
+import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.repository.BoardRepository;
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
@@ -54,13 +55,13 @@ public class BoardService {
     }
 
     @Transactional
-    public void addBoard(Board board) {
-        boardRepository.save(board);
+    public void addBoard(BoardRequest boardRequest) {
+        boardRepository.save(boardRequest.toEntity());
     }
 
     @Transactional
-    public void updateBoard(Board board) {
-        boardRepository.save(board);
+    public void updateBoard(BoardRequest boardRequest) {
+        boardRepository.save(boardRequest.toEntity());
     }
 
     @Transactional
