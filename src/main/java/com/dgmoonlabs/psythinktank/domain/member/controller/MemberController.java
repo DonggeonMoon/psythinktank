@@ -27,15 +27,13 @@ public class MemberController {
         MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
-        } else {
-            if (UserLevel.ADMIN.isSame(sessionInfo.userLevel())) {
-                Page<Member> members = memberService.selectMembers(pageable);
-                model.addAttribute(MEMBERS_KEY.getText(), members);
-                return MANAGER_PAGE.getText();
-            } else {
-                return LOGIN.redirect();
-            }
         }
+        if (UserLevel.ADMIN.isSame(sessionInfo.userLevel())) {
+            Page<Member> members = memberService.selectMembers(pageable);
+            model.addAttribute(MEMBERS_KEY.getText(), members);
+            return MANAGER_PAGE.getText();
+        }
+        return LOGIN.redirect();
     }
 
     @GetMapping("/member")
@@ -58,11 +56,10 @@ public class MemberController {
     @PostMapping("/member")
     public String insertMember(MemberRequest memberRequest, HttpSession session) {
         MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (sessionInfo == null) {
-            memberService.addMember(memberRequest);
-        } else {
+        if (sessionInfo != null) {
             session.removeAttribute(SESSION_KEY.getText());
         }
+        memberService.addMember(memberRequest);
         return LOGIN.redirect();
     }
 
@@ -103,14 +100,12 @@ public class MemberController {
         MemberResponse memberResponse = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (memberResponse == null) {
             return LOGIN.redirect();
-        } else {
-            if (memberResponse.memberId().equals(memberRequest.memberId())) {
-                memberService.editMember(memberRequest);
-                return BOARD_LIST.redirect();
-            } else {
-                return LOGIN.redirect();
-            }
         }
+        if (memberResponse.memberId().equals(memberRequest.memberId())) {
+            memberService.editMember(memberRequest);
+            return BOARD_LIST.redirect();
+        }
+        return LOGIN.redirect();
     }
 
     @DeleteMapping("/member")
@@ -118,15 +113,13 @@ public class MemberController {
         MemberResponse memberResponse = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (memberResponse == null) {
             return LOGIN.redirect();
-        } else {
-            if (memberResponse.memberId().equals(memberId)) {
-                memberService.deleteMember(memberId);
-                session.removeAttribute(SESSION_KEY.getText());
-                return GOOD_BYE.redirect();
-            } else {
-                return LOGIN.redirect();
-            }
         }
+        if (memberResponse.memberId().equals(memberId)) {
+            memberService.deleteMember(memberId);
+            session.removeAttribute(SESSION_KEY.getText());
+            return GOOD_BYE.redirect();
+        }
+        return LOGIN.redirect();
     }
 
     @GetMapping("/goodBye")
@@ -139,13 +132,11 @@ public class MemberController {
         MemberResponse memberResponse = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (memberResponse == null) {
             return LOGIN.redirect();
-        } else {
-            if (UserLevel.ADMIN.isSame(memberResponse.userLevel())) {
-                memberService.changeUserLevel(memberRequest);
-                return MANAGER_PAGE.redirect();
-            } else {
-                return LOGIN.redirect();
-            }
         }
+        if (UserLevel.ADMIN.isSame(memberResponse.userLevel())) {
+            memberService.changeUserLevel(memberRequest);
+            return MANAGER_PAGE.redirect();
+        }
+        return LOGIN.redirect();
     }
 }

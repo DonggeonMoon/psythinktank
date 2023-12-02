@@ -26,14 +26,12 @@ public class CommentController {
         MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
-        } else {
-            if (sessionInfo.memberId().equals(commentRequest.memberId())) {
-                commentService.addComment(commentRequest);
-                return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
-            } else {
-                return LOGIN.redirect();
-            }
         }
+        if (sessionInfo.memberId().equals(commentRequest.memberId())) {
+            commentService.addComment(commentRequest);
+            return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
+        }
+        return LOGIN.redirect();
     }
 
     @PutMapping("comment")
@@ -41,14 +39,12 @@ public class CommentController {
         MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
-        } else {
-            if (sessionInfo.memberId().equals(commentRequest.memberId())) {
-                commentService.updateComment(commentRequest);
-                return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
-            } else {
-                return LOGIN.redirect();
-            }
         }
+        if (sessionInfo.memberId().equals(commentRequest.memberId())) {
+            commentService.updateComment(commentRequest);
+            return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
+        }
+        return LOGIN.redirect();
     }
 
     @DeleteMapping("comment")
@@ -56,13 +52,11 @@ public class CommentController {
         MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
-        } else {
-            if (sessionInfo.memberId().equals(commentService.selectComment(commentRequest.id()).memberId())) {
-                commentService.deleteComment(commentRequest.id());
-                return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
-            } else {
-                return LOGIN.redirect();
-            }
         }
+        if (sessionInfo.memberId().equals(commentService.selectComment(commentRequest.id()).memberId())) {
+            commentService.deleteComment(commentRequest.id());
+            return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
+        }
+        return LOGIN.redirect();
     }
 }

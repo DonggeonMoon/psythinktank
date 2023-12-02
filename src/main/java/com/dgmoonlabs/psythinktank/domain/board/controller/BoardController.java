@@ -74,14 +74,12 @@ public class BoardController {
         MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
-        } else {
-            if (sessionInfo.memberId().equals(boardRequest.memberId())) {
-                boardService.addBoard(boardRequest);
-                return BOARD_LIST.redirect();
-            } else {
-                return LOGIN.redirect();
-            }
         }
+        if (sessionInfo.memberId().equals(boardRequest.memberId())) {
+            boardService.addBoard(boardRequest);
+            return BOARD_LIST.redirect();
+        }
+        return LOGIN.redirect();
     }
 
     @GetMapping("/updateBoard")
@@ -89,15 +87,13 @@ public class BoardController {
         MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
-        } else {
-            BoardResponse boardResponse = boardService.selectBoards(boardRequest);
-            if (sessionInfo.memberId().equals(boardResponse.memberId())) {
-                model.addAttribute(BOARD_KEY.getText(), boardService.selectBoards(boardRequest));
-                return UPDATE_BOARD.getText();
-            } else {
-                return LOGIN.redirect();
-            }
         }
+        BoardResponse boardResponse = boardService.selectBoards(boardRequest);
+        if (sessionInfo.memberId().equals(boardResponse.memberId())) {
+            model.addAttribute(BOARD_KEY.getText(), boardService.selectBoards(boardRequest));
+            return UPDATE_BOARD.getText();
+        }
+        return LOGIN.redirect();
     }
 
     @PutMapping("/board")
@@ -105,14 +101,12 @@ public class BoardController {
         MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
-        } else {
-            if (sessionInfo.memberId().equals(boardRequest.memberId())) {
-                boardService.updateBoard(boardRequest);
-                return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, boardRequest.id());
-            } else {
-                return LOGIN.redirect();
-            }
         }
+        if (sessionInfo.memberId().equals(boardRequest.memberId())) {
+            boardService.updateBoard(boardRequest);
+            return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, boardRequest.id());
+        }
+        return LOGIN.redirect();
     }
 
     @DeleteMapping("/board")
@@ -120,13 +114,11 @@ public class BoardController {
         MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
-        } else {
-            if (sessionInfo.memberId().equals(boardRequest.memberId())) {
-                boardService.deleteBoard(boardRequest.id());
-                return BOARD_LIST.redirect();
-            } else {
-                return LOGIN.redirect();
-            }
         }
+        if (sessionInfo.memberId().equals(boardRequest.memberId())) {
+            boardService.deleteBoard(boardRequest.id());
+            return BOARD_LIST.redirect();
+        }
+        return LOGIN.redirect();
     }
 }
