@@ -59,7 +59,7 @@ public class BoardController {
     }
 
     @GetMapping("/board")
-    public String getBoard(@RequestBody BoardRequest boardRequest, Model model) {
+    public String getBoard(BoardRequest boardRequest, Model model) {
         boardService.addHit(boardRequest.id());
         model.addAttribute(BOARD_KEY.getText(), boardService.selectBoards(boardRequest));
         model.addAttribute(COMMENTS_KEY.getText(), commentService.selectCommentsByBoardId(boardRequest.id()));
@@ -75,7 +75,7 @@ public class BoardController {
     }
 
     @PostMapping("/board")
-    public String insertBoard(@RequestBody BoardRequest boardRequest, HttpSession session) {
+    public String insertBoard(BoardRequest boardRequest, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
@@ -90,7 +90,7 @@ public class BoardController {
     }
 
     @GetMapping("/updateBoard")
-    public String getModifyBoardForm(@RequestBody BoardRequest boardRequest, HttpSession session, Model model) {
+    public String getModifyBoardForm(BoardRequest boardRequest, HttpSession session, Model model) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
@@ -106,7 +106,7 @@ public class BoardController {
     }
 
     @PutMapping("/board")
-    public String updateBoard(@RequestBody BoardRequest boardRequest, HttpSession session) {
+    public String updateBoard(BoardRequest boardRequest, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
@@ -121,7 +121,7 @@ public class BoardController {
     }
 
     @DeleteMapping("/board")
-    public String deleteBoard(@RequestBody BoardRequest boardRequest, HttpSession session) {
+    public String deleteBoard(BoardRequest boardRequest, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();

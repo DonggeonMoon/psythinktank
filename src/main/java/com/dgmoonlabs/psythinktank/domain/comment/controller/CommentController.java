@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpSession;
 
@@ -23,7 +22,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("comment")
-    public String insertComment(@RequestBody CommentRequest commentRequest, HttpSession session) {
+    public String insertComment(CommentRequest commentRequest, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
@@ -38,7 +37,7 @@ public class CommentController {
     }
 
     @PutMapping("comment")
-    public String updateComment(@RequestBody CommentRequest commentRequest, HttpSession session) {
+    public String updateComment(CommentRequest commentRequest, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
@@ -53,7 +52,7 @@ public class CommentController {
     }
 
     @DeleteMapping("comment")
-    public String deleteComment(@RequestBody CommentRequest commentRequest, HttpSession session) {
+    public String deleteComment(CommentRequest commentRequest, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();

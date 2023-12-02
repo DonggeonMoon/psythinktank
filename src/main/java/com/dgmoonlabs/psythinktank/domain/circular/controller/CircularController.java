@@ -43,7 +43,7 @@ public class CircularController {
     }
 
     @PostMapping("/circular")
-    public String insertCircular(@RequestBody CircularRequest circularRequest) {
+    public String insertCircular(CircularRequest circularRequest) {
         circularService.addCircular(circularRequest);
         return CIRCULAR_LIST.redirect();
     }
