@@ -55,12 +55,7 @@ public class LoginService {
                         .getPassword());
     }
 
-    public boolean checkId(String memberId) {
-        return (memberRepository.findById(memberId).isPresent());
-    }
-
-    @Transactional
-    public boolean checkEmail(String email) {
-        return (memberRepository.findByEmail(email) != null);
+    private boolean checkId(String memberId) {
+        return memberRepository.findById(memberId).isPresent();
     }
 }

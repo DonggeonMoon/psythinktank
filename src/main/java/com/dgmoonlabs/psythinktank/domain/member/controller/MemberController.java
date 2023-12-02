@@ -1,21 +1,18 @@
 package com.dgmoonlabs.psythinktank.domain.member.controller;
 
 import com.dgmoonlabs.psythinktank.domain.member.constant.UserLevel;
-import com.dgmoonlabs.psythinktank.domain.member.dto.MemberDto;
-import com.dgmoonlabs.psythinktank.domain.member.dto.MemberRequest;
+import com.dgmoonlabs.psythinktank.domain.member.dto.*;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
-import com.dgmoonlabs.psythinktank.domain.member.service.LoginService;
 import com.dgmoonlabs.psythinktank.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
@@ -23,16 +20,15 @@ import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
-    private final LoginService loginService;
     private final MemberService memberService;
 
     @GetMapping("/managerPage")
     public String getMembers(@RequestParam(defaultValue = "1") Pageable pageable, HttpSession session, Model model) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
+        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (UserLevel.ADMIN.isSame(sessionInfo.getUserLevel())) {
+            if (UserLevel.ADMIN.isSame(sessionInfo.userLevel())) {
                 Page<Member> members = memberService.selectMembers(pageable);
                 model.addAttribute(MEMBERS_KEY.getText(), members);
                 return MANAGER_PAGE.getText();
@@ -49,23 +45,19 @@ public class MemberController {
 
     @PostMapping("/checkId")
     @ResponseBody
-    public Map<Object, Object> checkId(@RequestBody String memberId) {
-        HashMap<Object, Object> map = new HashMap<>();
-        map.put(IS_UNIQUE_KEY.getText(), !loginService.checkId(memberId));
-        return map;
+    public ResponseEntity<CheckIdResponse> checkId(@RequestBody CheckIdRequest request) {
+        return ResponseEntity.ok(memberService.checkId(request.memberId()));
     }
 
     @PostMapping("/checkEmail")
     @ResponseBody
-    public Map<Object, Object> checkEmail(@RequestBody String memberEmail) {
-        HashMap<Object, Object> map = new HashMap<>();
-        map.put(IS_UNIQUE_KEY2.getText(), !loginService.checkEmail(memberEmail));
-        return map;
+    public ResponseEntity<CheckEmailResponse> checkEmail(@RequestBody CheckEmailRequest request) {
+        return ResponseEntity.ok(memberService.checkEmail(request.memberEmail()));
     }
 
     @PostMapping("/member")
     public String insertMember(MemberRequest memberRequest, HttpSession session) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
+        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             memberService.addMember(memberRequest);
         } else {
@@ -81,23 +73,14 @@ public class MemberController {
 
     @PostMapping("/findId")
     @ResponseBody
-    public Map<String, Object> findId(@RequestBody Map<String, String> member) {
-        Map<String, Object> map = new HashMap<>();
-        Member result = memberService.selectMemberByEmail(member.get(MEMBER_EMAIL_KEY.getText()));
-        map.put(EXISTS_KEY.getText(), result != null);
-        map.put(ID_KEY.getText(), (result != null) ? result.getMemberId() : null);
-        return map;
+    public ResponseEntity<FindIdResponse> findId(@RequestBody FindIdRequest request) {
+        return ResponseEntity.ok(memberService.selectMemberByEmail(request.memberEmail()));
     }
 
     @PostMapping("/findPw")
     @ResponseBody
-    public Map<String, Object> findPassword(@RequestBody Map<String, String> member) {
-        Map<String, Object> map = new HashMap<>();
-        Member result = memberService.selectMemberByEmailAndMemberId(member.get(MEMBER_EMAIL_KEY.getText()), member.get(MEMBER_ID_KEY.getText()));
-        map.put(EXISTS_KEY.getText(), result != null);
-        assert result != null;
-        memberService.sendTemporaryPasswordEmail(result);
-        return map;
+    public ResponseEntity<FindPasswordResponse> findPassword(@RequestBody FindPasswordRequest request) {
+        return ResponseEntity.ok(memberService.selectMemberByEmailAndMemberId(request));
     }
 
     @GetMapping("/editMemberInfo")
@@ -105,17 +88,23 @@ public class MemberController {
         if (session.getAttribute(SESSION_KEY.getText()) == null) {
             return LOGIN.redirect();
         }
-        model.addAttribute(MEMBER_KEY.getText(), memberService.getMember(session));
+        model.addAttribute(
+                MEMBER_KEY.getText(),
+                memberService.getMember(
+                        ((MemberResponse) session.getAttribute(SESSION_KEY.getText()))
+                                .memberId()
+                )
+        );
         return EDIT_MEMBER_INFO.getText();
     }
 
     @PutMapping("/member")
     public String updateMember(MemberRequest memberRequest, HttpSession session) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
-        if (sessionInfo == null) {
+        MemberResponse memberResponse = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
+        if (memberResponse == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(memberRequest.memberId())) {
+            if (memberResponse.memberId().equals(memberRequest.memberId())) {
                 memberService.editMember(memberRequest);
                 return BOARD_LIST.redirect();
             } else {
@@ -126,11 +115,11 @@ public class MemberController {
 
     @DeleteMapping("/member")
     public String deleteMember(String memberId, HttpSession session) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
-        if (sessionInfo == null) {
+        MemberResponse memberResponse = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
+        if (memberResponse == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(memberId)) {
+            if (memberResponse.memberId().equals(memberId)) {
                 memberService.deleteMember(memberId);
                 session.removeAttribute(SESSION_KEY.getText());
                 return GOOD_BYE.redirect();
@@ -147,11 +136,11 @@ public class MemberController {
 
     @PostMapping("/changeUserLevel")
     public String changeUserLevel(MemberRequest memberRequest, HttpSession session) {
-        MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
-        if (sessionInfo == null) {
+        MemberResponse memberResponse = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
+        if (memberResponse == null) {
             return LOGIN.redirect();
         } else {
-            if (UserLevel.ADMIN.isSame(sessionInfo.getUserLevel())) {
+            if (UserLevel.ADMIN.isSame(memberResponse.userLevel())) {
                 memberService.changeUserLevel(memberRequest);
                 return MANAGER_PAGE.redirect();
             } else {

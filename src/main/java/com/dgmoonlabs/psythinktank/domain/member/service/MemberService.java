@@ -1,7 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.member.service;
 
-import com.dgmoonlabs.psythinktank.domain.member.dto.MemberDto;
-import com.dgmoonlabs.psythinktank.domain.member.dto.MemberRequest;
+import com.dgmoonlabs.psythinktank.domain.member.dto.*;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.repository.MemberRepository;
 import com.dgmoonlabs.psythinktank.global.constant.*;
@@ -17,12 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.util.stream.IntStream;
-
-import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
 
 @Service
 @RequiredArgsConstructor
@@ -44,8 +40,11 @@ public class MemberService {
     }
 
     @Transactional
-    public Member getMember(HttpSession session) {
-        return memberRepository.findById(((MemberDto) session.getAttribute(SESSION_KEY.getText())).getMemberId()).orElseThrow(IllegalStateException::new);
+    public MemberResponse getMember(String memberId) {
+        return MemberResponse.from(
+                memberRepository.findById(memberId)
+                        .orElseThrow(IllegalStateException::new)
+        );
     }
 
     @Transactional
@@ -68,23 +67,29 @@ public class MemberService {
     }
 
     @Transactional
-    public Member selectMemberByEmail(String memberEmail) {
-        return memberRepository.findByEmail(memberEmail);
+    public FindIdResponse selectMemberByEmail(String memberEmail) {
+        return FindIdResponse.from(
+                memberRepository.findByEmail(memberEmail)
+                        .orElseThrow(IllegalStateException::new)
+        );
     }
 
     @Transactional
-    public Member selectMemberByEmailAndMemberId(String memberEmail, String memberId) {
-        return memberRepository.findByEmailAndMemberId(memberEmail, memberId);
+    public FindPasswordResponse selectMemberByEmailAndMemberId(FindPasswordRequest request) {
+        Member member = memberRepository.findByEmailAndMemberId(request.memberEmail(), request.memberId())
+                .orElseThrow(IllegalStateException::new);
+        sendTemporaryPasswordEmail(member);
+
+        return FindPasswordResponse.from(member);
     }
 
-    @Transactional
-    public void sendTemporaryPasswordEmail(Member member) {
+    private void sendTemporaryPasswordEmail(Member member) {
         StringBuilder sb = new StringBuilder();
         IntStream.range(0, TemporaryPassword.LENGTH.getValue())
-                .forEach(it -> sb.append((char) (random.nextInt(RandomNumber.BOUND.getValue()) + 'A'))
-                );
+                .forEach(it -> sb.append((char) (random.nextInt(RandomNumber.BOUND.getValue()) + 'A')));
         String randomizedLetters = sb.toString();
-        Member member2 = memberRepository.findByEmail(member.getEmail());
+        Member member2 = memberRepository.findByEmail(member.getEmail())
+                .orElseThrow(IllegalStateException::new);
         member2.setPassword(BCrypt.hashpw(randomizedLetters, BCrypt.gensalt()));
         member2.setLoginTryCount(LoginTry.COUNT_RANGE.getStart());
         final MimeMessagePreparator preparator = mimeMessage -> {
@@ -101,5 +106,15 @@ public class MemberService {
     public void changeUserLevel(MemberRequest memberRequest) {
         Member newMember = memberRepository.findById(memberRequest.memberId()).orElse(Member.builder().build());
         newMember.setUserLevel(memberRequest.userLevel());
+    }
+
+    @Transactional
+    public CheckIdResponse checkId(String memberId) {
+        return CheckIdResponse.from(memberRepository.findById(memberId).isEmpty());
+    }
+
+    @Transactional
+    public CheckEmailResponse checkEmail(String email) {
+        return CheckEmailResponse.from(memberRepository.findByEmail(email).isEmpty());
     }
 }
