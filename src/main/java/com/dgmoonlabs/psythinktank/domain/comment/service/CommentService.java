@@ -1,5 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.comment.service;
 
+import com.dgmoonlabs.psythinktank.domain.comment.dto.CommentRequest;
 import com.dgmoonlabs.psythinktank.domain.comment.model.Comment;
 import com.dgmoonlabs.psythinktank.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +26,13 @@ public class CommentService {
     }
 
     @Transactional
-    public void addComment(Comment comment) {
-        commentRepository.save(comment);
+    public void addComment(CommentRequest commentRequest) {
+        commentRepository.save(commentRequest.toEntity());
     }
 
     @Transactional
-    public void updateComment(Comment comment) {
-        commentRepository.save(comment);
+    public void updateComment(CommentRequest commentRequest) {
+        commentRepository.save(commentRequest.toEntity());
     }
 
     @Transactional

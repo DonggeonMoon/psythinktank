@@ -1,9 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.comment.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -12,8 +9,9 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@Builder
 public class Comment {
     @Column(name = "board_no")
     private Long boardId;
