@@ -9,7 +9,7 @@ public record CircularRequest(
         Long id,
         String title,
         String fileName,
-        MultipartFile multipartFile,
+        MultipartFile file,
         Timestamp createdAt
 ) {
     public Circular toEntity() {

@@ -55,25 +55,23 @@ public class CircularService {
 
     @Transactional
     public Resource downloadCircular(long id) {
+        Resource resource = null;
         try {
             Circular circular = circularRepository.findById(id)
                     .orElseThrow(IllegalStateException::new);
             Path filePath = Paths.get(multipartProperties.getLocation(), circular.getFileName());
-            Resource resource = new UrlResource(filePath.toUri());
+            resource = new UrlResource(filePath.toUri());
             log.info("uri: " + filePath.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            }
         } catch (MalformedURLException e) {
             log.info(e.getMessage());
         }
-        return null;
+        return resource;
     }
 
     @Transactional
     public void addCircular(CircularRequest circularRequest) {
         Circular circular = circularRequest.toEntity();
-        MultipartFile multipartFile = circularRequest.multipartFile();
+        MultipartFile multipartFile = circularRequest.file();
         try {
             if (!multipartFile.isEmpty()) {
                 String originalFilename = multipartFile.getOriginalFilename();
@@ -96,7 +94,7 @@ public class CircularService {
         Circular circular = circularRepository.findById(id)
                 .orElseThrow(IllegalStateException::new);
         try {
-            Path path = Paths.get(multipartProperties.getLocation() + circular.getFileName());
+            Path path = Paths.get(multipartProperties.getLocation(), circular.getFileName());
             Files.delete(path);
             circularRepository.deleteById(id);
         } catch (Exception e) {

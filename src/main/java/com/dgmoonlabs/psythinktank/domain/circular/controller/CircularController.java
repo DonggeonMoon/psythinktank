@@ -30,7 +30,7 @@ public class CircularController {
 
     @GetMapping("/circular")
     @ResponseBody
-    public ResponseEntity<Resource> getCircular(@RequestBody long id, Model model) {
+    public ResponseEntity<Resource> getCircular(@RequestParam long id, Model model) {
         model.addAttribute(CIRCULAR_KEY.getText(), circularService.selectCircular(id));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
