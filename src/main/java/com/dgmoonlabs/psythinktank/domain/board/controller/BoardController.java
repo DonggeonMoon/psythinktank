@@ -54,10 +54,10 @@ public class BoardController {
     }
 
     @GetMapping("/board")
-    public String getBoard(BoardRequest boardRequest, Model model) {
-        boardService.addHit(boardRequest.id());
-        model.addAttribute(BOARD_KEY.getText(), boardService.selectBoards(boardRequest));
-        model.addAttribute(COMMENTS_KEY.getText(), commentService.selectCommentsByBoardId(boardRequest.id()));
+    public String getBoard(long id, Model model) {
+        boardService.addHit(id);
+        model.addAttribute(BOARD_KEY.getText(), boardService.selectBoard(id));
+        model.addAttribute(COMMENTS_KEY.getText(), commentService.selectCommentsByBoardId(id));
         return BOARD.getText();
     }
 
@@ -83,14 +83,14 @@ public class BoardController {
     }
 
     @GetMapping("/updateBoard")
-    public String getModifyBoardForm(BoardRequest boardRequest, HttpSession session, Model model) {
+    public String getModifyBoardForm(long id, HttpSession session, Model model) {
         MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         }
-        BoardResponse boardResponse = boardService.selectBoards(boardRequest);
+        BoardResponse boardResponse = boardService.selectBoard(id);
         if (sessionInfo.memberId().equals(boardResponse.memberId())) {
-            model.addAttribute(BOARD_KEY.getText(), boardService.selectBoards(boardRequest));
+            model.addAttribute(BOARD_KEY.getText(), boardResponse);
             return UPDATE_BOARD.getText();
         }
         return LOGIN.redirect();

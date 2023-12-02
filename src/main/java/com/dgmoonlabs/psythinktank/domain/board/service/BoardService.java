@@ -36,9 +36,9 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponse selectBoards(BoardRequest boardRequest) {
+    public BoardResponse selectBoard(long id) {
         return BoardResponse.from(
-                boardRepository.findById(boardRequest.id())
+                boardRepository.findById(id)
                         .orElseThrow(IllegalStateException::new)
         );
     }

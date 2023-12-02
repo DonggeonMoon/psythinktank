@@ -33,7 +33,7 @@ public class Board {
     private int hit;
 
     @Builder.Default
-    @Column(name = "is_notice")
+    @Column(name = "is_notice", nullable = false)
     private Boolean isNotice = false;
 
     @CreationTimestamp
