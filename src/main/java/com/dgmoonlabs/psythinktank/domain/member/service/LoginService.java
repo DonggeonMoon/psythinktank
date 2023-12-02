@@ -24,10 +24,10 @@ public class LoginService {
 
     @Transactional
     public LoginResponse login(LoginRequest loginRequest, HttpSession session) {
-        if ("".equals(loginRequest.memberId()) || "".equals(loginRequest.password())) {
+        if ("".equals(loginRequest.memberId()) || "".equals(loginRequest.memberPw())) {
             return new LoginResponse(false, BLANK_ID_AND_PASSWORD.getCode(), null);
         }
-        Optional<Member> memberToCheck = memberRepository.findById(loginRequest.password());
+        Optional<Member> memberToCheck = memberRepository.findById(loginRequest.memberId());
         if (memberToCheck.isEmpty()) {
             return new LoginResponse(false, ABSENT_ID.getCode(), null);
         }
@@ -35,7 +35,7 @@ public class LoginService {
         if (!LoginTry.includes(member.getLoginTryCount())) {
             return new LoginResponse(false, LOGIN_TRY_EXCEEDING.getCode(), null);
         }
-        if (!checkPassword(loginRequest.memberId(), loginRequest.password())) {
+        if (!checkPassword(loginRequest)) {
             member.increaseLoginTryCount();
             return new LoginResponse(false, WRONG_PASSWORD.getCode(), member.getLoginTryCount());
         }
@@ -48,11 +48,12 @@ public class LoginService {
         return new LoginResponse(true, SUCCESS.getCode(), member.getLoginTryCount());
     }
 
-
-    private boolean checkPassword(String memberId, String password) {
-        return BCrypt.checkpw(password,
-                memberRepository.findById(memberId)
+    private boolean checkPassword(LoginRequest loginRequest) {
+        return BCrypt.checkpw(
+                loginRequest.memberPw(),
+                memberRepository.findById(loginRequest.memberId())
                         .orElseThrow(IllegalStateException::new)
-                        .getPassword());
+                        .getPassword()
+        );
     }
 }

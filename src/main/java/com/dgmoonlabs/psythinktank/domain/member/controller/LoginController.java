@@ -4,7 +4,6 @@ import com.dgmoonlabs.psythinktank.domain.member.dto.LoginRequest;
 import com.dgmoonlabs.psythinktank.domain.member.dto.LoginResponse;
 import com.dgmoonlabs.psythinktank.domain.member.service.LoginService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,11 +30,9 @@ public class LoginController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
-        LoginResponse loginResponse = loginService.login(loginRequest, session);
-        if (loginResponse.isSucceeded()) {
-            return ResponseEntity.ok(loginResponse);
-        }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(loginResponse);
+        return ResponseEntity.ok(
+                loginService.login(loginRequest, session)
+        );
     }
 
     @GetMapping("/logout")
