@@ -2,11 +2,13 @@ package com.dgmoonlabs.psythinktank.domain.member.controller;
 
 import com.dgmoonlabs.psythinktank.domain.member.constant.UserLevel;
 import com.dgmoonlabs.psythinktank.domain.member.dto.MemberDto;
+import com.dgmoonlabs.psythinktank.domain.member.dto.MemberRequest;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.service.LoginService;
 import com.dgmoonlabs.psythinktank.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +27,13 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/managerPage")
-    public String getMembers(HttpSession session, @RequestParam(defaultValue = "1") int page, Model model) {
+    public String getMembers(@RequestParam(defaultValue = "1") Pageable pageable, HttpSession session, Model model) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
             if (UserLevel.ADMIN.isSame(sessionInfo.getUserLevel())) {
-                Page<Member> members = memberService.selectMembers(--page);
+                Page<Member> members = memberService.selectMembers(pageable);
                 model.addAttribute(MEMBERS_KEY.getText(), members);
                 return MANAGER_PAGE.getText();
             } else {
@@ -62,10 +64,10 @@ public class MemberController {
     }
 
     @PostMapping("/member")
-    public String insertMember(HttpSession session, Member member) {
+    public String insertMember(MemberRequest memberRequest, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
-            memberService.addMember(member);
+            memberService.addMember(memberRequest);
         } else {
             session.removeAttribute(SESSION_KEY.getText());
         }
@@ -108,13 +110,13 @@ public class MemberController {
     }
 
     @PutMapping("/member")
-    public String updateMember(HttpSession session, Member member) {
+    public String updateMember(MemberRequest memberRequest, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(member.getMemberId())) {
-                memberService.editMember(member);
+            if (sessionInfo.getMemberId().equals(memberRequest.memberId())) {
+                memberService.editMember(memberRequest);
                 return BOARD_LIST.redirect();
             } else {
                 return LOGIN.redirect();
@@ -123,7 +125,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/member")
-    public String deleteMember(HttpSession session, String memberId) {
+    public String deleteMember(String memberId, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
@@ -144,13 +146,13 @@ public class MemberController {
     }
 
     @PostMapping("/changeUserLevel")
-    public String changeUserLevel(HttpSession session, Member member) {
+    public String changeUserLevel(MemberRequest memberRequest, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
             if (UserLevel.ADMIN.isSame(sessionInfo.getUserLevel())) {
-                memberService.changeUserLevel(member);
+                memberService.changeUserLevel(memberRequest);
                 return MANAGER_PAGE.redirect();
             } else {
                 return LOGIN.redirect();

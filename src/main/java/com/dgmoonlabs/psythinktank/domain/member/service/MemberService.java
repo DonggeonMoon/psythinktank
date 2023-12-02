@@ -1,12 +1,14 @@
 package com.dgmoonlabs.psythinktank.domain.member.service;
 
 import com.dgmoonlabs.psythinktank.domain.member.dto.MemberDto;
+import com.dgmoonlabs.psythinktank.domain.member.dto.MemberRequest;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.repository.MemberRepository;
 import com.dgmoonlabs.psythinktank.global.constant.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -30,8 +32,15 @@ public class MemberService {
     private final Random random;
 
     @Transactional
-    public Page<Member> selectMembers(int page) {
-        return memberRepository.findAll(PageRequest.of(page, Pagination.MEMBER_SIZE.getValue(), Sort.by(CriteriaField.USER_LEVEL.getName()).descending().and(Sort.by("memberId").ascending())));
+    public Page<Member> selectMembers(Pageable pageable) {
+        return memberRepository.findAll(
+                PageRequest.of(
+                        pageable.getPageNumber(), Pagination.MEMBER_SIZE.getValue(),
+                        Sort.by(CriteriaField.USER_LEVEL.getName())
+                                .descending()
+                                .and(Sort.by("memberId").ascending())
+                )
+        );
     }
 
     @Transactional
@@ -40,16 +49,17 @@ public class MemberService {
     }
 
     @Transactional
-    public void addMember(Member member) {
-        member.setPassword(BCrypt.hashpw(member.getPassword(), BCrypt.gensalt()));
+    public void addMember(MemberRequest memberRequest) {
+        Member member = memberRequest.toEntity();
+        member.setPassword(BCrypt.hashpw(memberRequest.password(), BCrypt.gensalt()));
         memberRepository.save(member);
     }
 
     @Transactional
-    public void editMember(Member member) {
-        Member newMember = memberRepository.findById(member.getMemberId()).orElse(Member.builder().build());
-        newMember.setPassword(BCrypt.hashpw(member.getPassword(), BCrypt.gensalt()));
-        newMember.setEmail(member.getEmail());
+    public void editMember(MemberRequest memberRequest) {
+        Member newMember = memberRepository.findById(memberRequest.memberId()).orElse(Member.builder().build());
+        newMember.setPassword(BCrypt.hashpw(memberRequest.password(), BCrypt.gensalt()));
+        newMember.setEmail(memberRequest.email());
     }
 
     @Transactional
@@ -88,8 +98,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void changeUserLevel(Member member) {
-        Member newMember = memberRepository.findById(member.getMemberId()).orElse(Member.builder().build());
-        newMember.setUserLevel(member.getUserLevel());
+    public void changeUserLevel(MemberRequest memberRequest) {
+        Member newMember = memberRepository.findById(memberRequest.memberId()).orElse(Member.builder().build());
+        newMember.setUserLevel(memberRequest.userLevel());
     }
 }
