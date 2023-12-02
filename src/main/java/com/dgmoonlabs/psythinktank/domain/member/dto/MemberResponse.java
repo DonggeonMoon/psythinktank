@@ -3,6 +3,7 @@ package com.dgmoonlabs.psythinktank.domain.member.dto;
 import com.dgmoonlabs.psythinktank.domain.member.constant.UserLevel;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 public record MemberResponse(
@@ -12,7 +13,7 @@ public record MemberResponse(
         Date createdAt,
         int userLevel,
         int loginTryCount
-) {
+) implements Serializable {
     public static MemberResponse from(Member member) {
         return new MemberResponse(
                 member.getMemberId(),

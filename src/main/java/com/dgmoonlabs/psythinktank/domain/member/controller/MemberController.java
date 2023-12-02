@@ -23,7 +23,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/managerPage")
-    public String getMembers(@RequestParam(defaultValue = "1") Pageable pageable, HttpSession session, Model model) {
+    public String getMembers(Pageable pageable, HttpSession session, Model model) {
         MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
@@ -43,14 +43,14 @@ public class MemberController {
 
     @PostMapping("/checkId")
     @ResponseBody
-    public ResponseEntity<CheckIdResponse> checkId(@RequestBody CheckIdRequest request) {
-        return ResponseEntity.ok(memberService.checkId(request.memberId()));
+    public ResponseEntity<CheckIdResponse> checkId(@RequestBody String memberId) {
+        return ResponseEntity.ok(memberService.checkId(memberId));
     }
 
     @PostMapping("/checkEmail")
     @ResponseBody
-    public ResponseEntity<CheckEmailResponse> checkEmail(@RequestBody CheckEmailRequest request) {
-        return ResponseEntity.ok(memberService.checkEmail(request.memberEmail()));
+    public ResponseEntity<CheckEmailResponse> checkEmail(@RequestBody String memberEmail) {
+        return ResponseEntity.ok(memberService.checkEmail(memberEmail));
     }
 
     @PostMapping("/member")

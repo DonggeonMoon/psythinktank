@@ -9,8 +9,7 @@ public record MemberRequest(
         String password,
         String email,
         Date createdAt,
-        int userLevel,
-        int loginTryCount
+        int userLevel
 ) {
     public Member toEntity() {
         return Member.builder()
@@ -19,7 +18,6 @@ public record MemberRequest(
                 .email(email)
                 .createdAt(createdAt)
                 .userLevel(userLevel)
-                .loginTryCount(loginTryCount)
                 .build();
     }
 }

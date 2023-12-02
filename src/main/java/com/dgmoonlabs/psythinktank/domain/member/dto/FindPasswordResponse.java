@@ -1,11 +1,9 @@
 package com.dgmoonlabs.psythinktank.domain.member.dto;
 
-import com.dgmoonlabs.psythinktank.domain.member.model.Member;
-
 public record FindPasswordResponse(
         boolean exists
 ) {
-    public static FindPasswordResponse from(final Member member) {
-        return new FindPasswordResponse(member != null);
+    public static FindPasswordResponse from(final boolean exists) {
+        return new FindPasswordResponse(exists);
     }
 }
