@@ -2,6 +2,7 @@ package com.dgmoonlabs.psythinktank.domain.member.service;
 
 import com.dgmoonlabs.psythinktank.domain.member.dto.LoginRequest;
 import com.dgmoonlabs.psythinktank.domain.member.dto.LoginResponse;
+import com.dgmoonlabs.psythinktank.domain.member.dto.MemberResponse;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.repository.MemberRepository;
 import com.dgmoonlabs.psythinktank.global.constant.LoginTry;
@@ -30,8 +31,10 @@ public class LoginService {
                     if (checkPassword(loginRequest.memberId(), loginRequest.password())) {
                         member.setLoginTryCount(LoginTry.COUNT_RANGE.getStart());
                         session.setAttribute(SESSION_KEY.getText(),
-                                memberRepository.findById(loginRequest.memberId())
-                                        .orElseThrow(IllegalStateException::new).toDto());
+                                MemberResponse.from(
+                                        memberRepository.findById(loginRequest.memberId())
+                                                .orElseThrow(IllegalStateException::new)
+                                ));
                         return new LoginResponse(true, SUCCESS.getCode(), member.getLoginTryCount());
                     } else {
                         member.increaseLoginTryCount();

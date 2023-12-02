@@ -1,6 +1,5 @@
 package com.dgmoonlabs.psythinktank.domain.member.model;
 
-import com.dgmoonlabs.psythinktank.domain.member.dto.MemberResponse;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,17 +37,6 @@ public class Member implements Serializable {
     @Column(name = "login_try_count")
     @ColumnDefault(value = "0")
     private int loginTryCount;
-
-    public MemberResponse toDto() {
-        return MemberResponse.builder()
-                .memberId(memberId)
-                .password(password)
-                .email(email)
-                .createdAt(createdAt)
-                .userLevel(userLevel)
-                .loginTryCount(loginTryCount)
-                .build();
-    }
 
     public void increaseLoginTryCount() {
         this.loginTryCount++;

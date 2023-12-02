@@ -27,7 +27,7 @@ public class CommentController {
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(commentRequest.memberId())) {
+            if (sessionInfo.memberId().equals(commentRequest.memberId())) {
                 commentService.addComment(commentRequest);
                 return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
             } else {
@@ -42,7 +42,7 @@ public class CommentController {
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(commentRequest.memberId())) {
+            if (sessionInfo.memberId().equals(commentRequest.memberId())) {
                 commentService.updateComment(commentRequest);
                 return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
             } else {
@@ -57,7 +57,7 @@ public class CommentController {
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(commentService.selectComment(commentRequest.id()).memberId())) {
+            if (sessionInfo.memberId().equals(commentService.selectComment(commentRequest.id()).memberId())) {
                 commentService.deleteComment(commentRequest.id());
                 return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
             } else {
