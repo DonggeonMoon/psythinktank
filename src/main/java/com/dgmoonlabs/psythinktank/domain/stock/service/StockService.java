@@ -1,7 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.stock.service;
 
-import com.dgmoonlabs.psythinktank.domain.stock.dto.StockSearchRequest;
-import com.dgmoonlabs.psythinktank.domain.stock.model.Dividend;
+import com.dgmoonlabs.psythinktank.domain.stock.dto.*;
 import com.dgmoonlabs.psythinktank.domain.stock.model.Share;
 import com.dgmoonlabs.psythinktank.domain.stock.model.StockInfo;
 import com.dgmoonlabs.psythinktank.domain.stock.repository.*;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -42,29 +40,49 @@ public class StockService {
     }
 
     @Transactional
-    public List<StockInfo> selectStocksBySymbol(StockSearchRequest stockSearchRequest) {
-        return stockInfoRepository.findBySymbolContains(stockSearchRequest.searchText());
+    public StockSearchResponse selectStocksBySymbol(StockSearchRequest stockSearchRequest) {
+        return StockSearchResponse.from(
+                stockInfoRepository.findBySymbolContains(stockSearchRequest.searchText())
+                        .stream()
+                        .map(StockResponse::from)
+                        .toList()
+        );
     }
 
     @Transactional
-    public List<StockInfo> selectStocksBySymbol(String searchText) {
-        return stockInfoRepository.findBySymbolContains(searchText);
+    public StockSearchResponse selectStocksBySymbol(String searchText) {
+        return StockSearchResponse.from(
+                stockInfoRepository.findBySymbolContains(searchText)
+                        .stream()
+                        .map(StockResponse::from)
+                        .toList()
+        );
     }
 
     @Transactional
-    public List<StockInfo> selectStocksByName(StockSearchRequest stockSearchRequest) {
-        return stockInfoRepository.findByNameContains(stockSearchRequest.searchText());
+    public StockSearchResponse selectStocksByName(StockSearchRequest stockSearchRequest) {
+        return StockSearchResponse.from(
+                stockInfoRepository.findByNameContains(stockSearchRequest.searchText())
+                        .stream()
+                        .map(StockResponse::from)
+                        .toList()
+        );
     }
 
     @Transactional
-    public List<Share> selectSharesBySymbol(String symbol) {
-        return shareRepository.findBySymbol(symbol);
+    public ShareSearchResponse selectSharesBySymbol(String symbol) {
+        return ShareSearchResponse.from(shareRepository.findBySymbol(symbol)
+                .stream()
+                .map(ShareResponse::from)
+                .toList()
+        );
     }
 
     @Transactional
-    public Dividend selectDividendBySymbol(String symbol) {
-        return dividendRepository.findById(symbol)
-                .orElseThrow(IllegalStateException::new);
+    public DividendResponse selectDividendBySymbol(String symbol) {
+        return DividendResponse.from(dividendRepository.findById(symbol)
+                .orElseThrow(IllegalStateException::new)
+        );
     }
 
     @Transactional
