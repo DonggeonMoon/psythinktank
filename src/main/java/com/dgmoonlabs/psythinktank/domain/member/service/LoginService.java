@@ -27,7 +27,6 @@ public class LoginService {
             if (checkId(memberId)) {
                 Member member = memberRepository.findById(memberId)
                         .orElseThrow(IllegalStateException::new);
-                // 5회 이상 틀렸을 경우
                 if (LoginTry.includes(member.getLoginTryCount())) {
                     if (checkPassword(memberId, password)) {
                         member.setLoginTryCount(LoginTry.COUNT_RANGE.getStart());
