@@ -1,6 +1,7 @@
 package com.dgmoonlabs.psythinktank.domain.board.service;
 
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
+import com.dgmoonlabs.psythinktank.domain.board.dto.BoardSearchRequest;
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.repository.BoardRepository;
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
@@ -8,6 +9,7 @@ import com.dgmoonlabs.psythinktank.global.constant.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +22,10 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Page<Board> selectBoards(int page) {
+    public Page<Board> selectBoards(Pageable pageable) {
         return boardRepository.findAll(
                 PageRequest.of(
-                        page,
+                        pageable.getPageNumber(),
                         Pagination.SIZE.getValue(),
                         Sort.by(CriteriaField.IS_NOTICE.getName())
                                 .descending()
@@ -34,24 +36,24 @@ public class BoardService {
     }
 
     @Transactional
-    public Board selectBoards(long id) {
-        return boardRepository.findById(id)
+    public Board selectBoards(BoardRequest boardRequest) {
+        return boardRepository.findById(boardRequest.id())
                 .orElseThrow(IllegalStateException::new);
     }
 
     @Transactional
-    public List<Board> searchBoardByTitle(String title) {
-        return boardRepository.findByTitleContainingOrderByIdDesc(title);
+    public List<Board> searchBoardByTitle(BoardSearchRequest boardSearchRequest) {
+        return boardRepository.findByTitleContainingOrderByIdDesc(boardSearchRequest.searchText());
     }
 
     @Transactional
-    public List<Board> searchBoardByContent(String content) {
-        return boardRepository.findByContentContainingOrderByIdDesc(content);
+    public List<Board> searchBoardByContent(BoardSearchRequest boardSearchRequest) {
+        return boardRepository.findByContentContainingOrderByIdDesc(boardSearchRequest.searchText());
     }
 
     @Transactional
-    public List<Board> searchBoardByMemberId(String memberId) {
-        return boardRepository.findByMemberIdOrderByIdDesc(memberId);
+    public List<Board> searchBoardByMemberId(BoardSearchRequest boardSearchRequest) {
+        return boardRepository.findByMemberIdOrderByIdDesc(boardSearchRequest.searchText());
     }
 
     @Transactional

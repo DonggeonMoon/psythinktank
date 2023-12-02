@@ -1,6 +1,7 @@
 package com.dgmoonlabs.psythinktank.domain.board.controller;
 
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
+import com.dgmoonlabs.psythinktank.domain.board.dto.BoardSearchRequest;
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.service.BoardService;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
@@ -28,40 +29,40 @@ public class BoardController {
 
     @GetMapping("/boardList")
     public String getBoards(Pageable pageable, Model model) {
-        Page<Board> boards = boardService.selectBoards(pageable.getPageNumber());
+        Page<Board> boards = boardService.selectBoards(pageable);
         model.addAttribute(BOARDS_KEY.getText(), boards);
         return BOARD_LIST.getText();
     }
 
     @PostMapping("/searchByBoardTitle")
     @ResponseBody
-    public Map<String, Object> searchBoardByTitle(@RequestBody String searchText) {
+    public Map<String, Object> searchBoardByTitle(@RequestBody BoardSearchRequest boardSearchRequest) {
         Map<String, Object> map = new HashMap<>();
-        map.put(AJAX_RESPONSE_KEY.getText(), boardService.searchBoardByTitle(searchText));
+        map.put(AJAX_RESPONSE_KEY.getText(), boardService.searchBoardByTitle(boardSearchRequest));
         return map;
     }
 
     @PostMapping("/searchByBoardContent")
     @ResponseBody
-    public Map<String, Object> searchBoardByContent(@RequestBody String searchText) {
+    public Map<String, Object> searchBoardByContent(@RequestBody BoardSearchRequest boardSearchRequest) {
         Map<String, Object> map = new HashMap<>();
-        map.put(AJAX_RESPONSE_KEY.getText(), boardService.searchBoardByContent(searchText));
+        map.put(AJAX_RESPONSE_KEY.getText(), boardService.searchBoardByContent(boardSearchRequest));
         return map;
     }
 
     @PostMapping("/searchByMemberId")
     @ResponseBody
-    public Map<String, Object> searchBoardByMemberId(@RequestBody String searchText) {
+    public Map<String, Object> searchBoardByMemberId(@RequestBody BoardSearchRequest boardSearchRequest) {
         Map<String, Object> map = new HashMap<>();
-        map.put(AJAX_RESPONSE_KEY.getText(), boardService.searchBoardByMemberId(searchText));
+        map.put(AJAX_RESPONSE_KEY.getText(), boardService.searchBoardByMemberId(boardSearchRequest));
         return map;
     }
 
     @GetMapping("/board")
-    public String getBoard(long id, Model model) {
-        boardService.addHit(id);
-        model.addAttribute(BOARD_KEY.getText(), boardService.selectBoards(id));
-        model.addAttribute(COMMENTS_KEY.getText(), commentService.selectCommentsByBoardId(id));
+    public String getBoard(@RequestBody BoardRequest boardRequest, Model model) {
+        boardService.addHit(boardRequest.id());
+        model.addAttribute(BOARD_KEY.getText(), boardService.selectBoards(boardRequest));
+        model.addAttribute(COMMENTS_KEY.getText(), commentService.selectCommentsByBoardId(boardRequest.id()));
         return BOARD.getText();
     }
 
@@ -74,7 +75,7 @@ public class BoardController {
     }
 
     @PostMapping("/board")
-    public String insertBoard(HttpSession session, BoardRequest boardRequest) {
+    public String insertBoard(@RequestBody BoardRequest boardRequest, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
@@ -89,14 +90,14 @@ public class BoardController {
     }
 
     @GetMapping("/updateBoard")
-    public String getModifyBoardForm(HttpSession session, long id, Model model) {
+    public String getModifyBoardForm(@RequestBody BoardRequest boardRequest, HttpSession session, Model model) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            Board board = boardService.selectBoards(id);
+            Board board = boardService.selectBoards(boardRequest);
             if (sessionInfo.getMemberId().equals(board.getMemberId())) {
-                model.addAttribute(BOARD_KEY.getText(), boardService.selectBoards(id));
+                model.addAttribute(BOARD_KEY.getText(), boardService.selectBoards(boardRequest));
                 return UPDATE_BOARD.getText();
             } else {
                 return LOGIN.redirect();
@@ -105,7 +106,7 @@ public class BoardController {
     }
 
     @PutMapping("/board")
-    public String updateBoard(HttpSession session, BoardRequest boardRequest) {
+    public String updateBoard(@RequestBody BoardRequest boardRequest, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
@@ -120,13 +121,13 @@ public class BoardController {
     }
 
     @DeleteMapping("/board")
-    public String deleteBoard(HttpSession session, long id, String memberId) {
+    public String deleteBoard(@RequestBody BoardRequest boardRequest, HttpSession session) {
         MemberDto sessionInfo = (MemberDto) session.getAttribute(SESSION_KEY.getText());
         if (sessionInfo == null) {
             return LOGIN.redirect();
         } else {
-            if (sessionInfo.getMemberId().equals(memberId)) {
-                boardService.deleteBoard(id);
+            if (sessionInfo.getMemberId().equals(boardRequest.memberId())) {
+                boardService.deleteBoard(boardRequest.id());
                 return BOARD_LIST.redirect();
             } else {
                 return LOGIN.redirect();
