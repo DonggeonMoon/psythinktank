@@ -1,6 +1,7 @@
 package com.dgmoonlabs.psythinktank.domain.circular.service;
 
 import com.dgmoonlabs.psythinktank.domain.circular.dto.CircularRequest;
+import com.dgmoonlabs.psythinktank.domain.circular.dto.CircularResponse;
 import com.dgmoonlabs.psythinktank.domain.circular.model.Circular;
 import com.dgmoonlabs.psythinktank.domain.circular.repository.CircularRepository;
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
@@ -45,9 +46,11 @@ public class CircularService {
     }
 
     @Transactional
-    public Circular selectCircular(long id) {
-        return circularRepository.findById(id)
-                .orElseThrow(IllegalStateException::new);
+    public CircularResponse selectCircular(long id) {
+        return CircularResponse.from(
+                circularRepository.findById(id)
+                        .orElseThrow(IllegalStateException::new)
+        );
     }
 
     @Transactional
