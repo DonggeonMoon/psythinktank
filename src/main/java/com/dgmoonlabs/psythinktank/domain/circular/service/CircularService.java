@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -51,7 +52,7 @@ public class CircularService {
         try {
             Circular circular = circularRepository.findById(id)
                     .orElseThrow(IllegalStateException::new);
-            Path filePath = Paths.get(multipartProperties.getLocation() + "/" + circular.getFileName());
+            Path filePath = Paths.get(multipartProperties.getLocation(), circular.getFileName());
             Resource resource = new UrlResource(filePath.toUri());
             log.info("uri: " + filePath.toUri());
             if (resource.exists() || resource.isReadable()) {
@@ -88,9 +89,9 @@ public class CircularService {
         Circular circular = circularRepository.findById(id)
                 .orElseThrow(IllegalStateException::new);
         try {
-            if (new File(multipartProperties.getLocation() + circular.getFileName()).delete()) {
-                circularRepository.deleteById(id);
-            }
+            Path path = Paths.get(multipartProperties.getLocation() + circular.getFileName());
+            Files.delete(path);
+            circularRepository.deleteById(id);
         } catch (Exception e) {
             log.info(e.getMessage());
         }
