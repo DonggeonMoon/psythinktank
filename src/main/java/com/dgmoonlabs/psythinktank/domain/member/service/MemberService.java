@@ -36,7 +36,7 @@ public class MemberService {
 
     @Transactional
     public Member getMember(HttpSession session) {
-        return memberRepository.findById(((MemberDto) session.getAttribute(SESSION_KEY.getText())).getMemberId()).orElse(null);
+        return memberRepository.findById(((MemberDto) session.getAttribute(SESSION_KEY.getText())).getMemberId()).orElseThrow(IllegalStateException::new);
     }
 
     @Transactional

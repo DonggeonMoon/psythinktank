@@ -3,13 +3,14 @@ package com.dgmoonlabs.psythinktank.domain.member.dto;
 import com.dgmoonlabs.psythinktank.domain.member.constant.UserLevel;
 import lombok.*;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.NONE)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class MemberDto {
+public class MemberDto implements Serializable {
     private String memberId;
     private String password;
     private String email;

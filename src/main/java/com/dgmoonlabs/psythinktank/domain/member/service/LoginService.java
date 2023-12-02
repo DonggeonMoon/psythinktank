@@ -33,7 +33,7 @@ public class LoginService {
                         member.setLoginTryCount(LoginTry.COUNT_RANGE.getStart());
                         session.setAttribute(SESSION_KEY.getText(),
                                 memberRepository.findById(memberId)
-                                        .orElseThrow(IllegalStateException::new));
+                                        .orElseThrow(IllegalStateException::new).toDto());
                         map.put(IS_SUCCEEDED_KEY.getText(), true);
                         map.put(ERROR_KEY.getText(), SUCCESS.getCode());
                     } else {
@@ -64,7 +64,6 @@ public class LoginService {
                         .getPassword());
     }
 
-    @Transactional
     public boolean checkId(String memberId) {
         return (memberRepository.findById(memberId).isPresent());
     }
