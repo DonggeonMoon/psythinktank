@@ -42,7 +42,8 @@ public class StockService {
     @Transactional
     public StockResponse selectStock(String stockCode) {
         return StockResponse.from(
-                stockInfoRepository.findById(stockCode).orElseGet(StockInfo::new)
+                stockInfoRepository.findById(stockCode)
+                        .orElseThrow(IllegalStateException::new)
         );
     }
 

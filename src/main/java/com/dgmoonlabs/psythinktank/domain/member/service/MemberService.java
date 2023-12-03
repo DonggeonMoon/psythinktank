@@ -56,7 +56,8 @@ public class MemberService {
 
     @Transactional
     public void editMember(MemberRequest memberRequest) {
-        Member newMember = memberRepository.findById(memberRequest.memberId()).orElse(Member.builder().build());
+        Member newMember = memberRepository.findById(memberRequest.memberId())
+                .orElseThrow(IllegalArgumentException::new);
         newMember.setPassword(BCrypt.hashpw(memberRequest.password(), BCrypt.gensalt()));
         newMember.setEmail(memberRequest.email());
     }
@@ -103,7 +104,8 @@ public class MemberService {
 
     @Transactional
     public void changeUserLevel(MemberRequest memberRequest) {
-        Member newMember = memberRepository.findById(memberRequest.memberId()).orElse(Member.builder().build());
+        Member newMember = memberRepository.findById(memberRequest.memberId())
+                .orElseThrow(IllegalArgumentException::new);
         newMember.setUserLevel(memberRequest.userLevel());
     }
 
