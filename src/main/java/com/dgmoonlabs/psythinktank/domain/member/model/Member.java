@@ -1,14 +1,14 @@
 package com.dgmoonlabs.psythinktank.domain.member.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,6 +36,10 @@ public class Member implements Serializable {
     @Column(name = "login_try_count")
     @ColumnDefault(value = "0")
     private int loginTryCount;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+    private Set<Authority> authorities;
 
     public void increaseLoginTryCount() {
         this.loginTryCount++;
