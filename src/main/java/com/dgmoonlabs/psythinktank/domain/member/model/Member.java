@@ -11,11 +11,10 @@ import java.io.Serializable;
 import java.sql.Date;
 
 @Entity
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
-@Setter
+@AllArgsConstructor
+@Builder
+@Data
 public class Member implements Serializable {
     @Id
     @Column(name = "member_id", nullable = false, length = 50)

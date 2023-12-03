@@ -7,11 +7,10 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 @Builder
+@Data
 public class Circular {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

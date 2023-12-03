@@ -8,11 +8,10 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Getter
-@Setter
 @Builder
+@Data
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
