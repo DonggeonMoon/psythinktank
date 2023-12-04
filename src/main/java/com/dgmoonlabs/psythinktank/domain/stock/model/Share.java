@@ -9,7 +9,8 @@ import java.sql.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
 public class Share {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,7 +8,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
 public class Dividend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

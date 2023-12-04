@@ -11,7 +11,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

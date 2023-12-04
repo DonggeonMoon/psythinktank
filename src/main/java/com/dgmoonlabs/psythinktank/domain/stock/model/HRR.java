@@ -8,7 +8,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
 public class HRR {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -10,7 +10,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
 public class Comment {
     @Column(name = "board_no")
     private Long boardId;

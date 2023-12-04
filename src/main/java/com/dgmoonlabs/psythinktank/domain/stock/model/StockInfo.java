@@ -9,7 +9,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
 public class StockInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
