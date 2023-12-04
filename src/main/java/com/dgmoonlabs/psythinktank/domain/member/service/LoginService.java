@@ -7,11 +7,17 @@ import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.repository.MemberRepository;
 import com.dgmoonlabs.psythinktank.global.constant.LoginTry;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
 
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
@@ -19,7 +25,7 @@ import static com.dgmoonlabs.psythinktank.global.constant.LoginResult.*;
 
 @Service
 @RequiredArgsConstructor
-public class LoginService {
+public class LoginService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -55,5 +61,21 @@ public class LoginService {
                         .orElseThrow(IllegalStateException::new)
                         .getPassword()
         );
+    }
+
+    @Transactional
+    @Override
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        Member member = memberRepository.findById(username)
+                .orElseThrow(IllegalStateException::new);
+
+        String memberId = member.getMemberId();
+        String password = member.getPassword();
+        List<SimpleGrantedAuthority> authorities = member.getAuthorities()
+                .stream()
+                .map(authority -> new SimpleGrantedAuthority(member.getRole().getValue()))
+                .toList();
+
+        return new User(memberId, password, authorities);
     }
 }

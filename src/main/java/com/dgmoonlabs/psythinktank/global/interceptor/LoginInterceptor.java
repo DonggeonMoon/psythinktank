@@ -1,31 +1,36 @@
 package com.dgmoonlabs.psythinktank.global.interceptor;
 
+import com.dgmoonlabs.psythinktank.global.constant.Role;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-
-import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
-import static com.dgmoonlabs.psythinktank.global.constant.ViewName.LOGIN;
+import java.util.Map;
 
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
-    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws IOException {
-        if (emptySessionFrom(request)) {
-            response.sendRedirect(request.getContextPath() + "/" + LOGIN.getText());
-            return false;
+    public void postHandle(@NonNull HttpServletRequest request, @NonNull final HttpServletResponse response, @NonNull final Object handler, ModelAndView modelAndView) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                System.out.println(authority.getAuthority());
+
+            }
+
+            if (modelAndView != null) {
+                modelAndView.getModelMap().put("member", Map.of(
+                        "memberId", authentication.getName(),
+                        "isAdmin", authentication.getAuthorities()
+                                .stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .anyMatch(it -> it.equals(Role.ROLE_ADMIN.getValue()))
+                ));
+            }
         }
-        return true;
-    }
-
-    private boolean emptySessionFrom(final HttpServletRequest request) {
-        return getSessionFrom(request).getAttribute(SESSION_KEY.getText()) == null;
-    }
-
-    private HttpSession getSessionFrom(final HttpServletRequest request) {
-        return request.getSession();
     }
 }

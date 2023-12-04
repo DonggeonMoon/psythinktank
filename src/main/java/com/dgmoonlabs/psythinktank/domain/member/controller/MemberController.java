@@ -24,16 +24,9 @@ public class MemberController {
 
     @GetMapping("/managerPage")
     public String getMembers(Pageable pageable, HttpSession session, Model model) {
-        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (sessionInfo == null) {
-            return LOGIN.redirect();
-        }
-        if (UserLevel.ADMIN.isSame(sessionInfo.userLevel())) {
-            Page<Member> members = memberService.selectMembers(pageable);
-            model.addAttribute(MEMBERS_KEY.getText(), members);
-            return MANAGER_PAGE.getText();
-        }
-        return LOGIN.redirect();
+        Page<Member> members = memberService.selectMembers(pageable);
+        model.addAttribute(MEMBERS_KEY.getText(), members);
+        return MANAGER_PAGE.getText();
     }
 
     @GetMapping("/member")

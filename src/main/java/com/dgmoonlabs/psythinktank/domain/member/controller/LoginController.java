@@ -35,7 +35,7 @@ public class LoginController {
         );
     }
 
-    @GetMapping("/logout")
+    //@GetMapping("/logout")
     public String logout(HttpSession session) {
         session.removeAttribute(SESSION_KEY.getText());
         return ROOT.redirect();

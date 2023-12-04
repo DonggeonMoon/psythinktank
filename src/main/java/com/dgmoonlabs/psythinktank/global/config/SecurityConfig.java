@@ -23,16 +23,13 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .csrf().disable()
-                .formLogin(configurer -> {
-                    configurer
-                            .loginPage("/login")
-                            .defaultSuccessUrl("/boardList")
-                            .usernameParameter("memberId")
-                            .passwordParameter("memberPw")
-                            .loginProcessingUrl("/login_proc")
-                    ;
-                });
-
+                .formLogin(configurer -> configurer
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/boardList")
+                        .usernameParameter("memberId")
+                        .passwordParameter("memberPw")
+                        .loginProcessingUrl("/login_proc")
+                );
         return http.build();
     }
 
