@@ -9,11 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns("/stockList")
-                .addPathPatterns("/boardList")
-                .addPathPatterns("/stock")
-                .addPathPatterns("/board");
+        registry.addInterceptor(new LoginInterceptor());
     }
 }
-	
