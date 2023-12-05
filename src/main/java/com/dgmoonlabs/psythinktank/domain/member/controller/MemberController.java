@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.MEMBERS_KEY;
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
@@ -71,11 +72,15 @@ public class MemberController {
 
     @GetMapping("/editMemberInfo")
     public String getModifyMemberForm(HttpSession session, Model model) {
+        model.addAttribute(
+                "memberInfo",
+                memberService.getMember((String) ((Map<?, ?>) session.getAttribute("member")).get("memberId"))
+        );
         return EDIT_MEMBER_INFO.getText();
     }
 
     @PutMapping("/member")
-    public String updateMember(MemberRequest memberRequest, HttpSession session) {
+    public String updateMember(MemberRequest memberRequest) {
         memberService.editMember(memberRequest);
         return BOARD_LIST.redirect();
     }
