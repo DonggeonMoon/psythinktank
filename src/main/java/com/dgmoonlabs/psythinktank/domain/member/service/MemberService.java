@@ -121,8 +121,21 @@ public class MemberService {
 
     @Transactional
     public void resetLoginTryCount(String memberId) {
+        if (memberId.isEmpty() || memberId.isBlank()) {
+            return;
+        }
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(IllegalStateException::new);
         member.setLoginTryCount(0);
+    }
+
+    @Transactional
+    public void increaseLoginTryCount(String memberId) {
+        if (memberId.isEmpty() || memberId.isBlank()) {
+            return;
+        }
+        Member member = memberRepository.findById(memberId)
+                .orElse(Member.builder().build());
+        member.increaseLoginTryCount();
     }
 }

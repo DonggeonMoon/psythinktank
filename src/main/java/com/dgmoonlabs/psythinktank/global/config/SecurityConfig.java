@@ -1,5 +1,6 @@
 package com.dgmoonlabs.psythinktank.global.config;
 
+import com.dgmoonlabs.psythinktank.domain.member.handler.LoginFailureHandler;
 import com.dgmoonlabs.psythinktank.domain.member.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
     private final LoginSuccessHandler loginSuccessHandler;
+    private final LoginFailureHandler loginFailureHandler;
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -59,6 +61,7 @@ public class SecurityConfig {
                         .usernameParameter("memberId")
                         .passwordParameter("memberPw")
                         .successHandler(loginSuccessHandler)
+                        .failureHandler(loginFailureHandler)
                 );
         return http.build();
     }

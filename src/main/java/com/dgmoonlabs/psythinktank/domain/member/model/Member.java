@@ -1,6 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.member.model;
 
-import com.dgmoonlabs.psythinktank.global.constant.Role;
+import com.dgmoonlabs.psythinktank.global.constant.LoginTry;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -35,13 +35,9 @@ public class Member implements Serializable {
     @Column(name = "user_level", nullable = false)
     private int userLevel;
 
-    @Column(name = "login_try_count")
+    @Column(name = "login_try_count", nullable = false)
     @ColumnDefault(value = "0")
     private int loginTryCount;
-
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
     @JsonIgnore
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
@@ -49,5 +45,9 @@ public class Member implements Serializable {
 
     public void increaseLoginTryCount() {
         this.loginTryCount++;
+    }
+
+    public boolean isLocked() {
+        return this.loginTryCount >= LoginTry.COUNT_RANGE.getEnd();
     }
 }

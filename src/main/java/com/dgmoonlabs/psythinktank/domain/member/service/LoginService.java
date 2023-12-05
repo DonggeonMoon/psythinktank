@@ -6,6 +6,7 @@ import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.repository.MemberRepository;
 import com.dgmoonlabs.psythinktank.global.constant.LoginTry;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,14 +60,21 @@ public class LoginService implements UserDetailsService {
     @Transactional
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        if (username.isBlank()) {
+            throw new InternalAuthenticationServiceException(String.valueOf(BLANK_ID_AND_PASSWORD.getCode()));
+        }
         Member member = memberRepository.findById(username)
-                .orElseThrow(IllegalStateException::new);
+                .orElseThrow(() -> new InternalAuthenticationServiceException(String.valueOf(ABSENT_ID.getCode())));
+
+        if (member.isLocked()) {
+            throw new InternalAuthenticationServiceException(String.valueOf(LOGIN_TRY_EXCEEDING.getCode()));
+        }
 
         String memberId = member.getMemberId();
         String password = member.getPassword();
         List<SimpleGrantedAuthority> authorities = member.getAuthorities()
                 .stream()
-                .map(authority -> new SimpleGrantedAuthority(member.getRole().getValue()))
+                .map(authority -> new SimpleGrantedAuthority(authority.getName().getValue()))
                 .toList();
 
         return new User(memberId, password, authorities);
