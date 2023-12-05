@@ -118,4 +118,11 @@ public class MemberService {
     public CheckEmailResponse checkEmail(String email) {
         return CheckEmailResponse.from(memberRepository.findByEmail(email).isEmpty());
     }
+
+    @Transactional
+    public void resetLoginTryCount(String memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(IllegalStateException::new);
+        member.setLoginTryCount(0);
+    }
 }

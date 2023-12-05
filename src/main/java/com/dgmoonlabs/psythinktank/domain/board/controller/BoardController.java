@@ -7,7 +7,6 @@ import com.dgmoonlabs.psythinktank.domain.board.dto.BoardSearchResponse;
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.service.BoardService;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
-import com.dgmoonlabs.psythinktank.domain.member.dto.MemberResponse;
 import com.dgmoonlabs.psythinktank.global.constant.QueryParameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -63,62 +62,31 @@ public class BoardController {
 
     @GetMapping("/insertBoard")
     public String getAddBoardForm(HttpSession session) {
-        if (session.getAttribute(SESSION_KEY.getText()) == null) {
-            return LOGIN.redirect();
-        }
         return INSERT_BOARD.getText();
     }
 
     @PostMapping("/board")
-    public String insertBoard(BoardRequest boardRequest, HttpSession session) {
-        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (sessionInfo == null) {
-            return LOGIN.redirect();
-        }
-        if (sessionInfo.memberId().equals(boardRequest.memberId())) {
-            boardService.addBoard(boardRequest);
-            return BOARD_LIST.redirect();
-        }
-        return LOGIN.redirect();
+    public String insertBoard(BoardRequest boardRequest) {
+        boardService.addBoard(boardRequest);
+        return BOARD_LIST.redirect();
     }
 
     @GetMapping("/updateBoard")
     public String getModifyBoardForm(long id, HttpSession session, Model model) {
-        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (sessionInfo == null) {
-            return LOGIN.redirect();
-        }
         BoardResponse boardResponse = boardService.selectBoard(id);
-        if (sessionInfo.memberId().equals(boardResponse.memberId())) {
-            model.addAttribute(BOARD_KEY.getText(), boardResponse);
-            return UPDATE_BOARD.getText();
-        }
-        return LOGIN.redirect();
+        model.addAttribute(BOARD_KEY.getText(), boardResponse);
+        return UPDATE_BOARD.getText();
     }
 
     @PutMapping("/board")
     public String updateBoard(BoardRequest boardRequest, HttpSession session) {
-        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (sessionInfo == null) {
-            return LOGIN.redirect();
-        }
-        if (sessionInfo.memberId().equals(boardRequest.memberId())) {
-            boardService.updateBoard(boardRequest);
-            return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, boardRequest.id());
-        }
-        return LOGIN.redirect();
+        boardService.updateBoard(boardRequest);
+        return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, boardRequest.id());
     }
 
     @DeleteMapping("/board")
-    public String deleteBoard(BoardRequest boardRequest, HttpSession session) {
-        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (sessionInfo == null) {
-            return LOGIN.redirect();
-        }
-        if (sessionInfo.memberId().equals(boardRequest.memberId())) {
-            boardService.deleteBoard(boardRequest.id());
-            return BOARD_LIST.redirect();
-        }
-        return LOGIN.redirect();
+    public String deleteBoard(BoardRequest boardRequest) {
+        boardService.deleteBoard(boardRequest.id());
+        return BOARD_LIST.redirect();
     }
 }

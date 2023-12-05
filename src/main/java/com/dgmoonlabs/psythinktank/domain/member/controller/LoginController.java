@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.LOGIN;
-import static com.dgmoonlabs.psythinktank.global.constant.ViewName.ROOT;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,11 +31,5 @@ public class LoginController {
         return ResponseEntity.ok(
                 loginService.login(loginRequest, session)
         );
-    }
-
-    //@GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.removeAttribute(SESSION_KEY.getText());
-        return ROOT.redirect();
     }
 }

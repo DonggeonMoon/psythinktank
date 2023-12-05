@@ -2,7 +2,6 @@ package com.dgmoonlabs.psythinktank.domain.member.service;
 
 import com.dgmoonlabs.psythinktank.domain.member.dto.LoginRequest;
 import com.dgmoonlabs.psythinktank.domain.member.dto.LoginResponse;
-import com.dgmoonlabs.psythinktank.domain.member.dto.MemberResponse;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.repository.MemberRepository;
 import com.dgmoonlabs.psythinktank.global.constant.LoginTry;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
-import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
 import static com.dgmoonlabs.psythinktank.global.constant.LoginResult.*;
 
 @Service
@@ -46,11 +44,6 @@ public class LoginService implements UserDetailsService {
             return new LoginResponse(false, WRONG_PASSWORD.getCode(), member.getLoginTryCount());
         }
         member.setLoginTryCount(LoginTry.COUNT_RANGE.getStart());
-        session.setAttribute(SESSION_KEY.getText(),
-                MemberResponse.from(
-                        memberRepository.findById(loginRequest.memberId())
-                                .orElseThrow(IllegalStateException::new)
-                ));
         return new LoginResponse(true, SUCCESS.getCode(), member.getLoginTryCount());
     }
 

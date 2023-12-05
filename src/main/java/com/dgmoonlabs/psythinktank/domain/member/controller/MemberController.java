@@ -1,6 +1,5 @@
 package com.dgmoonlabs.psythinktank.domain.member.controller;
 
-import com.dgmoonlabs.psythinktank.domain.member.constant.UserLevel;
 import com.dgmoonlabs.psythinktank.domain.member.dto.*;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.service.MemberService;
@@ -14,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
-import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.MEMBERS_KEY;
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
 
 @Controller
@@ -48,10 +48,6 @@ public class MemberController {
 
     @PostMapping("/member")
     public String insertMember(MemberRequest memberRequest, HttpSession session) {
-        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (sessionInfo != null) {
-            session.removeAttribute(SESSION_KEY.getText());
-        }
         memberService.addMember(memberRequest);
         return LOGIN.redirect();
     }
@@ -75,44 +71,20 @@ public class MemberController {
 
     @GetMapping("/editMemberInfo")
     public String getModifyMemberForm(HttpSession session, Model model) {
-        if (session.getAttribute(SESSION_KEY.getText()) == null) {
-            return LOGIN.redirect();
-        }
-        model.addAttribute(
-                MEMBER_KEY.getText(),
-                memberService.getMember(
-                        ((MemberResponse) session.getAttribute(SESSION_KEY.getText()))
-                                .memberId()
-                )
-        );
         return EDIT_MEMBER_INFO.getText();
     }
 
     @PutMapping("/member")
     public String updateMember(MemberRequest memberRequest, HttpSession session) {
-        MemberResponse memberResponse = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (memberResponse == null) {
-            return LOGIN.redirect();
-        }
-        if (memberResponse.memberId().equals(memberRequest.memberId())) {
-            memberService.editMember(memberRequest);
-            return BOARD_LIST.redirect();
-        }
-        return LOGIN.redirect();
+        memberService.editMember(memberRequest);
+        return BOARD_LIST.redirect();
     }
 
     @DeleteMapping("/member")
     public String deleteMember(String memberId, HttpSession session) {
-        MemberResponse memberResponse = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (memberResponse == null) {
-            return LOGIN.redirect();
-        }
-        if (memberResponse.memberId().equals(memberId)) {
-            memberService.deleteMember(memberId);
-            session.removeAttribute(SESSION_KEY.getText());
-            return GOOD_BYE.redirect();
-        }
-        return LOGIN.redirect();
+        memberService.deleteMember(memberId);
+        session.removeAttribute(SESSION_KEY.getText());
+        return GOOD_BYE.redirect();
     }
 
     @GetMapping("/goodBye")
@@ -121,15 +93,8 @@ public class MemberController {
     }
 
     @PostMapping("/changeUserLevel")
-    public String changeUserLevel(MemberRequest memberRequest, HttpSession session) {
-        MemberResponse memberResponse = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (memberResponse == null) {
-            return LOGIN.redirect();
-        }
-        if (UserLevel.ADMIN.isSame(memberResponse.userLevel())) {
-            memberService.changeUserLevel(memberRequest);
-            return MANAGER_PAGE.redirect();
-        }
-        return LOGIN.redirect();
+    public String changeUserLevel(MemberRequest memberRequest) {
+        memberService.changeUserLevel(memberRequest);
+        return MANAGER_PAGE.redirect();
     }
 }
