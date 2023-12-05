@@ -24,7 +24,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/managerPage")
-    public String getMembers(Pageable pageable, HttpSession session, Model model) {
+    public String getMembers(Pageable pageable, Model model) {
         Page<Member> members = memberService.selectMembers(pageable);
         model.addAttribute(MEMBERS_KEY.getText(), members);
         return MANAGER_PAGE.getText();
@@ -48,7 +48,7 @@ public class MemberController {
     }
 
     @PostMapping("/member")
-    public String insertMember(MemberRequest memberRequest, HttpSession session) {
+    public String insertMember(MemberRequest memberRequest) {
         memberService.addMember(memberRequest);
         return LOGIN.redirect();
     }
