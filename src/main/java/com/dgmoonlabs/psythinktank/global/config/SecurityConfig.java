@@ -34,7 +34,13 @@ public class SecurityConfig {
                                 "/assets/**",
                                 "/build/**",
                                 "/error/**",
-                                "/web/**"
+                                "/web/**",
+                                "/findIdAndPw",
+                                "/findId",
+                                "/findPw",
+                                "/checkId",
+                                "/checkEmail",
+                                "/goodBye"
                         )
                         .permitAll()
                         .antMatchers(
