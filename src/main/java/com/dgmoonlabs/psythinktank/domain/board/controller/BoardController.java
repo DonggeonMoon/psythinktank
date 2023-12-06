@@ -60,8 +60,8 @@ public class BoardController {
     }
 
     @DeleteMapping("/board")
-    public String deleteBoard(BoardRequest boardRequest) {
-        boardService.deleteBoard(boardRequest.id());
+    public String deleteBoard(long id) {
+        boardService.deleteBoard(id);
         return BOARD_LIST.redirect();
     }
 }
