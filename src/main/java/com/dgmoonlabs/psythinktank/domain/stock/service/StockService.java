@@ -58,16 +58,6 @@ public class StockService {
     }
 
     @Transactional
-    public StockSearchResponse selectStocksBySymbol(String searchText) {
-        return StockSearchResponse.from(
-                stockInfoRepository.findBySymbolContains(searchText)
-                        .stream()
-                        .map(StockResponse::from)
-                        .toList()
-        );
-    }
-
-    @Transactional
     public StockSearchResponse selectStocksByName(StockSearchRequest stockSearchRequest) {
         return StockSearchResponse.from(
                 stockInfoRepository.findByNameContains(stockSearchRequest.searchText())

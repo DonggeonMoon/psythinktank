@@ -16,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +27,7 @@ public class LoginService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public LoginResponse login(LoginRequest loginRequest, HttpSession session) {
+    public LoginResponse login(LoginRequest loginRequest) {
         if ("".equals(loginRequest.memberId()) || "".equals(loginRequest.memberPw())) {
             return new LoginResponse(false, BLANK_ID_AND_PASSWORD.getCode(), null);
         }
