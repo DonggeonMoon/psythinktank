@@ -1,8 +1,7 @@
 package com.dgmoonlabs.psythinktank.domain.stock.service;
 
 import com.dgmoonlabs.psythinktank.domain.stock.dto.*;
-import com.dgmoonlabs.psythinktank.domain.stock.model.Share;
-import com.dgmoonlabs.psythinktank.domain.stock.model.StockInfo;
+import com.dgmoonlabs.psythinktank.domain.stock.model.*;
 import com.dgmoonlabs.psythinktank.domain.stock.repository.*;
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
 import com.dgmoonlabs.psythinktank.global.constant.Hrr;
@@ -43,7 +42,7 @@ public class StockService {
     public StockResponse selectStock(String stockCode) {
         return StockResponse.from(
                 stockInfoRepository.findById(stockCode)
-                        .orElseThrow(IllegalStateException::new)
+                        .orElse(StockInfo.builder().build())
         );
     }
 
@@ -78,8 +77,9 @@ public class StockService {
 
     @Transactional
     public DividendResponse selectDividendBySymbol(String symbol) {
-        return DividendResponse.from(dividendRepository.findById(symbol)
-                .orElseThrow(IllegalStateException::new)
+        return DividendResponse.from(
+                dividendRepository.findById(symbol)
+                        .orElse(Dividend.builder().build())
         );
     }
 
@@ -87,7 +87,7 @@ public class StockService {
     public String calculateBoardStability(final String symbol) {
         Double boardStability;
         boardStability = corporateBoardStabilityRepository.findBySymbol(symbol)
-                .orElseThrow(IllegalStateException::new)
+                .orElse(CorporateBoardStability.builder().build())
                 .getValue();
 
         return Rating.evaluateBoardStability(boardStability);
@@ -96,10 +96,11 @@ public class StockService {
     @Transactional
     public String calculateGrowthPotential(String symbol) {
         Double hrr = hrrRepository.findBySymbolAndBusinessYearAndReportCode(
-                symbol,
-                Hrr.BUSINESS_YEAR.getText(),
-                Hrr.REPORT_CODE.getText()
-        ).getValue();
+                        symbol,
+                        Hrr.BUSINESS_YEAR.getText(),
+                        Hrr.REPORT_CODE.getText()
+                ).orElse(HRR.builder().build())
+                .getValue();
         return Rating.evaluateGrowthPotential(hrr);
     }
 
