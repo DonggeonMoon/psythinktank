@@ -1,13 +1,10 @@
 package com.dgmoonlabs.psythinktank.domain.board.controller;
 
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
-import com.dgmoonlabs.psythinktank.domain.board.dto.BoardResponse;
-import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.service.BoardService;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
 import com.dgmoonlabs.psythinktank.global.constant.QueryParameter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,8 +24,7 @@ public class BoardController {
 
     @GetMapping("/boardList")
     public String getBoards(Pageable pageable, Model model) {
-        Page<Board> boards = boardService.selectBoards(pageable);
-        model.addAttribute(BOARDS_KEY.getText(), boards);
+        model.addAttribute(BOARDS_KEY.getText(), boardService.selectBoards(pageable));
         return BOARD_LIST.getText();
     }
 
@@ -53,8 +49,7 @@ public class BoardController {
 
     @GetMapping("/updateBoard")
     public String getModifyBoardForm(long id, Model model) {
-        BoardResponse boardResponse = boardService.selectBoard(id);
-        model.addAttribute(BOARD_KEY.getText(), boardResponse);
+        model.addAttribute(BOARD_KEY.getText(), boardService.selectBoard(id));
         return UPDATE_BOARD.getText();
     }
 
