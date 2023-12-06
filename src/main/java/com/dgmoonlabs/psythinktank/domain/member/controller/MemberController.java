@@ -1,15 +1,15 @@
 package com.dgmoonlabs.psythinktank.domain.member.controller;
 
-import com.dgmoonlabs.psythinktank.domain.member.dto.*;
-import com.dgmoonlabs.psythinktank.domain.member.model.Member;
+import com.dgmoonlabs.psythinktank.domain.member.dto.MemberRequest;
 import com.dgmoonlabs.psythinktank.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
@@ -25,26 +25,13 @@ public class MemberController {
 
     @GetMapping("/managerPage")
     public String getMembers(Pageable pageable, Model model) {
-        Page<Member> members = memberService.selectMembers(pageable);
-        model.addAttribute(MEMBERS_KEY.getText(), members);
+        model.addAttribute(MEMBERS_KEY.getText(), memberService.selectMembers(pageable));
         return MANAGER_PAGE.getText();
     }
 
     @GetMapping("/member")
     public String getAddMemberForm() {
         return JOIN.getText();
-    }
-
-    @PostMapping("/checkId")
-    @ResponseBody
-    public ResponseEntity<CheckIdResponse> checkId(@RequestBody String memberId) {
-        return ResponseEntity.ok(memberService.checkId(memberId));
-    }
-
-    @PostMapping("/checkEmail")
-    @ResponseBody
-    public ResponseEntity<CheckEmailResponse> checkEmail(@RequestBody String memberEmail) {
-        return ResponseEntity.ok(memberService.checkEmail(memberEmail));
     }
 
     @PostMapping("/member")
@@ -56,18 +43,6 @@ public class MemberController {
     @GetMapping("/findIdAndPw")
     public String findIdAndPassword() {
         return FIND_ID_AND_PASSWORD.getText();
-    }
-
-    @PostMapping("/findId")
-    @ResponseBody
-    public ResponseEntity<FindIdResponse> findId(@RequestBody FindIdRequest request) {
-        return ResponseEntity.ok(memberService.selectMemberByEmail(request.memberEmail()));
-    }
-
-    @PostMapping("/findPw")
-    @ResponseBody
-    public ResponseEntity<FindPasswordResponse> findPassword(@RequestBody FindPasswordRequest request) {
-        return ResponseEntity.ok(memberService.selectMemberByEmailAndMemberId(request));
     }
 
     @GetMapping("/editMemberInfo")

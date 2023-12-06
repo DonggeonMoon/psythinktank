@@ -2,8 +2,6 @@ package com.dgmoonlabs.psythinktank.domain.board.controller;
 
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardResponse;
-import com.dgmoonlabs.psythinktank.domain.board.dto.BoardSearchRequest;
-import com.dgmoonlabs.psythinktank.domain.board.dto.BoardSearchResponse;
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.service.BoardService;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
@@ -11,12 +9,12 @@ import com.dgmoonlabs.psythinktank.global.constant.QueryParameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
@@ -34,24 +32,6 @@ public class BoardController {
         return BOARD_LIST.getText();
     }
 
-    @PostMapping("/searchByBoardTitle")
-    @ResponseBody
-    public ResponseEntity<BoardSearchResponse> searchBoardByTitle(@RequestBody BoardSearchRequest boardSearchRequest) {
-        return ResponseEntity.ok(boardService.searchBoardByTitle(boardSearchRequest));
-    }
-
-    @PostMapping("/searchByBoardContent")
-    @ResponseBody
-    public ResponseEntity<BoardSearchResponse> searchBoardByContent(@RequestBody BoardSearchRequest boardSearchRequest) {
-        return ResponseEntity.ok(boardService.searchBoardByContent(boardSearchRequest));
-    }
-
-    @PostMapping("/searchByMemberId")
-    @ResponseBody
-    public ResponseEntity<BoardSearchResponse> searchBoardByMemberId(@RequestBody BoardSearchRequest boardSearchRequest) {
-        return ResponseEntity.ok(boardService.searchBoardByMemberId(boardSearchRequest));
-    }
-
     @GetMapping("/board")
     public String getBoard(long id, Model model) {
         boardService.addHit(id);
@@ -61,7 +41,7 @@ public class BoardController {
     }
 
     @GetMapping("/insertBoard")
-    public String getAddBoardForm(HttpSession session) {
+    public String getAddBoardForm() {
         return INSERT_BOARD.getText();
     }
 
@@ -72,14 +52,14 @@ public class BoardController {
     }
 
     @GetMapping("/updateBoard")
-    public String getModifyBoardForm(long id, HttpSession session, Model model) {
+    public String getModifyBoardForm(long id, Model model) {
         BoardResponse boardResponse = boardService.selectBoard(id);
         model.addAttribute(BOARD_KEY.getText(), boardResponse);
         return UPDATE_BOARD.getText();
     }
 
     @PutMapping("/board")
-    public String updateBoard(BoardRequest boardRequest, HttpSession session) {
+    public String updateBoard(BoardRequest boardRequest) {
         boardService.updateBoard(boardRequest);
         return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, boardRequest.id());
     }
