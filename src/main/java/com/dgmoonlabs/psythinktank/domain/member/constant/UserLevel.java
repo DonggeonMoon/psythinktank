@@ -11,8 +11,4 @@ public enum UserLevel {
     ADMIN(3);
 
     private final int level;
-
-    public boolean isSame(int level) {
-        return this.level == level;
-    }
 }

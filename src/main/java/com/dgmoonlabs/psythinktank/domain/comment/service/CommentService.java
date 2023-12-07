@@ -1,7 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.comment.service;
 
 import com.dgmoonlabs.psythinktank.domain.comment.dto.CommentRequest;
-import com.dgmoonlabs.psythinktank.domain.comment.dto.CommentResponse;
 import com.dgmoonlabs.psythinktank.domain.comment.model.Comment;
 import com.dgmoonlabs.psythinktank.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +17,6 @@ public class CommentService {
     @Transactional
     public List<Comment> selectCommentsByBoardId(long boardId) {
         return commentRepository.findAllById(boardId);
-    }
-
-    @Transactional
-    public CommentResponse selectComment(long id) {
-        return CommentResponse.from(
-                commentRepository.findById(id)
-                        .orElseThrow(IllegalStateException::new)
-        );
     }
 
     @Transactional

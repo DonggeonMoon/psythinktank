@@ -6,11 +6,11 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@Builder
 public class Share {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

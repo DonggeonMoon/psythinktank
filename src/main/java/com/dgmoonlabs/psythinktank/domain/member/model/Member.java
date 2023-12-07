@@ -1,19 +1,20 @@
 package com.dgmoonlabs.psythinktank.domain.member.model;
 
+import com.dgmoonlabs.psythinktank.global.constant.LoginTry;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Set;
 
 @Entity
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class Member implements Serializable {
@@ -34,11 +35,19 @@ public class Member implements Serializable {
     @Column(name = "user_level", nullable = false)
     private int userLevel;
 
-    @Column(name = "login_try_count")
+    @Column(name = "login_try_count", nullable = false)
     @ColumnDefault(value = "0")
     private int loginTryCount;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    private Set<Authority> authorities;
+
     public void increaseLoginTryCount() {
         this.loginTryCount++;
+    }
+
+    public boolean isLocked() {
+        return this.loginTryCount >= LoginTry.COUNT_RANGE.getEnd();
     }
 }

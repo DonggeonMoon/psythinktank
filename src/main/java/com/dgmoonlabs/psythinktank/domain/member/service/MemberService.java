@@ -56,7 +56,8 @@ public class MemberService {
 
     @Transactional
     public void editMember(MemberRequest memberRequest) {
-        Member newMember = memberRepository.findById(memberRequest.memberId()).orElse(Member.builder().build());
+        Member newMember = memberRepository.findById(memberRequest.memberId())
+                .orElseThrow(IllegalArgumentException::new);
         newMember.setPassword(BCrypt.hashpw(memberRequest.password(), BCrypt.gensalt()));
         newMember.setEmail(memberRequest.email());
     }
@@ -103,7 +104,8 @@ public class MemberService {
 
     @Transactional
     public void changeUserLevel(MemberRequest memberRequest) {
-        Member newMember = memberRepository.findById(memberRequest.memberId()).orElse(Member.builder().build());
+        Member newMember = memberRepository.findById(memberRequest.memberId())
+                .orElseThrow(IllegalArgumentException::new);
         newMember.setUserLevel(memberRequest.userLevel());
     }
 
@@ -115,5 +117,25 @@ public class MemberService {
     @Transactional
     public CheckEmailResponse checkEmail(String email) {
         return CheckEmailResponse.from(memberRepository.findByEmail(email).isEmpty());
+    }
+
+    @Transactional
+    public void resetLoginTryCount(String memberId) {
+        if (memberId.isEmpty() || memberId.isBlank()) {
+            return;
+        }
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(IllegalStateException::new);
+        member.setLoginTryCount(0);
+    }
+
+    @Transactional
+    public void increaseLoginTryCount(String memberId) {
+        if (memberId.isEmpty() || memberId.isBlank()) {
+            return;
+        }
+        Member member = memberRepository.findById(memberId)
+                .orElse(Member.builder().build());
+        member.increaseLoginTryCount();
     }
 }

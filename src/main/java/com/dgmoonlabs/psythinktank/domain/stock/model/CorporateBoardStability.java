@@ -6,11 +6,11 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "corporation_board_stability")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Builder
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class CorporateBoardStability {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,11 +5,11 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@Builder
 public class HRR {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

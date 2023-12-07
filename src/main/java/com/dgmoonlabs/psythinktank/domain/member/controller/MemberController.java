@@ -1,20 +1,21 @@
 package com.dgmoonlabs.psythinktank.domain.member.controller;
 
-import com.dgmoonlabs.psythinktank.domain.member.constant.UserLevel;
-import com.dgmoonlabs.psythinktank.domain.member.dto.*;
-import com.dgmoonlabs.psythinktank.domain.member.model.Member;
+import com.dgmoonlabs.psythinktank.domain.member.dto.MemberRequest;
 import com.dgmoonlabs.psythinktank.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
-import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.MEMBERS_KEY;
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
 
 @Controller
@@ -23,17 +24,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/managerPage")
-    public String getMembers(Pageable pageable, HttpSession session, Model model) {
-        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (sessionInfo == null) {
-            return LOGIN.redirect();
-        }
-        if (UserLevel.ADMIN.isSame(sessionInfo.userLevel())) {
-            Page<Member> members = memberService.selectMembers(pageable);
-            model.addAttribute(MEMBERS_KEY.getText(), members);
-            return MANAGER_PAGE.getText();
-        }
-        return LOGIN.redirect();
+    public String getMembers(Pageable pageable, Model model) {
+        model.addAttribute(MEMBERS_KEY.getText(), memberService.selectMembers(pageable));
+        return MANAGER_PAGE.getText();
     }
 
     @GetMapping("/member")
@@ -41,24 +34,8 @@ public class MemberController {
         return JOIN.getText();
     }
 
-    @PostMapping("/checkId")
-    @ResponseBody
-    public ResponseEntity<CheckIdResponse> checkId(@RequestBody String memberId) {
-        return ResponseEntity.ok(memberService.checkId(memberId));
-    }
-
-    @PostMapping("/checkEmail")
-    @ResponseBody
-    public ResponseEntity<CheckEmailResponse> checkEmail(@RequestBody String memberEmail) {
-        return ResponseEntity.ok(memberService.checkEmail(memberEmail));
-    }
-
     @PostMapping("/member")
-    public String insertMember(MemberRequest memberRequest, HttpSession session) {
-        MemberResponse sessionInfo = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (sessionInfo != null) {
-            session.removeAttribute(SESSION_KEY.getText());
-        }
+    public String insertMember(MemberRequest memberRequest) {
         memberService.addMember(memberRequest);
         return LOGIN.redirect();
     }
@@ -68,58 +45,26 @@ public class MemberController {
         return FIND_ID_AND_PASSWORD.getText();
     }
 
-    @PostMapping("/findId")
-    @ResponseBody
-    public ResponseEntity<FindIdResponse> findId(@RequestBody FindIdRequest request) {
-        return ResponseEntity.ok(memberService.selectMemberByEmail(request.memberEmail()));
-    }
-
-    @PostMapping("/findPw")
-    @ResponseBody
-    public ResponseEntity<FindPasswordResponse> findPassword(@RequestBody FindPasswordRequest request) {
-        return ResponseEntity.ok(memberService.selectMemberByEmailAndMemberId(request));
-    }
-
     @GetMapping("/editMemberInfo")
     public String getModifyMemberForm(HttpSession session, Model model) {
-        if (session.getAttribute(SESSION_KEY.getText()) == null) {
-            return LOGIN.redirect();
-        }
         model.addAttribute(
-                MEMBER_KEY.getText(),
-                memberService.getMember(
-                        ((MemberResponse) session.getAttribute(SESSION_KEY.getText()))
-                                .memberId()
-                )
+                "memberInfo",
+                memberService.getMember((String) ((Map<?, ?>) session.getAttribute("member")).get("memberId"))
         );
         return EDIT_MEMBER_INFO.getText();
     }
 
     @PutMapping("/member")
-    public String updateMember(MemberRequest memberRequest, HttpSession session) {
-        MemberResponse memberResponse = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (memberResponse == null) {
-            return LOGIN.redirect();
-        }
-        if (memberResponse.memberId().equals(memberRequest.memberId())) {
-            memberService.editMember(memberRequest);
-            return BOARD_LIST.redirect();
-        }
-        return LOGIN.redirect();
+    public String updateMember(MemberRequest memberRequest) {
+        memberService.editMember(memberRequest);
+        return BOARD_LIST.redirect();
     }
 
     @DeleteMapping("/member")
     public String deleteMember(String memberId, HttpSession session) {
-        MemberResponse memberResponse = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (memberResponse == null) {
-            return LOGIN.redirect();
-        }
-        if (memberResponse.memberId().equals(memberId)) {
-            memberService.deleteMember(memberId);
-            session.removeAttribute(SESSION_KEY.getText());
-            return GOOD_BYE.redirect();
-        }
-        return LOGIN.redirect();
+        memberService.deleteMember(memberId);
+        session.removeAttribute(SESSION_KEY.getText());
+        return GOOD_BYE.redirect();
     }
 
     @GetMapping("/goodBye")
@@ -128,15 +73,8 @@ public class MemberController {
     }
 
     @PostMapping("/changeUserLevel")
-    public String changeUserLevel(MemberRequest memberRequest, HttpSession session) {
-        MemberResponse memberResponse = (MemberResponse) session.getAttribute(SESSION_KEY.getText());
-        if (memberResponse == null) {
-            return LOGIN.redirect();
-        }
-        if (UserLevel.ADMIN.isSame(memberResponse.userLevel())) {
-            memberService.changeUserLevel(memberRequest);
-            return MANAGER_PAGE.redirect();
-        }
-        return LOGIN.redirect();
+    public String changeUserLevel(MemberRequest memberRequest) {
+        memberService.changeUserLevel(memberRequest);
+        return MANAGER_PAGE.redirect();
     }
 }

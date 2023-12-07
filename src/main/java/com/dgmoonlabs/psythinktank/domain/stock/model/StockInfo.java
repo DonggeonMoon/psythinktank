@@ -4,12 +4,13 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity(name = "stock_info")
+@Entity
+@Table(name = "stock_info")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class StockInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
