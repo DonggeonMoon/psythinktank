@@ -42,3 +42,14 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+def resourceDirectory = project.properties['RESOURCE_DIRECTORY']
+sourceSets {
+    main {
+        resources {
+            if (resourceDirectory) {
+                srcDir resourceDirectory
+            }
+        }
+    }
+}
