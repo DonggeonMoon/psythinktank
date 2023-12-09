@@ -36,6 +36,7 @@ public class SecurityConfig {
                                 "/assets/**",
                                 "/build/**",
                                 "/error/**",
+                                "/js/**",
                                 "/web/**",
                                 "/findIdAndPw",
                                 "/findId",

@@ -27,6 +27,7 @@ public class StockController {
         model.addAttribute(STOCK_KEY.getText(), stockService.selectStock(symbol));
         model.addAttribute(HRR_KEY.getText(), stockService.calculateGrowthPotential(symbol));
         model.addAttribute(SHARE_KEY.getText(), stockService.selectSharesBySymbol(symbol));
+        model.addAttribute(CHART_DATASET_KEY.getText(), stockService.selectDataBySymbol(symbol));
         model.addAttribute(DIVIDEND_KEY.getText(), stockService.selectDividendBySymbol(symbol));
         model.addAttribute(GOVERNANCE_KEY.getText(), stockService.calculateGovernance(symbol));
         model.addAttribute(CORPORATE_BOARD_STABILITY.getText(), stockService.calculateBoardStability(symbol));
