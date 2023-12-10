@@ -3,6 +3,8 @@ package com.dgmoonlabs.psythinktank.domain.stock.service;
 import com.dgmoonlabs.psythinktank.domain.stock.dto.*;
 import com.dgmoonlabs.psythinktank.domain.stock.model.*;
 import com.dgmoonlabs.psythinktank.domain.stock.repository.*;
+import com.dgmoonlabs.psythinktank.domain.stock.vo.ChartData;
+import com.dgmoonlabs.psythinktank.domain.stock.vo.ChartDataset;
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
 import com.dgmoonlabs.psythinktank.global.constant.Hrr;
 import com.dgmoonlabs.psythinktank.global.constant.Pagination;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -112,5 +115,35 @@ public class StockService {
                 .map(Share::getValue)
                 .orElseThrow(NoSuchElementException::new);
         return Rating.evaluateGovernance(currentShare);
+    }
+
+    public ChartData selectDataBySymbol(final String symbol) {
+        List<Share> shares = shareRepository.findBySymbol(symbol);
+
+        List<String> dates = shares.stream()
+                .map(share -> share.getDate().toString())
+                .distinct()
+                .toList();
+        dates.forEach(System.out::println);
+        List<String> holderNames = shares.stream()
+                .map(Share::getHolderName)
+                .distinct()
+                .toList();
+
+        return new ChartData(
+                dates,
+                holderNames.stream()
+                        .map(holderName -> new ChartDataset(
+                                holderName,
+                                dates.stream()
+                                        .map(date -> shares.stream()
+                                                .filter(share -> share.getDate().toString().equals(date)
+                                                        && share.getHolderName().equals(holderName))
+                                                .findFirst()
+                                                .map(Share::getValue)
+                                                .orElse(0.0))
+                                        .toList()
+                        )).toList()
+        );
     }
 }

@@ -5,6 +5,8 @@ import com.dgmoonlabs.psythinktank.domain.member.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -14,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
@@ -27,6 +30,10 @@ public class SecurityConfig {
                         )
                         .hasRole("ADMIN")
                         .antMatchers(
+                                HttpMethod.DELETE, "/circular"
+                        )
+                        .hasRole("ADMIN")
+                        .antMatchers(
                                 "/",
                                 "/circularList",
                                 "/circular",
@@ -36,6 +43,7 @@ public class SecurityConfig {
                                 "/assets/**",
                                 "/build/**",
                                 "/error/**",
+                                "/js/**",
                                 "/web/**",
                                 "/findIdAndPw",
                                 "/findId",

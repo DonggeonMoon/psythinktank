@@ -32,7 +32,9 @@ public enum KeyName {
     LOGIN_TRY_COUNT_KEY("loginTryCount"),
     MEMBER_ID_KEY("memberId"),
     MEMBER_PASSWORD_KEY("memberPw"),
-    MEMBER_EMAIL_KEY("memberEmail");
+    MEMBER_EMAIL_KEY("memberEmail"),
+    CHART_LABEL_KEY("chartLabel"),
+    CHART_DATASET_KEY("chartDataset");
 
     private final String text;
 }
