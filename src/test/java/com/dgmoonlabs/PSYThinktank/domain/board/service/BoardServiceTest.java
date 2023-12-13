@@ -1,6 +1,8 @@
 package com.dgmoonlabs.PSYThinktank.domain.board.service;
 
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardResponse;
+import com.dgmoonlabs.psythinktank.domain.board.dto.BoardSearchRequest;
+import com.dgmoonlabs.psythinktank.domain.board.dto.BoardSearchResponse;
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.repository.BoardRepository;
 import com.dgmoonlabs.psythinktank.domain.board.service.BoardService;
@@ -75,29 +77,30 @@ class BoardServiceTest {
 
     @Test
     void searchBoardByTitle() {
+        assertThat(boardService.searchBoardByTitle(new BoardSearchRequest("")))
+                .isEqualTo(new BoardSearchResponse(List.of()));
     }
 
     @Test
     void searchBoardByContent() {
+        assertThat(boardService.searchBoardByContent(new BoardSearchRequest("")))
+                .isEqualTo(new BoardSearchResponse(List.of()));
     }
 
     @Test
     void searchBoardByMemberId() {
-    }
-
-    @Test
-    void addBoard() {
-    }
-
-    @Test
-    void updateBoard() {
-    }
-
-    @Test
-    void deleteBoard() {
+        assertThat(boardService.searchBoardByMemberId(new BoardSearchRequest("")))
+                .isEqualTo(new BoardSearchResponse(List.of()));
     }
 
     @Test
     void addHit() {
+        Board board = board1;
+        int boardHit = board.getHit();
+
+        boardService.addHit(board.getId());
+
+        assertThat(board.getHit())
+                .isEqualTo(boardHit + 1);
     }
 }
