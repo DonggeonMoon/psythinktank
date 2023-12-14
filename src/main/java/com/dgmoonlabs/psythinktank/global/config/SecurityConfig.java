@@ -34,7 +34,7 @@ public class SecurityConfig {
                         )
                         .hasRole("ADMIN")
                         .antMatchers(
-                                "/",
+                                "/", "/boardList", "/board",
                                 "/circularList",
                                 "/circular",
                                 "/member",
@@ -55,6 +55,7 @@ public class SecurityConfig {
                         .permitAll()
                         .antMatchers(
                                 "/favicon.ico",
+                                "/robots.txt",
                                 "/sitemap.xml",
                                 "/style.css"
                         )
