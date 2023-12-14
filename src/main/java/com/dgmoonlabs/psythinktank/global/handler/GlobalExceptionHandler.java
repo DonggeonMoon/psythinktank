@@ -1,6 +1,6 @@
 package com.dgmoonlabs.psythinktank.global.handler;
 
-import com.dgmoonlabs.psythinktank.global.UnauthorizedAccessException;
+import com.dgmoonlabs.psythinktank.global.exception.UnauthorizedAccessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

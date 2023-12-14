@@ -3,7 +3,7 @@ package com.dgmoonlabs.psythinktank.domain.board.aspect;
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.repository.BoardRepository;
-import com.dgmoonlabs.psythinktank.global.UnauthorizedAccessException;
+import com.dgmoonlabs.psythinktank.global.exception.UnauthorizedAccessException;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
