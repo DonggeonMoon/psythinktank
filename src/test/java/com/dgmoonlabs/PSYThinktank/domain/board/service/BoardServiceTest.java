@@ -29,6 +29,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class BoardServiceTest {
 
+    public static final String SEARCH_TEXT = "검색어";
     private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
     private static final long boardId1 = 1L;
     private static final long boardId2 = 2L;
@@ -95,6 +96,9 @@ class BoardServiceTest {
 
     @Test
     void addHit() {
+        when(boardRepository.findById(anyLong()))
+                .thenReturn(Optional.of(board1));
+
         Board board = board1;
         int boardHit = board.getHit();
 
