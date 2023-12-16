@@ -56,7 +56,7 @@ class BoardServiceTest {
     @Mock
     private BoardRepository boardRepository;
     @InjectMocks
-    BoardService boardService;
+    private BoardService boardService;
 
     @Test
     void selectBoards() {

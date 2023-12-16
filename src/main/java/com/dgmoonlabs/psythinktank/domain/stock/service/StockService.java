@@ -117,6 +117,7 @@ public class StockService {
         return Rating.evaluateGovernance(currentShare);
     }
 
+    @Transactional
     public ChartData selectDataBySymbol(final String symbol) {
         List<Share> shares = shareRepository.findBySymbol(symbol);
 
