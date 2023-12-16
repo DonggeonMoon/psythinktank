@@ -1,98 +1,175 @@
 package com.dgmoonlabs.PSYThinktank.domain.stock.service;
 
 import com.dgmoonlabs.psythinktank.domain.stock.dto.*;
-import com.dgmoonlabs.psythinktank.domain.stock.model.Dividend;
-import com.dgmoonlabs.psythinktank.domain.stock.model.Share;
-import com.dgmoonlabs.psythinktank.domain.stock.model.StockInfo;
-import com.dgmoonlabs.psythinktank.domain.stock.repository.StockInfoRepository;
+import com.dgmoonlabs.psythinktank.domain.stock.model.*;
+import com.dgmoonlabs.psythinktank.domain.stock.repository.*;
 import com.dgmoonlabs.psythinktank.domain.stock.service.StockService;
 import com.dgmoonlabs.psythinktank.domain.stock.vo.ChartData;
 import com.dgmoonlabs.psythinktank.domain.stock.vo.ChartDataset;
+import com.dgmoonlabs.psythinktank.global.constant.Rating;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StockServiceTest {
-    public static final Share SHARE = Share.builder().build();
-    public static final Dividend DIVIDEND = Dividend.builder().build();
-    private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
-    private static final StockInfo STOCK = StockInfo.builder()
-            .symbol("005930")
-            .name("삼성전자")
+    public static final String SYMBOL = "005930";
+    public static final StockSearchRequest STOCK_SEARCH_REQUEST = new StockSearchRequest(SYMBOL);
+    public static final String NAME = "삼성전자";
+    public static final Share SHARE_1 = Share.builder()
+            .id(1L)
+            .date(Date.valueOf(LocalDate.of(2023, 3, 31)))
+            .value(45.0)
+            .holderName("주주1")
             .build();
+    public static final Share SHARE_2 = Share.builder()
+            .id(2L)
+            .date(Date.valueOf(LocalDate.of(2023, 6, 30)))
+            .value(45.0)
+            .holderName("주주2")
+            .build();
+    public static final List<ShareResponse> SHARE_RESPONSES = List.of(ShareResponse.from(SHARE_1), ShareResponse.from(SHARE_2));
+    public static final ShareSearchResponse SHARE_SEARCH_RESPONSE = ShareSearchResponse.from(SHARE_RESPONSES);
+    public static final CorporateBoardStability CORPORATE_BOARD_STABILITY = CorporateBoardStability.builder()
+            .id(1L)
+            .symbol(SYMBOL)
+            .stockName(NAME)
+            .value(15.0)
+            .build();
+    public static final HRR HRR_ = HRR.builder()
+            .id(1L)
+            .value(15.0)
+            .build();
+    public static final ChartData CHART_DATA = new ChartData(List.of("2023-03-31", "2023-06-30"), List.of(
+            new ChartDataset("주주1", List.of(45.0, 0.0)),
+            new ChartDataset("주주2", List.of(0.0, 45.0))
+    ));
+    private static final StockInfo STOCK = StockInfo.builder()
+            .symbol(SYMBOL)
+            .name(NAME)
+            .build();
+    public static final StockResponse STOCK_RESPONSE = StockResponse.from(STOCK);
+    public static final StockSearchResponse STOCK_SEARCH_RESPONSE = StockSearchResponse.from(List.of(STOCK_RESPONSE));
+    public static final Dividend DIVIDEND = Dividend.builder().build();
+    private static final List<StockInfo> STOCKS = List.of(STOCK);
+    private static final Page<StockInfo> STOCK_PAGES = new PageImpl<>(STOCKS);
+    private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
+    private static final List<Share> SHARES = List.of(SHARE_1, SHARE_2);
+    @Mock
+    private CorporateBoardStabilityRepository corporateBoardStabilityRepository;
+    @Mock
+    private DividendRepository dividendRepository;
+    @Mock
+    private HRRRepository hrrRepository;
+    @Mock
+    private ShareRepository shareRepository;
     @Mock
     private StockInfoRepository stockInfoRepository;
-
     @InjectMocks
     private StockService stockService;
 
     @Test
     void selectStocks() {
-        assertThat(stockService.selectStocks(PAGE_REQUEST))
-                .isEqualTo(PAGE_REQUEST);
+        when(stockInfoRepository.findAll(any(PageRequest.class)))
+                .thenReturn(STOCK_PAGES);
 
+        assertThat(stockService.selectStocks(PAGE_REQUEST))
+                .isEqualTo(STOCK_PAGES);
     }
 
     @Test
     void selectStock() {
-        assertThat(stockService.selectStock(anyString()))
-                .isEqualTo(StockResponse.from(STOCK));
+        when(stockInfoRepository.findById(anyString()))
+                .thenReturn(Optional.of(STOCK));
+
+        assertThat(stockService.selectStock(SYMBOL))
+                .isEqualTo(STOCK_RESPONSE);
     }
 
     @Test
     void selectStocksBySymbol() {
-        assertThat(stockService.selectStocksBySymbol(new StockSearchRequest("005930")))
-                .isEqualTo(StockSearchResponse.from(List.of(StockResponse.from(STOCK))));
+        when(stockInfoRepository.findBySymbolContains(SYMBOL))
+                .thenReturn(STOCKS);
+
+        assertThat(stockService.selectStocksBySymbol(STOCK_SEARCH_REQUEST))
+                .isEqualTo(STOCK_SEARCH_RESPONSE);
     }
 
     @Test
     void selectStocksByName() {
-        assertThat(stockService.selectStocksByName(new StockSearchRequest("삼성전자")))
-                .isEqualTo(StockSearchResponse.from(List.of(StockResponse.from(STOCK))));
+        when(stockInfoRepository.findByNameContains(anyString()))
+                .thenReturn(STOCKS);
+
+        assertThat(stockService.selectStocksByName(STOCK_SEARCH_REQUEST))
+                .isEqualTo(STOCK_SEARCH_RESPONSE);
     }
 
     @Test
     void selectSharesBySymbol() {
-        assertThat(stockService.selectSharesBySymbol("005930"))
-                .isEqualTo(ShareSearchResponse.from(List.of(ShareResponse.from(SHARE))));
+        when(shareRepository.findBySymbol(SYMBOL))
+                .thenReturn(SHARES);
+
+        assertThat(stockService.selectSharesBySymbol(SYMBOL))
+                .isEqualTo(SHARE_SEARCH_RESPONSE);
     }
 
     @Test
     void selectDividendBySymbol() {
-        assertThat(stockService.selectDividendBySymbol("005930"))
+        when(dividendRepository.findById(anyString()))
+                .thenReturn(Optional.of(DIVIDEND));
+
+        assertThat(stockService.selectDividendBySymbol(SYMBOL))
                 .isEqualTo(DividendResponse.from(DIVIDEND));
     }
 
     @Test
     void calculateBoardStability() {
-        assertThat(stockService.calculateBoardStability("005930"))
-                .isEqualTo("");
+        when(corporateBoardStabilityRepository.findBySymbol(anyString()))
+                .thenReturn(Optional.of(CORPORATE_BOARD_STABILITY));
+
+        assertThat(stockService.calculateBoardStability(SYMBOL))
+                .isEqualTo(Rating.A.getGrade());
     }
 
     @Test
     void calculateGrowthPotential() {
-        assertThat(stockService.calculateGrowthPotential("005930"))
-                .isEqualTo("");
+        when(hrrRepository.findBySymbolAndBusinessYearAndReportCode(anyString(), anyString(), anyString()))
+                .thenReturn(Optional.of(HRR_));
+
+        assertThat(stockService.calculateGrowthPotential(SYMBOL))
+                .isEqualTo(Rating.A.getGrade());
     }
 
     @Test
     void calculateGovernance() {
-        assertThat(stockService.calculateGovernance("005930"))
-                .isEqualTo("");
+        when(shareRepository.findBySymbol(SYMBOL))
+                .thenReturn(SHARES);
+
+        assertThat(stockService.calculateGovernance(SYMBOL))
+                .isEqualTo(Rating.A.getGrade());
     }
 
     @Test
     void selectDataBySymbol() {
-        assertThat(stockService.selectDataBySymbol("005930"))
-                .isEqualTo(new ChartData(List.of(""), List.of(new ChartDataset("", List.of(0.0)))));
+        when(shareRepository.findBySymbol(SYMBOL))
+                .thenReturn(SHARES);
+
+        assertThat(stockService.selectDataBySymbol(SYMBOL))
+                .isEqualTo(CHART_DATA);
     }
 }

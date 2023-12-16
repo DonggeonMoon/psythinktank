@@ -17,17 +17,12 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
-    private static final long CIRCULAR_ID_1 = 1L;
-    private static final long CIRCULAR_ID_2 = 2L;
-    private static final Comment COMMENT_1 = Comment.builder()
-            .id(CIRCULAR_ID_1)
+    private static final long CIRCULAR_ID = 1L;
+    private static final long BOARD_ID = 1L;
+    private static final Comment COMMENT = Comment.builder()
+            .id(CIRCULAR_ID)
             .build();
-    private static final Comment COMMENT_2 = Comment.builder()
-            .id(CIRCULAR_ID_2)
-            .build();
-
-    private static final List<Comment> COMMENTS = List.of(COMMENT_1, COMMENT_2);
-
+    private static final List<Comment> COMMENTS = List.of(COMMENT);
     @Mock
     private CommentRepository commentRepository;
     @InjectMocks
@@ -37,7 +32,8 @@ class CommentServiceTest {
     void selectCommentsByBoardId() {
         when(commentRepository.findAllById(anyLong()))
                 .thenReturn(COMMENTS);
-        assertThat(commentService.selectCommentsByBoardId(anyLong()))
+
+        assertThat(commentService.selectCommentsByBoardId(BOARD_ID))
                 .isEqualTo(COMMENTS);
     }
 }

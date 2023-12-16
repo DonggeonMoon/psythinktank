@@ -20,14 +20,16 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LoginServiceTest {
-    private static final String MEMBER_ID_1 = "id";
-    private static final Member MEMBER_1 = Member.builder()
-            .memberId(MEMBER_ID_1)
-            .password(BCrypt.hashpw("password", BCrypt.gensalt()))
+    public static final String MEMBER_PASSWORD = "password";
+    public static final LoginResponse LOGIN_RESPONSE = new LoginResponse(true, -1, 0);
+    private static final String MEMBER_ID = "id";
+    public static final LoginRequest LOGIN_REQUEST = new LoginRequest(MEMBER_ID, MEMBER_PASSWORD);
+    private static final Member MEMBER = Member.builder()
+            .memberId(MEMBER_ID)
+            .password(BCrypt.hashpw(MEMBER_PASSWORD, BCrypt.gensalt()))
             .build();
     @Mock
     private PasswordEncoder passwordEncoder;
-
     @Mock
     private MemberRepository memberRepository;
     @InjectMocks
@@ -35,15 +37,12 @@ class LoginServiceTest {
 
     @Test
     void login() {
-        when(memberRepository.findById(anyString()))
-                .thenReturn(Optional.of(MEMBER_1));
-
         when(passwordEncoder.matches(any(CharSequence.class), anyString()))
                 .thenReturn(true);
+        when(memberRepository.findById(anyString()))
+                .thenReturn(Optional.of(MEMBER));
 
-        assertThat(loginService.login(new LoginRequest(MEMBER_ID_1, "password")))
-                .isEqualTo(
-                        new LoginResponse(true, -1, 0)
-                );
+        assertThat(loginService.login(LOGIN_REQUEST))
+                .isEqualTo(LOGIN_RESPONSE);
     }
 }
