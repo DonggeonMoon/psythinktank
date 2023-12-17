@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +25,7 @@ import static com.dgmoonlabs.psythinktank.global.constant.LoginResult.*;
 @RequiredArgsConstructor
 public class LoginService implements UserDetailsService {
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public LoginResponse login(LoginRequest loginRequest) {
@@ -48,7 +49,7 @@ public class LoginService implements UserDetailsService {
     }
 
     private boolean checkPassword(LoginRequest loginRequest) {
-        return BCrypt.checkpw(
+        return passwordEncoder.matches(
                 loginRequest.memberPw(),
                 memberRepository.findById(loginRequest.memberId())
                         .orElseThrow(IllegalStateException::new)

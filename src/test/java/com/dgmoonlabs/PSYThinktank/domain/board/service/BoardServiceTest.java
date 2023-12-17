@@ -22,19 +22,21 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BoardServiceTest {
-
-    public static final String SEARCH_TEXT = "검색어";
-    private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
-    private static final long boardId1 = 1L;
-    private static final long boardId2 = 2L;
-    private static final Board board1 = Board.builder()
-            .id(1L)
+    public static final String SEARCH_BY_CONTENT_TEXT = "내용1";
+    public static final String SEARCH_BY_MEMBER_ID_TEXT = "회원1";
+    public static final String SEARCH_BY_TITLE_TEXT = "제목1";
+    public static final BoardSearchRequest BOARD_SEARCH_BY_CONTENT_REQUEST = new BoardSearchRequest(SEARCH_BY_CONTENT_TEXT);
+    public static final BoardSearchRequest BOARD_SEARCH_BY_MEMBER_ID_REQUEST = new BoardSearchRequest(SEARCH_BY_MEMBER_ID_TEXT);
+    public static final BoardSearchRequest BOARD_SEARCH_BY_TITLE_REQUEST = new BoardSearchRequest(SEARCH_BY_TITLE_TEXT);
+    private static final long BOARD_ID_1 = 1L;
+    private static final long BOARD_ID_2 = 2L;
+    private static final Board BOARD_1 = Board.builder()
+            .id(BOARD_ID_1)
             .title("제목1")
             .content("내용1")
             .hit(0)
@@ -42,8 +44,8 @@ class BoardServiceTest {
             .isNotice(false)
             .createdAt(Timestamp.valueOf(LocalDateTime.now()))
             .build();
-    private static final Board board2 = Board.builder()
-            .id(2L)
+    private static final Board BOARD_2 = Board.builder()
+            .id(BOARD_ID_2)
             .title("제목2")
             .content("내용2")
             .hit(0)
@@ -51,60 +53,66 @@ class BoardServiceTest {
             .isNotice(false)
             .createdAt(Timestamp.valueOf(LocalDateTime.now()))
             .build();
-    private static final List<Board> boards = List.of(board1, board2);
-    private static final Page<Board> boardPage = new PageImpl<>(boards);
+    public static final BoardSearchResponse BOARD_SEARCH_RESPONSE = new BoardSearchResponse(List.of(BoardResponse.from(BOARD_1)));
+    private static final List<Board> BOARDS = List.of(BOARD_1);
+    private static final Page<Board> BOARD_PAGE = new PageImpl<>(BOARDS);
+    private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
     @Mock
     private BoardRepository boardRepository;
     @InjectMocks
-    BoardService boardService;
+    private BoardService boardService;
 
     @Test
     void selectBoards() {
         when(boardRepository.findAll(any(Pageable.class)))
-                .thenReturn(boardPage);
+                .thenReturn(BOARD_PAGE);
 
         assertThat(boardService.selectBoards(PAGE_REQUEST))
-                .isEqualTo(boardPage);
+                .isEqualTo(BOARD_PAGE);
     }
 
     @Test
     void selectBoard() {
         when(boardRepository.findById(anyLong()))
-                .thenReturn(Optional.of(board1));
+                .thenReturn(Optional.of(BOARD_1));
 
-        assertThat(boardService.selectBoard(boardId1))
-                .isEqualTo(BoardResponse.from(board1));
+        assertThat(boardService.selectBoard(BOARD_ID_1))
+                .isEqualTo(BoardResponse.from(BOARD_1));
     }
 
     @Test
     void searchBoardByTitle() {
-        assertThat(boardService.searchBoardByTitle(new BoardSearchRequest("")))
-                .isEqualTo(new BoardSearchResponse(List.of()));
+        when(boardRepository.findByTitleContainingOrderByIdDesc(anyString())).thenReturn(BOARDS);
+
+        assertThat(boardService.searchBoardByTitle(BOARD_SEARCH_BY_TITLE_REQUEST))
+                .isEqualTo(BOARD_SEARCH_RESPONSE);
     }
 
     @Test
     void searchBoardByContent() {
-        assertThat(boardService.searchBoardByContent(new BoardSearchRequest("")))
-                .isEqualTo(new BoardSearchResponse(List.of()));
+        when(boardRepository.findByContentContainingOrderByIdDesc(anyString())).thenReturn(BOARDS);
+
+        assertThat(boardService.searchBoardByContent(BOARD_SEARCH_BY_CONTENT_REQUEST))
+                .isEqualTo(BOARD_SEARCH_RESPONSE);
     }
 
     @Test
     void searchBoardByMemberId() {
-        assertThat(boardService.searchBoardByMemberId(new BoardSearchRequest("")))
-                .isEqualTo(new BoardSearchResponse(List.of()));
+        when(boardRepository.findByMemberIdOrderByIdDesc(anyString())).thenReturn(BOARDS);
+
+        assertThat(boardService.searchBoardByMemberId(BOARD_SEARCH_BY_MEMBER_ID_REQUEST))
+                .isEqualTo(BOARD_SEARCH_RESPONSE);
     }
 
     @Test
     void addHit() {
-        when(boardRepository.findById(anyLong()))
-                .thenReturn(Optional.of(board1));
+        when(boardRepository.findById(anyLong())).thenReturn(Optional.of(BOARD_2));
 
-        Board board = board1;
-        int boardHit = board.getHit();
+        int boardHit = BOARD_2.getHit();
 
-        boardService.addHit(board.getId());
+        boardService.addHit(BOARD_2.getId());
 
-        assertThat(board.getHit())
+        assertThat(BOARD_2.getHit())
                 .isEqualTo(boardHit + 1);
     }
 }

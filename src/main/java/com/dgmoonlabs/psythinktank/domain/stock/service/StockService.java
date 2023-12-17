@@ -6,7 +6,6 @@ import com.dgmoonlabs.psythinktank.domain.stock.repository.*;
 import com.dgmoonlabs.psythinktank.domain.stock.vo.ChartData;
 import com.dgmoonlabs.psythinktank.domain.stock.vo.ChartDataset;
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
-import com.dgmoonlabs.psythinktank.global.constant.Hrr;
 import com.dgmoonlabs.psythinktank.global.constant.Pagination;
 import com.dgmoonlabs.psythinktank.global.constant.Rating;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ import java.util.NoSuchElementException;
 public class StockService {
     private final StockInfoRepository stockInfoRepository;
     private final ShareRepository shareRepository;
-    private final HRRRepository hrrRepository;
+    private final HrrRepository hrrRepository;
     private final DividendRepository dividendRepository;
     private final CorporateBoardStabilityRepository corporateBoardStabilityRepository;
 
@@ -100,9 +99,9 @@ public class StockService {
     public String calculateGrowthPotential(String symbol) {
         Double hrr = hrrRepository.findBySymbolAndBusinessYearAndReportCode(
                         symbol,
-                        Hrr.BUSINESS_YEAR.getText(),
-                        Hrr.REPORT_CODE.getText()
-                ).orElse(HRR.builder().build())
+                        com.dgmoonlabs.psythinktank.global.constant.Hrr.BUSINESS_YEAR.getText(),
+                        com.dgmoonlabs.psythinktank.global.constant.Hrr.REPORT_CODE.getText()
+                ).orElse(Hrr.builder().build())
                 .getValue();
         return Rating.evaluateGrowthPotential(hrr);
     }
@@ -117,6 +116,7 @@ public class StockService {
         return Rating.evaluateGovernance(currentShare);
     }
 
+    @Transactional
     public ChartData selectDataBySymbol(final String symbol) {
         List<Share> shares = shareRepository.findBySymbol(symbol);
 
