@@ -29,8 +29,22 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class StockServiceTest {
     public static final String SYMBOL = "005930";
-    public static final StockSearchRequest STOCK_SEARCH_REQUEST = new StockSearchRequest(SYMBOL);
     public static final String NAME = "삼성전자";
+    public static final CorporateBoardStability CORPORATE_BOARD_STABILITY = CorporateBoardStability.builder()
+            .id(1L)
+            .symbol(SYMBOL)
+            .stockName(NAME)
+            .value(15.0)
+            .build();
+    public static final Dividend DIVIDEND = Dividend.builder()
+            .symbol(SYMBOL)
+            .stockName(NAME)
+            .value(15)
+            .build();
+    public static final Hrr HRR = Hrr.builder()
+            .id(1L)
+            .value(15.0)
+            .build();
     public static final Share SHARE_1 = Share.builder()
             .id(1L)
             .date(Date.valueOf(LocalDate.of(2023, 3, 31)))
@@ -43,18 +57,6 @@ class StockServiceTest {
             .value(45.0)
             .holderName("주주2")
             .build();
-    public static final List<ShareResponse> SHARE_RESPONSES = List.of(ShareResponse.from(SHARE_1), ShareResponse.from(SHARE_2));
-    public static final ShareSearchResponse SHARE_SEARCH_RESPONSE = ShareSearchResponse.from(SHARE_RESPONSES);
-    public static final CorporateBoardStability CORPORATE_BOARD_STABILITY = CorporateBoardStability.builder()
-            .id(1L)
-            .symbol(SYMBOL)
-            .stockName(NAME)
-            .value(15.0)
-            .build();
-    public static final HRR HRR_ = HRR.builder()
-            .id(1L)
-            .value(15.0)
-            .build();
     public static final ChartData CHART_DATA = new ChartData(List.of("2023-03-31", "2023-06-30"), List.of(
             new ChartDataset("주주1", List.of(45.0, 0.0)),
             new ChartDataset("주주2", List.of(0.0, 45.0))
@@ -63,19 +65,21 @@ class StockServiceTest {
             .symbol(SYMBOL)
             .name(NAME)
             .build();
-    public static final StockResponse STOCK_RESPONSE = StockResponse.from(STOCK);
-    public static final StockSearchResponse STOCK_SEARCH_RESPONSE = StockSearchResponse.from(List.of(STOCK_RESPONSE));
-    public static final Dividend DIVIDEND = Dividend.builder().build();
+    public static final List<ShareResponse> SHARE_RESPONSES = List.of(ShareResponse.from(SHARE_1), ShareResponse.from(SHARE_2));
     private static final List<StockInfo> STOCKS = List.of(STOCK);
     private static final Page<StockInfo> STOCK_PAGES = new PageImpl<>(STOCKS);
     private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
+    public static final ShareSearchResponse SHARE_SEARCH_RESPONSE = ShareSearchResponse.from(SHARE_RESPONSES);
+    public static final StockResponse STOCK_RESPONSE = StockResponse.from(STOCK);
+    public static final StockSearchRequest STOCK_SEARCH_REQUEST = new StockSearchRequest(SYMBOL);
+    public static final StockSearchResponse STOCK_SEARCH_RESPONSE = StockSearchResponse.from(List.of(STOCK_RESPONSE));
     private static final List<Share> SHARES = List.of(SHARE_1, SHARE_2);
     @Mock
     private CorporateBoardStabilityRepository corporateBoardStabilityRepository;
     @Mock
     private DividendRepository dividendRepository;
     @Mock
-    private HRRRepository hrrRepository;
+    private HrrRepository hrrRepository;
     @Mock
     private ShareRepository shareRepository;
     @Mock
@@ -149,7 +153,7 @@ class StockServiceTest {
     @Test
     void calculateGrowthPotential() {
         when(hrrRepository.findBySymbolAndBusinessYearAndReportCode(anyString(), anyString(), anyString()))
-                .thenReturn(Optional.of(HRR_));
+                .thenReturn(Optional.of(HRR));
 
         assertThat(stockService.calculateGrowthPotential(SYMBOL))
                 .isEqualTo(Rating.A.getGrade());

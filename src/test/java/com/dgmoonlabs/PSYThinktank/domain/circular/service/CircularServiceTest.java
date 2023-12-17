@@ -24,10 +24,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CircularServiceTest {
-    private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
     private static final long CIRCULAR_ID_1 = 1L;
     private static final long CIRCULAR_ID_2 = 2L;
-
     private static final Circular CIRCULAR_1 = Circular.builder()
             .id(CIRCULAR_ID_1)
             .title("제목1")
@@ -41,9 +39,8 @@ class CircularServiceTest {
             .createdAt(new Timestamp(System.currentTimeMillis()))
             .build();
     private static final List<Circular> CIRCULARS = List.of(CIRCULAR_1, CIRCULAR_2);
-
     private static final Page<Circular> CIRCULAR_PAGE = new PageImpl<>(CIRCULARS);
-
+    private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
     @Mock
     private CircularRepository circularRepository;
     @InjectMocks
@@ -53,6 +50,7 @@ class CircularServiceTest {
     void selectCirculars() {
         when(circularRepository.findAll(any(Pageable.class)))
                 .thenReturn(CIRCULAR_PAGE);
+
         assertThat(circularService.selectCirculars(PAGE_REQUEST))
                 .isEqualTo(CIRCULAR_PAGE);
     }

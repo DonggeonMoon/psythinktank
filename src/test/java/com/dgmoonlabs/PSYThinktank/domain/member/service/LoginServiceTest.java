@@ -20,8 +20,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LoginServiceTest {
-    public static final String MEMBER_PASSWORD = "password";
     public static final LoginResponse LOGIN_RESPONSE = new LoginResponse(true, -1, 0);
+    public static final String MEMBER_PASSWORD = "password";
     private static final String MEMBER_ID = "id";
     public static final LoginRequest LOGIN_REQUEST = new LoginRequest(MEMBER_ID, MEMBER_PASSWORD);
     private static final Member MEMBER = Member.builder()

@@ -24,13 +24,12 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
+    private static final String MEMBER_ID = "id";
+    private static final String MEMBER_EMAIL = "email";
+    private static final String MEMBER_PASSWORD = "password";
     public static final CheckEmailResponse CHECK_EMAIL_RESPONSE = CheckEmailResponse.from(true);
     public static final CheckIdResponse CHECK_ID_RESPONSE = CheckIdResponse.from(true);
-    private static final String MEMBER_ID = "id";
     public static final FindIdResponse FIND_ID_RESPONSE = FindIdResponse.of(true, MEMBER_ID);
-    private static final String MEMBER_PASSWORD = "password";
-    private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
-    private static final String MEMBER_EMAIL = "email";
     public static final MemberRequest MEMBER_REQUEST = new MemberRequest(MEMBER_ID, MEMBER_PASSWORD, MEMBER_EMAIL, new Date(System.currentTimeMillis()), UserLevel.MANAGER.getLevel());
     private static final Member MEMBER = Member.builder()
             .memberId(MEMBER_ID)
@@ -40,6 +39,7 @@ class MemberServiceTest {
             .build();
     private static final List<Member> MEMBERS = List.of(MEMBER);
     private static final Page<Member> MEMBER_PAGE = new PageImpl<>(MEMBERS);
+    private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
     @Mock
     private MemberRepository memberRepository;
     @InjectMocks
