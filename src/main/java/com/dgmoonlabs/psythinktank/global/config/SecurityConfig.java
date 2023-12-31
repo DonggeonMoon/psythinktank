@@ -43,6 +43,7 @@ public class SecurityConfig {
                                 "/circularList",
                                 "/circular",
                                 "/member",
+                                "/investmentPerformance.html",
                                 "/login",
                                 "/logout",
                                 "/assets/**",
