@@ -75,13 +75,15 @@ public class BoardService {
     }
 
     @Transactional
-    public void addBoard(BoardRequest boardRequest) {
-        boardRepository.save(boardRequest.toEntity());
+    public void addBoard(BoardRequest request) {
+        boardRepository.save(request.toEntity());
     }
 
     @Transactional
-    public void updateBoard(BoardRequest boardRequest) {
-        boardRepository.save(boardRequest.toEntity());
+    public void updateBoard(BoardRequest request) {
+        boardRepository.findById(request.id())
+                .orElseThrow(IllegalArgumentException::new)
+                .update(request);
     }
 
     @Transactional
@@ -95,6 +97,5 @@ public class BoardService {
                 .orElseThrow(IllegalStateException::new);
         int currentHit = board.getHit();
         board.setHit(++currentHit);
-        boardRepository.save(board);
     }
 }

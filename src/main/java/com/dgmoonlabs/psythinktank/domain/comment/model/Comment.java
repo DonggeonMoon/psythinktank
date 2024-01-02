@@ -1,5 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.comment.model;
 
+import com.dgmoonlabs.psythinktank.domain.comment.dto.CommentRequest;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -39,4 +40,8 @@ public class Comment {
     @CreationTimestamp
     @Column(name = "comment_date")
     private Timestamp createdAt;
+
+    public void update(final CommentRequest request) {
+        this.content = request.content();
+    }
 }

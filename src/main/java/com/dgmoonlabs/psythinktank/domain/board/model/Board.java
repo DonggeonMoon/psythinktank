@@ -1,5 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.board.model;
 
+import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,4 +40,10 @@ public class Board {
     @CreationTimestamp
     @Column(name = "write_date")
     private Timestamp createdAt;
+
+    public void update(BoardRequest request) {
+        this.title = request.title();
+        this.content = request.title();
+        this.isNotice = request.isNotice();
+    }
 }

@@ -25,8 +25,10 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(CommentRequest commentRequest) {
-        commentRepository.save(commentRequest.toEntity());
+    public void updateComment(CommentRequest request) {
+        commentRepository.findById(request.id())
+                .orElseThrow(IllegalArgumentException::new)
+                .update(request);
     }
 
     @Transactional
