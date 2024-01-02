@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class StockService {
     private final DividendRepository dividendRepository;
     private final CorporateBoardStabilityRepository corporateBoardStabilityRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<StockInfo> selectStocks(Pageable pageable) {
         return stockInfoRepository.findAll(
                 PageRequest.of(
@@ -40,7 +41,7 @@ public class StockService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public StockResponse selectStock(String stockCode) {
         return StockResponse.from(
                 stockInfoRepository.findById(stockCode)
@@ -48,7 +49,7 @@ public class StockService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public StockSearchResponse selectStocksBySymbol(StockSearchRequest stockSearchRequest) {
         return StockSearchResponse.from(
                 stockInfoRepository.findBySymbolContains(stockSearchRequest.searchText())
@@ -58,7 +59,7 @@ public class StockService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public StockSearchResponse selectStocksByName(StockSearchRequest stockSearchRequest) {
         return StockSearchResponse.from(
                 stockInfoRepository.findByNameContains(stockSearchRequest.searchText())
@@ -68,7 +69,7 @@ public class StockService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ShareSearchResponse selectSharesBySymbol(String symbol) {
         return ShareSearchResponse.from(shareRepository.findBySymbol(symbol)
                 .stream()
@@ -77,15 +78,15 @@ public class StockService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public DividendResponse selectDividendBySymbol(String symbol) {
         return DividendResponse.from(
                 dividendRepository.findById(symbol)
-                        .orElse(Dividend.builder().build())
+                        .orElse(Dividend.builder().value(0).build())
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public String calculateBoardStability(final String symbol) {
         Double boardStability;
         boardStability = corporateBoardStabilityRepository.findBySymbol(symbol)
@@ -95,7 +96,7 @@ public class StockService {
         return Rating.evaluateBoardStability(boardStability);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public String calculateGrowthPotential(String symbol) {
         Double hrr = hrrRepository.findBySymbolAndBusinessYearAndReportCode(
                         symbol,
@@ -106,7 +107,7 @@ public class StockService {
         return Rating.evaluateGrowthPotential(hrr);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public String calculateGovernance(final String symbol) {
         Double currentShare = shareRepository.findBySymbol(symbol)
                 .stream()
@@ -116,7 +117,7 @@ public class StockService {
         return Rating.evaluateGovernance(currentShare);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ChartData selectDataBySymbol(final String symbol) {
         List<Share> shares = shareRepository.findBySymbol(symbol);
 
@@ -124,26 +125,22 @@ public class StockService {
                 .map(share -> share.getDate().toString())
                 .distinct()
                 .toList();
-        dates.forEach(System.out::println);
-        List<String> holderNames = shares.stream()
-                .map(Share::getHolderName)
-                .distinct()
-                .toList();
 
         return new ChartData(
                 dates,
-                holderNames.stream()
-                        .map(holderName -> new ChartDataset(
-                                holderName,
+                IntStream.range(0, 4)
+                        .mapToObj(index -> new ChartDataset(
+                                index + 1 + "대 주주",
                                 dates.stream()
                                         .map(date -> shares.stream()
-                                                .filter(share -> share.getDate().toString().equals(date)
-                                                        && share.getHolderName().equals(holderName))
-                                                .findFirst()
+                                                .filter(it -> it.getDate().toString().equals(date))
+                                                .skip(index)
                                                 .map(Share::getValue)
-                                                .orElse(0.0))
-                                        .toList()
-                        )).toList()
+                                                .findFirst()
+                                                .orElse(0.0)
+                                        ).toList()
+                        ))
+                        .toList()
         );
     }
 }
