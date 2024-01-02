@@ -27,7 +27,7 @@ public class LoginService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest loginRequest) {
         if ("".equals(loginRequest.memberId()) || "".equals(loginRequest.memberPw())) {
             return new LoginResponse(false, BLANK_ID_AND_PASSWORD.getCode(), null);
@@ -57,7 +57,7 @@ public class LoginService implements UserDetailsService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         if (username.isBlank()) {

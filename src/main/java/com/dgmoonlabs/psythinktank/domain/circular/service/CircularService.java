@@ -33,7 +33,7 @@ public class CircularService {
     private final CircularRepository circularRepository;
     private final MultipartProperties multipartProperties;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<Circular> selectCirculars(Pageable pageable) {
         return circularRepository.findAll(
                 PageRequest.of(
@@ -45,7 +45,7 @@ public class CircularService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public CircularResponse selectCircular(long id) {
         return CircularResponse.from(
                 circularRepository.findById(id)
@@ -53,7 +53,7 @@ public class CircularService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Resource downloadCircular(long id) {
         Resource resource = null;
         try {

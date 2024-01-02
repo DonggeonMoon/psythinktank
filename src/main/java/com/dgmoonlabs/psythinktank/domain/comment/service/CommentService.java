@@ -14,7 +14,7 @@ import java.util.List;
 public class CommentService {
     private final CommentRepository commentRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Comment> selectCommentsByBoardId(long boardId) {
         return commentRepository.findAllById(boardId);
     }
