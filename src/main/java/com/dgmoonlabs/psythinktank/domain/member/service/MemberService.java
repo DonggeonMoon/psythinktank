@@ -27,7 +27,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final Random random;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<Member> selectMembers(Pageable pageable) {
         return memberRepository.findAll(
                 PageRequest.of(
@@ -39,7 +39,7 @@ public class MemberService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public MemberResponse getMember(String memberId) {
         return MemberResponse.from(
                 memberRepository.findById(memberId)
@@ -67,7 +67,7 @@ public class MemberService {
         memberRepository.deleteById(memberId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public FindIdResponse selectMemberByEmail(String memberEmail) {
         Optional<Member> memberToFind = memberRepository.findByEmail(memberEmail);
         return memberToFind.map(
@@ -109,12 +109,12 @@ public class MemberService {
         newMember.setUserLevel(memberRequest.userLevel());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public CheckIdResponse checkId(String memberId) {
         return CheckIdResponse.from(memberRepository.findById(memberId).isEmpty());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public CheckEmailResponse checkEmail(String email) {
         return CheckEmailResponse.from(memberRepository.findByEmail(email).isEmpty());
     }

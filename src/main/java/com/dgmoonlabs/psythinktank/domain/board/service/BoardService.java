@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardService {
     private final BoardRepository boardRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<Board> selectBoards(Pageable pageable) {
         return boardRepository.findAll(
                 PageRequest.of(
@@ -35,7 +35,7 @@ public class BoardService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public BoardResponse selectBoard(long id) {
         return BoardResponse.from(
                 boardRepository.findById(id)
@@ -43,7 +43,7 @@ public class BoardService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public BoardSearchResponse searchBoardByTitle(BoardSearchRequest boardSearchRequest) {
         return new BoardSearchResponse(
                 boardRepository
@@ -54,7 +54,7 @@ public class BoardService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public BoardSearchResponse searchBoardByContent(BoardSearchRequest boardSearchRequest) {
         return new BoardSearchResponse(
                 boardRepository.findByContentContainingOrderByIdDesc(boardSearchRequest.searchText())
@@ -64,7 +64,7 @@ public class BoardService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public BoardSearchResponse searchBoardByMemberId(BoardSearchRequest boardSearchRequest) {
         return new BoardSearchResponse(
                 boardRepository.findByMemberIdOrderByIdDesc(boardSearchRequest.searchText())
@@ -75,13 +75,15 @@ public class BoardService {
     }
 
     @Transactional
-    public void addBoard(BoardRequest boardRequest) {
-        boardRepository.save(boardRequest.toEntity());
+    public void addBoard(BoardRequest request) {
+        boardRepository.save(request.toEntity());
     }
 
     @Transactional
-    public void updateBoard(BoardRequest boardRequest) {
-        boardRepository.save(boardRequest.toEntity());
+    public void updateBoard(BoardRequest request) {
+        boardRepository.findById(request.id())
+                .orElseThrow(IllegalArgumentException::new)
+                .update(request);
     }
 
     @Transactional
@@ -95,6 +97,5 @@ public class BoardService {
                 .orElseThrow(IllegalStateException::new);
         int currentHit = board.getHit();
         board.setHit(++currentHit);
-        boardRepository.save(board);
     }
 }

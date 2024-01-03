@@ -23,7 +23,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(requests -> requests
+        http.requiresChannel(channelRequestMatcherRegistry ->
+                        channelRequestMatcherRegistry
+                                .anyRequest()
+                                .requiresSecure()
+                )
+                .authorizeHttpRequests(requests -> requests
                         .antMatchers(
                                 "/managerPage",
                                 "/changeUserLeve"
@@ -38,6 +43,7 @@ public class SecurityConfig {
                                 "/circularList",
                                 "/circular",
                                 "/member",
+                                "/investmentPerformance.html",
                                 "/login",
                                 "/logout",
                                 "/assets/**",

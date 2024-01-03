@@ -14,7 +14,7 @@ import java.util.List;
 public class CommentService {
     private final CommentRepository commentRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Comment> selectCommentsByBoardId(long boardId) {
         return commentRepository.findAllById(boardId);
     }
@@ -25,8 +25,10 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(CommentRequest commentRequest) {
-        commentRepository.save(commentRequest.toEntity());
+    public void updateComment(CommentRequest request) {
+        commentRepository.findById(request.id())
+                .orElseThrow(IllegalArgumentException::new)
+                .update(request);
     }
 
     @Transactional

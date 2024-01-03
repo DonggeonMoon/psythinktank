@@ -58,8 +58,10 @@ class StockServiceTest {
             .holderName("주주2")
             .build();
     public static final ChartData CHART_DATA = new ChartData(List.of("2023-03-31", "2023-06-30"), List.of(
-            new ChartDataset("주주1", List.of(45.0, 0.0)),
-            new ChartDataset("주주2", List.of(0.0, 45.0))
+            new ChartDataset("1대 주주", List.of(45.0, 45.0)),
+            new ChartDataset("2대 주주", List.of(0.0, 0.0)),
+            new ChartDataset("3대 주주", List.of(0.0, 0.0)),
+            new ChartDataset("4대 주주", List.of(0.0, 0.0))
     ));
     private static final StockInfo STOCK = StockInfo.builder()
             .symbol(SYMBOL)
