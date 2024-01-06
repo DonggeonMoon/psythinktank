@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -69,6 +72,22 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated()
                 )
+                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(
+                        request -> {
+                            CorsConfiguration corsConfiguration = new CorsConfiguration();
+                            corsConfiguration.setAllowedOrigins(List.of(
+                                    "https://psythinktank.com",
+                                    "https://www.psythinktank.com",
+                                    "https://m.psythinktank.com"
+                            ));
+                            corsConfiguration.setAllowedMethods(List.of("*"));
+                            corsConfiguration.setAllowCredentials(true);
+                            corsConfiguration.setAllowedHeaders(List.of("*"));
+                            corsConfiguration.setExposedHeaders(List.of("Authorization"));
+                            corsConfiguration.setMaxAge(3600L);
+                            return corsConfiguration;
+                        }
+                ))
                 .csrf().disable()
                 .formLogin(configurer -> configurer
                         .loginPage("/login")
