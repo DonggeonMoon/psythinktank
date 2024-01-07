@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class ContentController {
-    @GetMapping("/content/{contentName}")
-    public String getContent(@PathVariable String contentName) {
-        return contentName;
+    @GetMapping("/content/{name}")
+    public String getContent(@PathVariable String name) {
+        return name;
     }
 }
