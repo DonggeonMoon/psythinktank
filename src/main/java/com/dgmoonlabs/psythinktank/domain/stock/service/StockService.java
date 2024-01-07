@@ -71,10 +71,8 @@ public class StockService {
 
     @Transactional(readOnly = true)
     public ShareSearchResponse selectSharesBySymbol(String symbol) {
-        return ShareSearchResponse.from(shareRepository.findBySymbol(symbol)
-                .stream()
-                .map(ShareResponse::from)
-                .toList()
+        return ShareSearchResponse.from(
+                ShareResponse.from(shareRepository.findBySymbol(symbol))
         );
     }
 
