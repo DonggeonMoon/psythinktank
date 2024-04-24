@@ -1,0 +1,37 @@
+name: psythinktank
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:stable-alpine
+    platform: linux/amd64
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - backend
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    restart: always
+  postgres:
+    container_name: postgres
+    image: postgres:14.11-alpine
+    platform: linux/amd64
+    env_file:
+      - .env
+    ports:
+      - 5432:5432
+    networks:
+      - backend
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGDATA=${PGDATA}
+    volumes:
+      - "./data:/var/lib/postgresql/data"
+    restart: always
+    depends_on:
+      - java
+networks:
+  backend:
+    driver: bridge
