@@ -23,11 +23,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.requiresChannel(channelRequestMatcherRegistry ->
+        http/*.requiresChannel(channelRequestMatcherRegistry ->
                         channelRequestMatcherRegistry
                                 .anyRequest()
                                 .requiresSecure()
-                )
+                )*/
                 .authorizeHttpRequests(requests -> requests
                         .antMatchers(
                                 "/managerPage",
