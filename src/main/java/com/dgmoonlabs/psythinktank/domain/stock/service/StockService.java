@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
 
+import static com.dgmoonlabs.psythinktank.global.constant.CorporateBoardStability.BUSINESS_YEAR;
+
 @Service
 @RequiredArgsConstructor
 public class StockService {
@@ -89,7 +91,7 @@ public class StockService {
     @Transactional(readOnly = true)
     public String calculateBoardStability(final String symbol) {
         Double boardStability;
-        boardStability = corporateBoardStabilityRepository.findBySymbol(symbol)
+        boardStability = corporateBoardStabilityRepository.findBySymbolAndBusinessYear(symbol, BUSINESS_YEAR.getText())
                 .orElse(CorporateBoardStability.builder().build())
                 .getValue();
 

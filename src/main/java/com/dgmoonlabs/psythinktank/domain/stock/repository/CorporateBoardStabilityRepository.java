@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface CorporateBoardStabilityRepository extends JpaRepository<CorporateBoardStability, Long> {
-    Optional<CorporateBoardStability> findBySymbol(String symbol);
+    Optional<CorporateBoardStability> findBySymbolAndBusinessYear(String symbol, String businessYear);
 }

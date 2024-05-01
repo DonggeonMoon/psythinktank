@@ -145,7 +145,7 @@ class StockServiceTest {
 
     @Test
     void calculateBoardStability() {
-        when(corporateBoardStabilityRepository.findBySymbol(anyString()))
+        when(corporateBoardStabilityRepository.findBySymbolAndBusinessYear(anyString(), anyString()))
                 .thenReturn(Optional.of(CORPORATE_BOARD_STABILITY));
 
         assertThat(stockService.calculateBoardStability(SYMBOL))
