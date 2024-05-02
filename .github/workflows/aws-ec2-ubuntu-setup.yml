@@ -1,0 +1,28 @@
+name: aws-ec2-ubuntu-setup
+
+on: workflow_dispatch
+
+jobs:
+  ec2_commands:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  # GitHub Secrets에 저장된 SSH 비밀 키
+
+      - name: Install Docker and Docker Compose on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "sudo sed -i 's/kr.archive.ubuntu.com/mirror.kakao.com/g' /etc/apt/sources.list && sudo apt update && sudo apt install docker docker-compose -y"
+
+      - name: Upload docker-compose.yml and renew-certificate.sh to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no docker-compose.yml renew-certificate.sh ${{ secrets.USERNAME }}@${{ secrets.EC2_PUBLIC_IP }}:${{ secrets.BASE_DIR }}  # 파일을 EC2의 지정된 디렉토리로 업로드
+
+      - name: Schedule renew-certificate.sh with Cron
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "echo '0 0 * */2 * ${{ secrets.BASE_DIR }}/renew-certificate.sh' | sudo tee -a /var/spool/cron/crontabs/ubuntu"  # 크론탭 추가

@@ -12,7 +12,19 @@ services:
       - backend
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/lib:/var/lib/letsencrypt
+      - ./certbot/www:/var/www/certbot
     restart: always
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/logs:/var/log/letsencrypt
+      - ./certbot/lib:/var/lib/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly -n --expand --webroot --webroot-path=/var/www/certbot --email nullsafer@naver.com --agree-tos --no-eff-email -d "psythinktank.com,www.psythinktank.com,m.psythinktank.com"
   java:
     container_name: java
     image: openjdk:17-alpine
@@ -21,10 +33,10 @@ services:
       - 8080:8080
     networks:
       - backend
-    working_dir: /usr/src/app
-    command: [ 'java', '-jar', '/usr/src/app/PSYThinktank-0.0.1.jar' ]
     volumes:
       - ./deploy:/usr/src/app
+    working_dir: /usr/src/app
+    command: [ 'java', '-jar', '/usr/src/app/PSYThinktank-0.0.1.jar' ]
     depends_on:
       - postgres
     restart: always
@@ -32,12 +44,12 @@ services:
     container_name: postgres
     image: postgres:14.11-alpine
     platform: linux/amd64
-    env_file:
-      - .env
     ports:
       - 5432:5432
     networks:
       - backend
+    env_file:
+      - .env
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
