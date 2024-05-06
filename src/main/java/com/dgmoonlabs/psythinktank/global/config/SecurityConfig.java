@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -66,6 +67,13 @@ public class SecurityConfig {
                                 "/style.css"
                         )
                         .permitAll()
+                        .antMatchers("/supervision/**")
+                        .access((authentication, object) -> {
+                            if ("127.0.0.1".equals(object.getRequest().getRemoteAddr())) {
+                                return new AuthorizationDecision(true);
+                            }
+                            return new AuthorizationDecision(false);
+                        })
                         .anyRequest()
                         .authenticated()
                 )
