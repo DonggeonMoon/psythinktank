@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>주식 검색</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        function search() {
+            let searchText = $("#searchText").val();
+            if (searchText != "") {
+                let regex = /^([0-9]+)$/;
+                if (regex.test(searchText)) {
+                    $
+                            .ajax({
+                                url: "searchBySymbol",
+                                type: "post",
+                                data: JSON.stringify({
+                                    searchText: searchText
+                                }),
+                                dataType: "json",
+                                contentType: "application/json; charset=utf-8"
+                            })
+                            .done(
+                                    function (data) {
+                                        var list = data.result;
+                                        $("#result").empty();
+                                        for (var i = 0; i < list.length; i++) {
+                                            $("#result")
+                                                    .append(
+                                                            "<tr><td>"
+                                                            + list[i].symbol
+                                                            + "</td>"
+                                                            + "<td><a href='stock?symbol="
+                                                            + list[i].symbol
+                                                            + "'>"
+                                                            + list[i].name
+                                                            + "</a></td>"
+                                                            + "<td>"
+                                                            + list[i].corporationClass
+                                                            + "</td>"
+                                                            + "</td></tr>");
+                                        }
+
+                                        $(".pagination").remove();
+                                    }).fail(function (error) {
+                        alert(error);
+                    });
+                } else {
+                    $
+                            .ajax({
+                                url: "searchByStockName",
+                                type: "post",
+                                data: JSON.stringify({
+                                    searchText: searchText
+                                }),
+                                dataType: "json",
+                                contentType: "application/json; charset=utf-8"
+                            })
+                            .done(
+                                    function (data) {
+                                        var list = data.result;
+                                        $("#result").empty();
+                                        for (var i = 0; i < list.length; i++) {
+                                            $("#result")
+                                                    .append(
+                                                            "<tr><td>"
+                                                            + list[i].symbol
+                                                            + "</td>"
+                                                            + "<td><a href='stock?symbol="
+                                                            + list[i].symbol
+                                                            + "'>"
+                                                            + list[i].name
+                                                            + "</a></td>"
+                                                            + "<td>"
+                                                            + list[i].corporationClass
+                                                            + "</td>"
+                                                            + "</td></tr>");
+                                        }
+
+                                        $(".pagination").remove();
+                                    }).fail(function (error) {
+                        alert(error);
+                    });
+                }
+            } else {
+                alert("검색어가 없습니다.");
+            }
+        }
+
+        $(document).ready(function () {
+            $("#searchBtn").click(search);
+            $("#searchText").focus().keypress(function (event) {
+                if (event.keyCode == 13) {
+                    search();
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+{{>layout/header}}
+<div class="container-fluid py-5" style="min-height:800px;">
+    <h2 class="m-2">주식 종목</h2>
+    <div class="d-flex justify-content-center m-2">
+        <input type="text" id="searchText" class="form-control mx-2" name="searchText" placeholder="종목명 또는 종목코드"> <input
+            type="button" id="searchBtn" class="btn btn-secondary mx-2" name="searchBtn" value="검색">
+    </div>
+    <table class="table text-center table-striped">
+        <thead class="table-dark">
+        <tr>
+            <td>종목코드</td>
+            <td>종목명</td>
+            <td>구분</td>
+        </tr>
+        </thead>
+        <tbody id="result">
+        {{#stocks.toList}}
+            <tr>
+                <td>
+                    {{symbol}}
+                </td>
+                <td>
+                    <a href="/stock?symbol={{symbol}}">{{name}}</a>
+                </td>
+                <td>
+                    {{corporationClass}}
+                </td>
+            </tr>
+        {{/stocks.toList}}
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <ul class="pagination">
+            {{#stocks.hasPrevious}}
+                <li class="page-item">
+                    <a class="page-link" href="stockList?page={{stocks.previousPageable.getPageNumber}}">이전</a>
+                </li>
+            {{/stocks.hasPrevious}}
+            {{#stocks.hasNext}}
+                <li class="page-item">
+                    <a class="page-link" href="stockList?page={{stocks.nextPageable.getPageNumber}}">다음</a>
+                </li>
+            {{/stocks.hasNext}}
+
+        </ul>
+    </div>
+</div>
+{{>layout/footer}}
+</body>
+</html>

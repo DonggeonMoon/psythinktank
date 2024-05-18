@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+<title>투자 성과</title>
+<head>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <script type="text/javascript">
+
+        window.onload = function () {
+            let chart1 = new CanvasJS.Chart("chartContainer1", {
+                title: {
+                    text: "2019 년 PSY THINKTANK 수익률(%)"
+                },
+                animationEnabled: true,
+                data: [
+                    {
+                        type: "column",
+                        dataPoints: [
+                            {label: "일지테크", y: 70},
+                            {label: "ISC", y: 27},
+                            {label: "화신", y: 34},
+                            {label: "GH신소재", y: 51},
+                            {label: "HDC아이콘트롤스", y: 56},
+                            {label: "코스맥스엔비티", y: 28}
+                        ]
+                    }
+                ]
+            });
+
+            let chart2 = new CanvasJS.Chart("chartContainer2", {
+                title: {
+                    text: "2020 년 PSY THINKTANK 수익률(%)"
+                },
+                animationEnabled: true,
+                data: [
+                    {
+                        type: "column",
+                        dataPoints: [
+                            {label: "동우팜투테이블", y: 31.47},
+                            {label: "새로닉스", y: 70},
+                            {label: "한세실업", y: 54},
+                            {label: "한국토지신탁", y: 30},
+                            {label: "티에이치엔", y: 71.63},
+                            {label: "인터엠", y: 36.78},
+                            {label: "레이언스", y: 23.88},
+                            {label: "CJ프레시웨이", y: 86.43}
+                        ]
+                    }
+                ]
+            });
+
+            let chart3 = new CanvasJS.Chart("chartContainer3", {
+                title: {
+                    text: "2021 년 PSY THINKTANK 수익률(%)"
+                },
+                animationEnabled: true,
+                data: [
+                    {
+                        type: "column",
+                        dataPoints: [
+                            {label: "코스맥스비티아이[보유중]", y: 0},
+                            {label: "알리코제약[보유중]", y: 0},
+                            {label: "남화토건", y: 48.22},
+                            {label: "KCI[보유중]", y: 0},
+                            {label: "우리넷[보유중]", y: 0},
+                            {label: "메카로", y: 22.34},
+                            {label: "브이원텍", y: 48.92},
+                            {label: "화성산업", y: 31.65}
+                        ]
+                    }
+                ]
+            });
+
+            let chart4 = new CanvasJS.Chart("chartContainer4", {
+                title: {
+                    text: "2022 년 PSY THINKTANK 수익률(%)"
+                },
+                animationEnabled: true,
+                data: [
+                    {
+                        type: "column",
+                        dataPoints: [
+                            {label: "유신", y: 32.28},
+                            {label: "휴메딕스", y: 29.4},
+                            {label: "현대퓨처넷", y: 29.6},
+                            {label: "휴네시온[보유중]", y: 0},
+                            {label: "브이원텍", y: 31.55},
+                            {label: "SGC에너지[보유중]", y: 0},
+                            {label: "코웰패션", y: 50.42},
+                            {label: "세이브존I&C[보유중]", y: 0}
+                        ]
+                    }
+                ]
+            });
+
+            let chart5 = new CanvasJS.Chart("chartContainer5", {
+                title: {
+                    text: "2023 년 PSY THINKTANK 수익률(%)"
+                },
+                animationEnabled: true,
+                data: [
+                    {
+                        type: "column",
+                        dataPoints: [
+                            {label: "사람인에이치알[보유중]", y: 0},
+                            {label: "CJ대한통운", y: 53.22},
+                            {label: "대상[보유중]", y: 0},
+                            {label: "모나리자[보유중]", y: 0},
+                            {label: "헥토파이낸셜", y: 33.57}
+                        ]
+                    }
+                ]
+            });
+
+            let chart6 = new CanvasJS.Chart("chartContainer6", {
+                title: {
+                    text: "2024 년 PSY THINKTANK 수익률(%)"
+                },
+                animationEnabled: true,
+                data: [
+                    {
+                        type: "column",
+                        dataPoints: [
+                            {label: "톱텍[보유중]", y: 0},
+                            {label: "엠투아이[보유중]", y: 0},
+                            {label: "회원공개[보유중]", y: 0},
+                            {label: "회원공개[보유중]", y: 0}
+                        ]
+                    }
+                ]
+            });
+
+            chart1.render();
+            chart2.render();
+            chart3.render();
+            chart4.render();
+            chart5.render();
+            chart6.render();
+
+            // Add text boxes
+            addTextBox("chartContainer1", "2019년 추천주식 모두 차익실현 완료");
+            addTextBox("chartContainer2", "2020년 추천주식 모두 차익실현 완료");
+            addTextBox("chartContainer3", "현재 4종목 보유중");
+            addTextBox("chartContainer4", "현재 4종목 보유중");
+            addTextBox("chartContainer5", "현재 3종목 보유중");
+            addTextBox("chartContainer6", "현재 4종목 보유중");
+
+            document.querySelectorAll(".canvasjs-chart-credit").forEach(element => {
+                element.style.display = "none";
+            });
+
+            function addTextBox(containerId, text) {
+                let textBox = document.createElement("div");
+                textBox.innerHTML = text;
+                textBox.style.backgroundColor = "white"; // Set background color to white
+                textBox.style.color = "black"; // Set text color to black
+                textBox.style.position = "absolute"; // Set position to absolute
+                textBox.style.top = "30px"
+                textBox.style.left = "20px"
+                textBox.style.margin = "20px"; // Add margin for spacing
+                document.getElementById(containerId).appendChild(textBox);
+            }
+        }
+
+    </script>
+</head>
+<body>
+{{>layout/header}}
+<div id="chartContainer1" style="height: 300px; max-width: 1200px; margin: 20px auto; position: relative;"></div>
+<div id="chartContainer2" style="height: 300px; max-width: 1200px; margin: 20px auto; position: relative;"></div>
+<div id="chartContainer3" style="height: 300px; max-width: 1200px; margin: 20px auto; position: relative;"></div>
+<div id="chartContainer4" style="height: 300px; max-width: 1200px; margin: 20px auto; position: relative;"></div>
+<div id="chartContainer5" style="height: 300px; max-width: 1200px; margin: 20px auto; position: relative;"></div>
+<div id="chartContainer6" style="height: 300px; max-width: 1200px; margin: 20px auto; position: relative;"></div>
+{{>layout/footer}}
+</body>
+</html>

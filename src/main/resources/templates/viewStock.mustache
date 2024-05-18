@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>종목 보기</title>
+</head>
+<body>
+{{>layout/header}}
+<div class="container-fluid py-5" style="min-height:800px;">
+    <h2 class="m-2">종목 보기</h2>
+    <table class="table">
+        <colgroup>
+            <col class="text-center" style="width:20%"/>
+            <col style="width:80%"/>
+        </colgroup>
+        <tr>
+            <td class="table-light text-center">구분</td>
+            <td>
+                {{stock.corporationClass}}
+            </td>
+        </tr>
+        <tr>
+            <td class="table-light text-center">종목코드</td>
+            <td>
+                {{stock.symbol}}
+            </td>
+        </tr>
+        <tr>
+            <td class="table-light text-center">종목명</td>
+            <td>
+                {{stock.name}}
+            </td>
+        </tr>
+        <tr>
+            <td class="table-light text-center">기업 소개</td>
+            <td>
+                {{stock.overview}}
+            </td>
+        </tr>
+        <tr>
+            <td class="table-light text-center">지분 변동</td>
+            <td>
+                <div>
+                    <canvas id="myChart"></canvas>
+                </div>
+                <a class="btn btn-light float-end" data-bs-toggle="collapse" href="#share" role="button"
+                   aria-expanded="false" aria-controls="collapseExample">
+                    <i class="bi bi-caret-down-fill"></i>
+                </a>
+                <table id="share" class="table collapse">
+                    {{#share.result}}
+                        <tr>
+                            <td class="table-light text-center">
+                                {{#date}}
+                                    {{.}}
+                                {{/date}}
+                            </td>
+                            <td>
+                                {{holderName}}
+                            </td>
+                            <td>
+                                {{value}}
+                            </td>
+                        </tr>
+                    {{/share.result}}
+                </table>
+                <script>
+                    document.getElementById('share').addEventListener('show.bs.collapse', function () {
+                        document.querySelector('.btn i').classList.remove('bi-caret-down-fill');
+                        document.querySelector('.btn i').classList.add('bi-caret-up-fill');
+                    });
+
+                    document.getElementById('share').addEventListener('hide.bs.collapse', function () {
+                        document.querySelector('.btn i').classList.remove('bi-caret-up-fill');
+                        document.querySelector('.btn i').classList.add('bi-caret-down-fill');
+                    });
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td class="table-light text-center">최근 배당</td>
+            <td>
+                {{dividend.value}}
+            </td>
+        </tr>
+        <tr>
+            <td class="table-light text-center">PSYThinktank 빅데이터 기반 평가</td>
+            <td>
+                <table class="table">
+                    <tr>
+                        <td class="table-light text-center w-25">성장성(Growth Potential)</td>
+                        <td>
+                            <!-- 10 5 0 -->
+                            {{hrr}}
+                            {{^hrr}}데이터 준비 중{{/hrr}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-light text-center w-25">지배구조(Governance)</td>
+                        <td>
+                            <!-- 40 30 20 -->
+                            {{governance}}
+                            {{^governance}}데이터 준비 중{{/governance}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-light text-center w-25">이사회 안정성(Board Stability)</td>
+                        <td>
+                            <!-- 14 9 4 -->
+                            {{corporateBoardStability}}
+                            {{^corporateBoardStability}}
+                                데이터 준비 중
+                            {{/corporateBoardStability}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-light text-center w-25">대외 환경(External Environment)</td>
+                        <td>준비 중</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <button class="btn btn-dark m-2" onclick="location.href='stockList'">목록</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@kurkle/color@0.3.2/dist/color.esm.min.js"></script>
+<script>
+    const CHART_COLORS = [
+        'rgb(255, 99, 132)',
+        'rgb(255, 159, 64)',
+        'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(54, 162, 235)',
+        'rgb(153, 102, 255)',
+        'rgb(201, 203, 207)'
+    ]
+    const CHART_COLORS_TRANSPARENT = [
+        'rgba(255, 99, 132, 0.5)',
+        'rgba(255, 159, 64, 0.5)',
+        'rgba(255, 205, 86, 0.5)',
+        'rgba(75, 192, 192, 0.5)',
+        'rgba(54, 162, 235, 0.5)',
+        'rgba(153, 102, 255, 0.5)',
+        'rgba(201, 203, 207, 0.5)'
+    ]
+
+        {{#chartDataset}}
+        new Chart(document.getElementById('myChart'),
+                {
+                    type: 'line',
+                    data: {
+                        labels: [
+                            {{#labels}}
+                                '{{.}}',
+                            {{/labels}}
+                        ],
+                        datasets: [
+                            {{#chartDatasets}}
+                                {
+                                    label: '{{holderName}}',
+                                    data: {{values}},
+                                },
+                            {{/chartDatasets}}
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: '최대주주 지분율 변화'
+                            }
+                        }
+                    },
+                }
+        );
+        {{/chartDataset}}
+</script>
+{{>layout/footer}}
+</body>
+</html>
