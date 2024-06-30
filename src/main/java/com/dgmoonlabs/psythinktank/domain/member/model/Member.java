@@ -40,7 +40,6 @@ public class Member implements Serializable {
     @ColumnDefault(value = "0")
     private int loginTryCount;
 
-    @CreationTimestamp
     @Column(name = "last_login_datetime", nullable = false)
     private LocalDateTime lastLoggedInAt;
 
