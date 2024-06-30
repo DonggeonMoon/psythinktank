@@ -2,16 +2,16 @@
          pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="keywords" content="PSYThinktank, 주식, 채권, 부동산, 파생상품, 투자, 금융, 증권">
-<meta name="description" content="올바른 주식 투자, PSYThinktank가 만들어 갑니다.">
-<meta name="author" content="PSYThinktank">
+<meta name="keywords" content="PSY THINKTANK, 주식, 채권, 부동산, 파생상품, 투자, 금융, 증권">
+<meta name="description" content="올바른 주식 투자, PSY THINKTANK가 만들어 갑니다.">
+<meta name="author" content="PSY THINKTANK">
 <meta name="google-site-verification" content="RIrNGTJOZcoMVdOjVbu1AlGgeDUxXoTC4YQnD2LrjCo"/>
 
-<meta property="og:title" content="PSYThinktank"/>
+<meta property="og:title" content="PSY THINKTANK"/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="www.psythinktank.com"/>
 <meta property="og:image" content="http://www.psythinktank.com/assets/img/logo2.png"/>
-<meta property="site_name" content="PSYThinktank"/>
+<meta property="site_name" content="PSY THINKTANK"/>
 <meta property="description" content="빅데이터 기반 금융투자"/>
 <meta property="locale" content="ko_KR"/>
 
@@ -24,7 +24,7 @@
     <div class="container-fluid mr-5">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="navbar-brand" href="index.html">PSYThinktank</a>
+                <a class="navbar-brand" href="index.html">PSY THINKTANK</a>
             </li>
         </ul>
         <ul class="navbar-nav me-5">

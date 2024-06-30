@@ -56,7 +56,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="table-light text-center">PSYthinktank 빅데이터 기반 평가</td>
+				<td class="table-light text-center">PSY Thinktank 빅데이터 기반 평가</td>
 				<td>
 					<c:if test="${sessionScope.member.userLevel >= 2}"> ${hrr.hrr}</c:if>
 					
