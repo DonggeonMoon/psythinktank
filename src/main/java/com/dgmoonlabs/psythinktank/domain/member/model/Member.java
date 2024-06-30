@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -29,7 +30,7 @@ public class Member implements Serializable {
     private String email;
 
     @CreationTimestamp
-    @Column(name = "register_date", nullable = false, length = 50)
+    @Column(name = "register_date", nullable = false)
     private Date createdAt;
 
     @Column(name = "user_level", nullable = false)
@@ -38,6 +39,9 @@ public class Member implements Serializable {
     @Column(name = "login_try_count", nullable = false)
     @ColumnDefault(value = "0")
     private int loginTryCount;
+
+    @Column(name = "last_login_datetime", nullable = false)
+    private LocalDateTime lastLoggedInAt;
 
     @JsonIgnore
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)

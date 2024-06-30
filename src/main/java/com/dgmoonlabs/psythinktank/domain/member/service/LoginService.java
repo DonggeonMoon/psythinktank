@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +58,7 @@ public class LoginService implements UserDetailsService {
         );
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         if (username.isBlank()) {
@@ -76,6 +77,8 @@ public class LoginService implements UserDetailsService {
                 .stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getName().getValue()))
                 .toList();
+
+        member.setLastLoggedInAt(LocalDateTime.now());
 
         return new User(memberId, password, authorities);
     }

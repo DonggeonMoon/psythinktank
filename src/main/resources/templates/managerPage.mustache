@@ -15,6 +15,7 @@
             <td>이메일</td>
             <td>사용자 레벨</td>
             <td>가입일</td>
+            <td>마지막 로그인 일시</td>
             <td>권한 변경</td>
         </tr>
         </thead>
@@ -32,6 +33,14 @@
                 </td>
                 <td>
                     {{createdAt}}
+                </td>
+                <td>
+                    {{#lastLoggedInAt}}
+                        {{lastLoggedInAt}}
+                    {{/lastLoggedInAt}}
+                    {{^lastLoggedInAt}}
+                        -
+                    {{/lastLoggedInAt}}
                 </td>
                 <td>
                     {{#toDto.isAdmin}}
