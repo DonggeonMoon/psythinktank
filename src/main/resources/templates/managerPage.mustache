@@ -14,6 +14,7 @@
             <td>아이디</td>
             <td>이메일</td>
             <td>사용자 레벨</td>
+            <td>가입일</td>
             <td>권한 변경</td>
         </tr>
         </thead>
@@ -28,6 +29,9 @@
                 </td>
                 <td>
                     {{userLevel}}
+                </td>
+                <td>
+                    {{createdAt}}
                 </td>
                 <td>
                     {{#toDto.isAdmin}}
