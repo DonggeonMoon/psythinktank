@@ -11,7 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +26,7 @@ public class MemberService {
     private final MailService mailService;
     private final MemberRepository memberRepository;
     private final Random random;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public Page<Member> selectMembers(Pageable pageable) {
@@ -50,7 +51,7 @@ public class MemberService {
     @Transactional
     public void addMember(MemberRequest memberRequest) {
         Member member = memberRequest.toEntity();
-        member.setPassword(BCrypt.hashpw(memberRequest.password(), BCrypt.gensalt()));
+        member.setPassword(passwordEncoder.encode(memberRequest.password()));
         memberRepository.save(member);
     }
 
@@ -58,7 +59,7 @@ public class MemberService {
     public void editMember(MemberRequest memberRequest) {
         Member newMember = memberRepository.findById(memberRequest.memberId())
                 .orElseThrow(IllegalArgumentException::new);
-        newMember.setPassword(BCrypt.hashpw(memberRequest.password(), BCrypt.gensalt()));
+        newMember.setPassword(passwordEncoder.encode(memberRequest.password()));
         newMember.setEmail(memberRequest.email());
     }
 
@@ -89,7 +90,7 @@ public class MemberService {
         IntStream.range(0, TemporaryPassword.LENGTH.getValue())
                 .forEach(it -> stringBuilder.append((char) (random.nextInt(RandomNumber.BOUND.getValue()) + 'A')));
         String randomizedLetters = stringBuilder.toString();
-        member.setPassword(BCrypt.hashpw(randomizedLetters, BCrypt.gensalt()));
+        member.setPassword(passwordEncoder.encode(randomizedLetters));
         member.setLoginTryCount(LoginTry.COUNT_RANGE.getStart());
         mailService.sendMail(mimeMessage -> {
             final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, StandardCharsets.UTF_8.name());
