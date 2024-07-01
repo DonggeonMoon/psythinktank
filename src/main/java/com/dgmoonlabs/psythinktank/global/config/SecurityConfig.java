@@ -10,8 +10,6 @@ import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -24,12 +22,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http/*.requiresChannel(channelRequestMatcherRegistry ->
-                        channelRequestMatcherRegistry
-                                .anyRequest()
-                                .requiresSecure()
-                )*/
-                .authorizeHttpRequests(requests -> requests
+        http.authorizeHttpRequests(requests -> requests
                         .antMatchers(
                                 "/managerPage",
                                 "/changeUserLeve"
@@ -40,7 +33,11 @@ public class SecurityConfig {
                         )
                         .hasRole("ADMIN")
                         .antMatchers(
-                                "/", "/boardList", "/board",
+                                "/",
+                                "/boardList",
+                                "/board",
+                                "/stockList",
+                                "/stock",
                                 "/circularList",
                                 "/circular",
                                 "/content/**",
@@ -87,20 +84,5 @@ public class SecurityConfig {
                         .failureHandler(loginFailureHandler)
                 );
         return http.build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new PasswordEncoder() {
-            @Override
-            public String encode(final CharSequence rawPassword) {
-                return BCrypt.hashpw(String.valueOf(rawPassword), BCrypt.gensalt());
-            }
-
-            @Override
-            public boolean matches(final CharSequence rawPassword, final String encodedPassword) {
-                return BCrypt.checkpw(String.valueOf(rawPassword), encodedPassword);
-            }
-        };
     }
 }
