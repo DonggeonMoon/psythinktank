@@ -6,16 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
-import static com.dgmoonlabs.psythinktank.global.constant.KeyName.MEMBERS_KEY;
-import static com.dgmoonlabs.psythinktank.global.constant.KeyName.SESSION_KEY;
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
 
 @Controller
@@ -46,10 +42,10 @@ public class MemberController {
     }
 
     @GetMapping("/editMemberInfo")
-    public String getModifyMemberForm(HttpSession session, Model model) {
+    public String getModifyMemberForm(Model model, @SessionAttribute Map<String, String> member) {
         model.addAttribute(
-                "memberInfo",
-                memberService.getMember((String) ((Map<?, ?>) session.getAttribute("member")).get("memberId"))
+                MEMBER_KEY.getText(),
+                memberService.getMember(member.get("memberId"))
         );
         return EDIT_MEMBER_INFO.getText();
     }

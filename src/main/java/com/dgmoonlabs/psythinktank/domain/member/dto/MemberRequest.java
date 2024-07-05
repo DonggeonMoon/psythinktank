@@ -2,13 +2,13 @@ package com.dgmoonlabs.psythinktank.domain.member.dto;
 
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public record MemberRequest(
         String memberId,
         String password,
         String email,
-        Date createdAt,
+        LocalDate createdAt,
         int userLevel
 ) {
     public Member toEntity() {

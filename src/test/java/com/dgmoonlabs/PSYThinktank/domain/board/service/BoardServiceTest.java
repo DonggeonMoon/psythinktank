@@ -53,9 +53,12 @@ class BoardServiceTest {
             .isNotice(false)
             .createdAt(Timestamp.valueOf(LocalDateTime.now()))
             .build();
-    public static final BoardSearchResponse BOARD_SEARCH_RESPONSE = new BoardSearchResponse(List.of(BoardResponse.from(BOARD_1)));
+    private static final BoardResponse BOARD_RESPONSE_1 = BoardResponse.from(BOARD_1);
+    private static final BoardSearchResponse BOARD_SEARCH_RESPONSE = new BoardSearchResponse(List.of(BoardResponse.from(BOARD_1)));
     private static final List<Board> BOARDS = List.of(BOARD_1);
+    private static final List<BoardResponse> BOARD_RESPONSES = List.of(BOARD_RESPONSE_1);
     private static final Page<Board> BOARD_PAGE = new PageImpl<>(BOARDS);
+    private static final Page<BoardResponse> BOARD_RESPONSE_PAGE = new PageImpl<>(BOARD_RESPONSES);
     private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
     @Mock
     private BoardRepository boardRepository;
@@ -68,7 +71,7 @@ class BoardServiceTest {
                 .thenReturn(BOARD_PAGE);
 
         assertThat(boardService.selectBoards(PAGE_REQUEST))
-                .isEqualTo(BOARD_PAGE);
+                .isEqualTo(BOARD_RESPONSE_PAGE);
     }
 
     @Test
