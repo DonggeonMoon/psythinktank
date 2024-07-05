@@ -43,7 +43,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberResponse getMember(String memberId) {
         return MemberResponse.from(
-                memberRepository.findById(memberId)
+                memberRepository.findByMemberId(memberId)
                         .orElseThrow(IllegalStateException::new)
         );
     }
@@ -57,7 +57,7 @@ public class MemberService {
 
     @Transactional
     public void editMember(MemberRequest memberRequest) {
-        Member newMember = memberRepository.findById(memberRequest.memberId())
+        Member newMember = memberRepository.findByMemberId(memberRequest.memberId())
                 .orElseThrow(IllegalArgumentException::new);
         newMember.changePassword(passwordEncoder.encode(memberRequest.password()));
         newMember.changeEmail(memberRequest.email());
@@ -65,7 +65,7 @@ public class MemberService {
 
     @Transactional
     public void deleteMember(String memberId) {
-        memberRepository.deleteById(memberId);
+        memberRepository.deleteByMemberId(memberId);
     }
 
     @Transactional(readOnly = true)
@@ -105,14 +105,14 @@ public class MemberService {
 
     @Transactional
     public void changeUserLevel(MemberRequest memberRequest) {
-        Member newMember = memberRepository.findById(memberRequest.memberId())
+        Member newMember = memberRepository.findByMemberId(memberRequest.memberId())
                 .orElseThrow(IllegalArgumentException::new);
         newMember.changeUserLevel(memberRequest.userLevel());
     }
 
     @Transactional(readOnly = true)
     public CheckIdResponse checkId(String memberId) {
-        return CheckIdResponse.from(memberRepository.findById(memberId).isEmpty());
+        return CheckIdResponse.from(memberRepository.findByMemberId(memberId).isEmpty());
     }
 
     @Transactional(readOnly = true)
@@ -125,7 +125,7 @@ public class MemberService {
         if (memberId.isEmpty() || memberId.isBlank()) {
             return;
         }
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(IllegalStateException::new);
         member.resetLoginTryCount();
     }
@@ -135,7 +135,7 @@ public class MemberService {
         if (memberId.isEmpty() || memberId.isBlank()) {
             return;
         }
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByMemberId(memberId)
                 .orElse(Member.builder().build());
         member.increaseLoginTryCount();
     }

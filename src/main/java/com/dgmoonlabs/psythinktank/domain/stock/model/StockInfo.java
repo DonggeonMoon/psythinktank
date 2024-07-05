@@ -14,6 +14,8 @@ import javax.persistence.*;
 public class StockInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "stock_code", nullable = false, length = 6)
     private String symbol;
 

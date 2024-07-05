@@ -44,9 +44,9 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public StockResponse selectStock(String stockCode) {
+    public StockResponse selectStock(String symbol) {
         return StockResponse.from(
-                stockInfoRepository.findById(stockCode)
+                stockInfoRepository.findBySymbol(symbol)
                         .orElse(StockInfo.builder().build())
         );
     }
@@ -83,7 +83,7 @@ public class StockService {
     @Transactional(readOnly = true)
     public DividendResponse selectDividendBySymbol(String symbol) {
         return DividendResponse.from(
-                dividendRepository.findById(symbol)
+                dividendRepository.findBySymbol(symbol)
                         .orElse(Dividend.builder().value(0).build())
         );
     }
