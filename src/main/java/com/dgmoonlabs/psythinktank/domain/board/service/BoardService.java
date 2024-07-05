@@ -22,7 +22,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional(readOnly = true)
-    public Page<Board> selectBoards(Pageable pageable) {
+    public Page<BoardResponse> selectBoards(Pageable pageable) {
         return boardRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),
@@ -32,7 +32,7 @@ public class BoardService {
                                 .and(Sort.by(CriteriaField.ID.getName())
                                         .descending())
                 )
-        );
+        ).map(BoardResponse::from);
     }
 
     @Transactional(readOnly = true)
