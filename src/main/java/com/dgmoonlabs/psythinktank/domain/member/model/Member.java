@@ -17,7 +17,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Getter
-@Setter
 public class Member implements Serializable {
     @Id
     @Column(name = "member_id", nullable = false, length = 50)
@@ -43,12 +42,36 @@ public class Member implements Serializable {
     @Column(name = "last_login_datetime")
     private LocalDateTime lastLoggedInAt;
 
+    @Column(name = "last_password_change_datetime")
+    private LocalDateTime passwordLastChangedAt;
+
     @JsonIgnore
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
     private Set<Authority> authorities;
 
     public void increaseLoginTryCount() {
         this.loginTryCount++;
+    }
+
+    public void resetLoginTryCount() {
+        this.loginTryCount = LoginTry.COUNT_RANGE.getStart();
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+        this.passwordLastChangedAt = LocalDateTime.now();
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+
+    public void changeUserLevel(int userLevel) {
+        this.userLevel = userLevel;
+    }
+
+    public void updateLastLoggedInAt() {
+        this.lastLoggedInAt = LocalDateTime.now();
     }
 
     public boolean isLocked() {

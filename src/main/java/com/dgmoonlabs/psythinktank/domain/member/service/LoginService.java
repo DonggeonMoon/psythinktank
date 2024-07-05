@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.dgmoonlabs.psythinktank.global.constant.LoginResult.*;
@@ -42,7 +41,7 @@ public class LoginService implements UserDetailsService {
                 .map(authority -> new SimpleGrantedAuthority(authority.getName().getValue()))
                 .toList();
 
-        member.setLastLoggedInAt(LocalDateTime.now());
+        member.updateLastLoggedInAt();
 
         return new User(memberId, password, authorities);
     }
