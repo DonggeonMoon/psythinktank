@@ -1,8 +1,7 @@
 package com.dgmoonlabs.psythinktank.domain.board.dto;
 
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
-
-import java.sql.Timestamp;
+import com.dgmoonlabs.psythinktank.global.constant.DateTimeFormat;
 
 public record BoardResponse(
         Long id,
@@ -11,7 +10,7 @@ public record BoardResponse(
         String content,
         int hit,
         Boolean isNotice,
-        Timestamp createdAt
+        String createdAt
 ) {
     public static BoardResponse from(final Board board) {
         return new BoardResponse(
@@ -21,7 +20,7 @@ public record BoardResponse(
                 board.getContent(),
                 board.getHit(),
                 board.getIsNotice(),
-                board.getCreatedAt()
+                board.getCreatedAt().toLocalDateTime().format(DateTimeFormat.DATE_TIME.getFormatter())
         );
     }
 }

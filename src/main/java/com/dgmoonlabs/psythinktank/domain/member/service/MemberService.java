@@ -29,7 +29,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public Page<Member> selectMembers(Pageable pageable) {
+    public Page<MemberResponse> selectMembers(Pageable pageable) {
         return memberRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(), Pagination.MEMBER_SIZE.getValue(),
@@ -37,7 +37,7 @@ public class MemberService {
                                 .descending()
                                 .and(Sort.by("memberId").ascending())
                 )
-        );
+        ).map(MemberResponse::from);
     }
 
     @Transactional(readOnly = true)
@@ -51,7 +51,7 @@ public class MemberService {
     @Transactional
     public void addMember(MemberRequest memberRequest) {
         Member member = memberRequest.toEntity();
-        member.setPassword(passwordEncoder.encode(memberRequest.password()));
+        member.changePassword(passwordEncoder.encode(memberRequest.password()));
         memberRepository.save(member);
     }
 
@@ -59,8 +59,8 @@ public class MemberService {
     public void editMember(MemberRequest memberRequest) {
         Member newMember = memberRepository.findById(memberRequest.memberId())
                 .orElseThrow(IllegalArgumentException::new);
-        newMember.setPassword(passwordEncoder.encode(memberRequest.password()));
-        newMember.setEmail(memberRequest.email());
+        newMember.changePassword(passwordEncoder.encode(memberRequest.password()));
+        newMember.changeEmail(memberRequest.email());
     }
 
     @Transactional
@@ -90,8 +90,8 @@ public class MemberService {
         IntStream.range(0, TemporaryPassword.LENGTH.getValue())
                 .forEach(it -> stringBuilder.append((char) (random.nextInt(RandomNumber.BOUND.getValue()) + 'A')));
         String randomizedLetters = stringBuilder.toString();
-        member.setPassword(passwordEncoder.encode(randomizedLetters));
-        member.setLoginTryCount(LoginTry.COUNT_RANGE.getStart());
+        member.changePassword(passwordEncoder.encode(randomizedLetters));
+        member.resetLoginTryCount();
         mailService.sendMail(mimeMessage -> {
             final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, StandardCharsets.UTF_8.name());
             helper.setFrom(EmailForm.SENDER_ADDRESS.getText());
@@ -107,7 +107,7 @@ public class MemberService {
     public void changeUserLevel(MemberRequest memberRequest) {
         Member newMember = memberRepository.findById(memberRequest.memberId())
                 .orElseThrow(IllegalArgumentException::new);
-        newMember.setUserLevel(memberRequest.userLevel());
+        newMember.changeUserLevel(memberRequest.userLevel());
     }
 
     @Transactional(readOnly = true)
@@ -127,7 +127,7 @@ public class MemberService {
         }
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(IllegalStateException::new);
-        member.setLoginTryCount(0);
+        member.resetLoginTryCount();
     }
 
     @Transactional
