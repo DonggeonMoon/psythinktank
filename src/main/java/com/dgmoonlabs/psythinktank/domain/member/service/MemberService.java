@@ -29,7 +29,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public Page<Member> selectMembers(Pageable pageable) {
+    public Page<MemberResponse> selectMembers(Pageable pageable) {
         return memberRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(), Pagination.MEMBER_SIZE.getValue(),
@@ -37,7 +37,7 @@ public class MemberService {
                                 .descending()
                                 .and(Sort.by("memberId").ascending())
                 )
-        );
+        ).map(MemberResponse::from);
     }
 
     @Transactional(readOnly = true)

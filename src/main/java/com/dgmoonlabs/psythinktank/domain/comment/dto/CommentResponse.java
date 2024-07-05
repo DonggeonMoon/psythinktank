@@ -2,7 +2,7 @@ package com.dgmoonlabs.psythinktank.domain.comment.dto;
 
 import com.dgmoonlabs.psythinktank.domain.comment.model.Comment;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public record CommentResponse(
         Long boardId,
@@ -12,7 +12,7 @@ public record CommentResponse(
         long sequence,
         String memberId,
         String content,
-        Timestamp createdAt
+        LocalDateTime createdAt
 ) {
     public static CommentResponse from(Comment comment) {
         return new CommentResponse(

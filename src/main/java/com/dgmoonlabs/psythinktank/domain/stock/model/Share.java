@@ -3,7 +3,7 @@ package com.dgmoonlabs.psythinktank.domain.stock.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,7 +24,7 @@ public class Share {
     private String stockName;
 
     @Column(nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "holder_name", length = 100, nullable = false)
     private String holderName;

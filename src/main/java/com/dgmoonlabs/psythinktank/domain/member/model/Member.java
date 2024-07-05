@@ -9,7 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -35,7 +35,7 @@ public class Member implements Serializable {
     @CreationTimestamp
     @Column(name = "register_date", nullable = false)
     @Comment("가입일")
-    private Date createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "user_level", nullable = false)
     @Comment("사용자 등급")

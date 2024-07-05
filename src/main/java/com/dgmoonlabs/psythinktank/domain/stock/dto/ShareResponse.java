@@ -2,13 +2,13 @@ package com.dgmoonlabs.psythinktank.domain.stock.dto;
 
 import com.dgmoonlabs.psythinktank.domain.stock.model.Share;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public record ShareResponse(
         Long id,
         String symbol,
         String stockName,
-        Date date,
+        LocalDate date,
         String holderName,
         Double value
 ) {
