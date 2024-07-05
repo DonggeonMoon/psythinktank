@@ -39,10 +39,10 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {{^member.isAdmin}}{{/member.isAdmin}}
                     {{#member.isAdmin}}
-                        <a class="dropdown-item" href="managerPage">관리자 페이지</a>
+                        <a class="dropdown-item" href="/managerPage">관리자 페이지</a>
                     {{/member.isAdmin}}
-                    <a class="dropdown-item" href="editMemberInfo">회원 정보 수정</a>
-                    <a class="dropdown-item" href="logout">로그아웃</a>
+                    <a class="dropdown-item" href="/editMemberInfo">회원 정보 수정</a>
+                    <a class="dropdown-item" href="/logout">로그아웃</a>
                 </div>
             {{/member}}
             {{^member}}
