@@ -39,7 +39,12 @@ class CircularServiceTest {
             .createdAt(LocalDateTime.now())
             .build();
     private static final List<Circular> CIRCULARS = List.of(CIRCULAR_1, CIRCULAR_2);
+    private static final List<CircularResponse> CIRCULAR_RESPONSES = List.of(
+            CircularResponse.from(CIRCULAR_1),
+            CircularResponse.from(CIRCULAR_2)
+    );
     private static final Page<Circular> CIRCULAR_PAGE = new PageImpl<>(CIRCULARS);
+    private static final Page<CircularResponse> CIRCULAR_RESPONSE_PAGE = new PageImpl<>(CIRCULAR_RESPONSES);
     private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
     @Mock
     private CircularRepository circularRepository;
@@ -52,7 +57,7 @@ class CircularServiceTest {
                 .thenReturn(CIRCULAR_PAGE);
 
         assertThat(circularService.selectCirculars(PAGE_REQUEST))
-                .isEqualTo(CIRCULAR_PAGE);
+                .isEqualTo(CIRCULAR_RESPONSE_PAGE);
     }
 
     @Test
