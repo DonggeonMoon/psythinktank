@@ -27,7 +27,7 @@ public class LoginService implements UserDetailsService {
         if (username.isBlank()) {
             throw new InternalAuthenticationServiceException(String.valueOf(BLANK_ID_AND_PASSWORD.getCode()));
         }
-        Member member = memberRepository.findById(username)
+        Member member = memberRepository.findByMemberId(username)
                 .orElseThrow(() -> new InternalAuthenticationServiceException(String.valueOf(ABSENT_ID.getCode())));
 
         if (member.isLocked()) {

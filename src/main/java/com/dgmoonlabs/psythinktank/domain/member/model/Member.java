@@ -19,6 +19,9 @@ import java.util.Set;
 @Getter
 public class Member implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "member_id", nullable = false, length = 50)
     private String memberId;
 

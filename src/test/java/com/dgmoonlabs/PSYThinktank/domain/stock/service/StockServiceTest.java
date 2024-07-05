@@ -99,7 +99,7 @@ class StockServiceTest {
 
     @Test
     void selectStock() {
-        when(stockInfoRepository.findById(anyString()))
+        when(stockInfoRepository.findBySymbol(anyString()))
                 .thenReturn(Optional.of(STOCK));
 
         assertThat(stockService.selectStock(SYMBOL))
@@ -135,7 +135,7 @@ class StockServiceTest {
 
     @Test
     void selectDividendBySymbol() {
-        when(dividendRepository.findById(anyString()))
+        when(dividendRepository.findBySymbol(anyString()))
                 .thenReturn(Optional.of(DIVIDEND));
 
         assertThat(stockService.selectDividendBySymbol(SYMBOL))

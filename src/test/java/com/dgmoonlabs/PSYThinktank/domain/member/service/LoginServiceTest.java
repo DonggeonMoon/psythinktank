@@ -33,7 +33,7 @@ class LoginServiceTest {
 
     @Test
     void loadUserByUsername() {
-        when(memberRepository.findById(anyString()))
+        when(memberRepository.findByMemberId(anyString()))
                 .thenReturn(Optional.of(MEMBER));
 
         assertThat(loginService.loadUserByUsername(MEMBER_ID).getUsername())

@@ -66,7 +66,7 @@ class MemberServiceTest {
 
     @Test
     void getMember() {
-        when(memberRepository.findById(anyString()))
+        when(memberRepository.findByMemberId(anyString()))
                 .thenReturn(Optional.of(MEMBER_1));
 
         assertThat(memberService.getMember(MEMBER_ID))
@@ -84,7 +84,7 @@ class MemberServiceTest {
 
     @Test
     void changeUserLevel() {
-        when(memberRepository.findById(anyString()))
+        when(memberRepository.findByMemberId(anyString()))
                 .thenReturn(Optional.of(MEMBER_2));
 
         memberService.changeUserLevel(MEMBER_REQUEST);
@@ -95,7 +95,7 @@ class MemberServiceTest {
 
     @Test
     void checkId() {
-        when(memberRepository.findById(anyString()))
+        when(memberRepository.findByMemberId(anyString()))
                 .thenReturn(Optional.empty());
 
         assertThat(memberService.checkId(MEMBER_ID))
@@ -113,7 +113,7 @@ class MemberServiceTest {
 
     @Test
     void resetLoginTryCount() {
-        when(memberRepository.findById(anyString()))
+        when(memberRepository.findByMemberId(anyString()))
                 .thenReturn(Optional.of(MEMBER_1));
 
         memberService.resetLoginTryCount(MEMBER_ID);
@@ -124,7 +124,7 @@ class MemberServiceTest {
 
     @Test
     void increaseLoginTryCount() {
-        when(memberRepository.findById(anyString()))
+        when(memberRepository.findByMemberId(anyString()))
                 .thenReturn(Optional.of(MEMBER_1));
 
         int loginTryCount = MEMBER_1.getLoginTryCount();
