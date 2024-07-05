@@ -4,7 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,5 +26,5 @@ public class Circular {
 
     @CreationTimestamp
     @Column(name = "upload_date")
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 }

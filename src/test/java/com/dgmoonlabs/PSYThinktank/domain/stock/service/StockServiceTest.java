@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -47,13 +46,13 @@ class StockServiceTest {
             .build();
     public static final Share SHARE_1 = Share.builder()
             .id(1L)
-            .date(Date.valueOf(LocalDate.of(2023, 3, 31)))
+            .date(LocalDate.of(2023, 3, 31))
             .value(45.0)
             .holderName("주주1")
             .build();
     public static final Share SHARE_2 = Share.builder()
             .id(2L)
-            .date(Date.valueOf(LocalDate.of(2023, 6, 30)))
+            .date(LocalDate.of(2023, 6, 30))
             .value(45.0)
             .holderName("주주2")
             .build();

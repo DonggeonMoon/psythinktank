@@ -34,7 +34,7 @@ public class CircularService {
     private final MultipartProperties multipartProperties;
 
     @Transactional(readOnly = true)
-    public Page<Circular> selectCirculars(Pageable pageable) {
+    public Page<CircularResponse> selectCirculars(Pageable pageable) {
         return circularRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),
@@ -42,7 +42,7 @@ public class CircularService {
                         Sort.by(CriteriaField.ID.getName())
                                 .ascending()
                 )
-        );
+        ).map(CircularResponse::from);
     }
 
     @Transactional(readOnly = true)

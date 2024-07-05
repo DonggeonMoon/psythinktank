@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,7 +39,7 @@ public class Comment {
 
     @CreationTimestamp
     @Column(name = "comment_date")
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     public void update(final CommentRequest request) {
         this.content = request.content();
