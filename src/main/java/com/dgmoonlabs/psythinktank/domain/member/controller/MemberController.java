@@ -39,11 +39,6 @@ public class MemberController {
         return LOGIN.redirect();
     }
 
-    @GetMapping("/findIdAndPw")
-    public String findIdAndPassword() {
-        return FIND_ID_AND_PASSWORD.getText();
-    }
-
     @GetMapping("/modify")
     public String getModifyMemberForm(Model model, @SessionAttribute Map<String, String> member) {
         model.addAttribute(
@@ -56,24 +51,29 @@ public class MemberController {
     @PutMapping
     public String updateMember(@Valid MemberRequest memberRequest) {
         memberService.editMember(memberRequest);
-        return BOARD_LIST.redirect();
+        return "redirect:/login";
     }
 
     @DeleteMapping
     public String deleteMember(String memberId, HttpSession session) {
         memberService.deleteMember(memberId);
         session.removeAttribute(SESSION_KEY.getText());
-        return GOOD_BYE.redirect();
+        return "redirect:/members/goodBye";
     }
 
-    @GetMapping("/goodBye")
-    public String getGoodByePage() {
-        return GOOD_BYE.getText();
+    @GetMapping("/findIdAndPw")
+    public String findIdAndPassword() {
+        return FIND_ID_AND_PASSWORD.getText();
     }
 
     @PutMapping("/change/userLevel")
     public String changeUserLevel(@Valid MemberUserLevelRequest memberRequest) {
         memberService.changeUserLevel(memberRequest);
         return "redirect:/members";
+    }
+
+    @GetMapping("/goodBye")
+    public String getGoodByePage() {
+        return GOOD_BYE.getText();
     }
 }

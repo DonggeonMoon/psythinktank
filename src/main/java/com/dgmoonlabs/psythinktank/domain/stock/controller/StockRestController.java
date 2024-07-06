@@ -19,12 +19,18 @@ public class StockRestController {
     private final StockService stockService;
 
     @PostMapping("/search/symbol")
-    public ResponseEntity<StockSearchResponse> searchBySymbol(@Valid @RequestBody StockSearchRequest stockSearchRequest) {
+    public ResponseEntity<StockSearchResponse> searchBySymbol(
+            @Valid
+            @RequestBody
+            StockSearchRequest stockSearchRequest) {
         return ResponseEntity.ok(stockService.selectStocksBySymbol(stockSearchRequest));
     }
 
     @PostMapping("/search/stockName")
-    public ResponseEntity<StockSearchResponse> searchByName(@Valid @RequestBody StockSearchRequest stockSearchRequest) {
+    public ResponseEntity<StockSearchResponse> searchByName(
+            @Valid
+            @RequestBody
+            StockSearchRequest stockSearchRequest) {
         return ResponseEntity.ok(stockService.selectStocksByName(stockSearchRequest));
     }
 }

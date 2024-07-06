@@ -27,7 +27,7 @@ public class BoardController {
         return BOARD_LIST.getText();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public String getBoard(@PathVariable long id, Model model) {
         boardService.addHit(id);
         model.addAttribute(BOARD_KEY.getText(), boardService.selectBoard(id));

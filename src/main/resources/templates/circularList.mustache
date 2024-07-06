@@ -30,17 +30,12 @@
                     {{createdAt}}
                 </td>
                 <td>
-                    <form action="/circulars" method="post">
-                        <input type="hidden" name="_method" value="delete">
-                        <input type="hidden" name="id" value="{{id}}">
-                        {{#member.isAdmin}}
-                            <form action="/circulars" method="post">
-                                <input type="hidden" name="_method" value="delete">
-                                <input type="hidden" name="id" value="{{id}}">
-                                <input type="submit" class="btn btn-primary p-1" value="삭제">
-                            </form>
-                        {{/member.isAdmin}}
-                    </form>
+                    {{#member.isAdmin}}
+                        <form action="/circulars/{{id}}" method="post">
+                            <input type="hidden" name="_method" value="delete">
+                            <input type="submit" class="btn btn-primary p-1" value="삭제">
+                        </form>
+                    {{/member.isAdmin}}
                 </td>
             </tr>
         {{/circulars.getContent}}
