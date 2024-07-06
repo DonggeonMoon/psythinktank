@@ -35,7 +35,7 @@ public class BoardController {
         boardService.addHit(id);
         model.addAttribute(BOARD_KEY.getText(), boardService.selectBoard(id));
         model.addAttribute(COMMENTS_KEY.getText(), commentService.selectCommentsByBoardId(id));
-        return BOARD.getText();
+        return VIEW_BOARD.getText();
     }
 
     @GetMapping("/insertBoard")
