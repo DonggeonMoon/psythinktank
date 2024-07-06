@@ -19,7 +19,7 @@
                     memberEmail: $("#memberEmail").val(),
                 }
                 $.ajax({
-                    url: "findId",
+                    url: "/api/members/find/id",
                     type: "post",
                     data: JSON.stringify(data),
                     dataType: "json",
@@ -41,7 +41,7 @@
                     memberId: $("#memberId").val()
                 }
                 $.ajax({
-                    url: "findPw",
+                    url: "/api/members/find/password",
                     type: "post",
                     data: JSON.stringify(data),
                     dataType: "json",

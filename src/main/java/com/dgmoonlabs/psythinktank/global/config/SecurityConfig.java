@@ -24,8 +24,11 @@ public class SecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
                         .antMatchers(
-                                "/members",
-                                "/changeUserLevel"
+                                HttpMethod.GET, "/members"
+                        )
+                        .hasRole("ADMIN")
+                        .antMatchers(
+                                HttpMethod.PUT, "/api/members/change/userLevel"
                         )
                         .hasRole("ADMIN")
                         .antMatchers(

@@ -20,7 +20,7 @@
                             async: true,
                             type: "POST",
                             data: memberId,
-                            url: "checkId",
+                            url: "/api/members/check/id",
                             dataType: "json",
                             contentType: "application/json; charset=UTF-8"
                         }).done(function (data) {
@@ -52,7 +52,7 @@
                         async: true,
                         type: "POST",
                         data: memberEmail,
-                        url: "checkEmail",
+                        url: "/api/members/check/email",
                         dataType: "json",
                         contentType: "application/json; charset=UTF-8"
                     }).done(function (data) {
@@ -125,7 +125,7 @@
                         <label class="d-inline-block w-25">아이디</label>
                         <div class="d-inline">
                             <input class="d-inline-block form-control w-50 my-2" type="text" id="memberId"
-                                   name="memberId" maxlength="50" required>
+                                   name="memberId" maxlength="50" placeholder="5 ~ 30자의 영숫자, 특수문자(-, _)" required>
                             <button type="button" id="checkIdBtn" class="btn btn-secondary d-inline">아이디 중복 확인</button>
                         </div>
                     </div>
@@ -133,7 +133,9 @@
                         <label class="d-inline-block w-25">비밀번호</label>
                         <div class="d-inline">
                             <input class="d-inline-block form-control w-50 my-2" type="password" id="memberPw"
-                                   name="password" maxlength="50" required>
+                                   name="password" maxlength="50"
+                                   placeholder="비밀번호에는 8 ~ 16자의 영숫자, 특수문자(!, @, #, $, %, ^, &, ^, &, *, -, _, +, =)"
+                                   required>
                         </div>
                     </div>
                     <div>
