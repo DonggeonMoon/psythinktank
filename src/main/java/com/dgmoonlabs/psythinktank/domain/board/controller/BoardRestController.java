@@ -7,16 +7,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/boards")
 public class BoardRestController {
     private final BoardService boardService;
 
-    @PostMapping("/searchByBoardTitle")
+    @PostMapping("/search/title")
     public ResponseEntity<BoardSearchResponse> searchBoardByTitle(
             @Valid
             @RequestBody
@@ -25,7 +27,7 @@ public class BoardRestController {
         return ResponseEntity.ok(boardService.searchBoardByTitle(boardSearchRequest));
     }
 
-    @PostMapping("/searchByBoardContent")
+    @PostMapping("/search/content")
     public ResponseEntity<BoardSearchResponse> searchBoardByContent(
             @Valid
             @RequestBody
@@ -34,7 +36,7 @@ public class BoardRestController {
         return ResponseEntity.ok(boardService.searchBoardByContent(boardSearchRequest));
     }
 
-    @PostMapping("/searchByMemberId")
+    @PostMapping("/search/memberId")
     public ResponseEntity<BoardSearchResponse> searchBoardByMemberId(
             @Valid
             @RequestBody

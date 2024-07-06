@@ -17,6 +17,11 @@ import org.springframework.stereotype.Component;
 public class BoardAspect {
     private final BoardRepository boardRepository;
 
+    @Around("execution(* com..BoardController.getAddBoardForm(..)) && args(id, ..)")
+    public Object protectAddBoardForm(final ProceedingJoinPoint joinPoint, final long id) throws Throwable {
+        return protectBoard(joinPoint, id);
+    }
+
     @Around("execution(* com..BoardController.getModifyBoardForm(..)) && args(id, ..)")
     public Object protectUpdateBoardForm(final ProceedingJoinPoint joinPoint, final long id) throws Throwable {
         return protectBoard(joinPoint, id);

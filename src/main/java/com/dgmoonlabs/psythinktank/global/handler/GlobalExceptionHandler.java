@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import static com.dgmoonlabs.psythinktank.global.constant.ViewName.BOARD_LIST;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.LOGIN;
 
 @ControllerAdvice
 @Slf4j
@@ -19,8 +19,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public String handleUnauthorizedAccessException() {
-        return BOARD_LIST.redirect();
+        return LOGIN.redirect();
     }
 }

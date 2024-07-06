@@ -24,17 +24,17 @@
                     {{id}}
                 </td>
                 <td>
-                    <a href="/circular?id={{id}}">{{title}}</a>
+                    <a href="/api/circulars/{{id}}">{{title}}</a>
                 </td>
                 <td>
                     {{createdAt}}
                 </td>
                 <td>
-                    <form action="circular" method="post">
+                    <form action="/circulars" method="post">
                         <input type="hidden" name="_method" value="delete">
                         <input type="hidden" name="id" value="{{id}}">
                         {{#member.isAdmin}}
-                            <form action="circular" method="post">
+                            <form action="/circulars" method="post">
                                 <input type="hidden" name="_method" value="delete">
                                 <input type="hidden" name="id" value="{{id}}">
                                 <input type="submit" class="btn btn-primary p-1" value="삭제">
@@ -47,17 +47,17 @@
         </tbody>
     </table>
     {{#member.isAdmin}}
-        <button class="btn btn-dark m-2" onclick="location.href='insertCircular'">파일 올리기</button>
+        <button class="btn btn-dark m-2" onclick="location.href='/circulars/add'">파일 올리기</button>
     {{/member.isAdmin}}
 
     <div class="d-flex justify-content-center">
         <ul class="pagination">
             {{#circulars.hasPrevious}}
                 <li class="page-item">
-                    <a class="page-link" href="circulars?page={{circulars.previousPageable.getPageNumber}}">이전</a>
+                    <a class="page-link" href="/circulars?page={{circulars.previousPageable.getPageNumber}}">이전</a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="circulars?page={{circulars.nextPageable.getPageNumber}}">다음</a>
+                    <a class="page-link" href="/circulars?page={{circulars.nextPageable.getPageNumber}}">다음</a>
                 </li>
             {{/circulars.hasPrevious}}
         </ul>

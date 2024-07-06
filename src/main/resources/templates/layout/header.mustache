@@ -39,9 +39,9 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {{^member.isAdmin}}{{/member.isAdmin}}
                     {{#member.isAdmin}}
-                        <a class="dropdown-item" href="/managerPage">관리자 페이지</a>
+                        <a class="dropdown-item" href="/members">관리자 페이지</a>
                     {{/member.isAdmin}}
-                    <a class="dropdown-item" href="/editMemberInfo">회원 정보 수정</a>
+                    <a class="dropdown-item" href="/members/modify">회원 정보 수정</a>
                     <a class="dropdown-item" href="/logout">로그아웃</a>
                 </div>
             {{/member}}
@@ -63,16 +63,16 @@
         <ul class="navbar-nav text-center">
 
             <li class="nav-item">
-                <a class="nav-link" href="/stockList">종목 검색</a>
+                <a class="nav-link" href="/stocks">종목 검색</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/boardList">회원 게시판</a>
+                <a class="nav-link" href="/boards">회원 게시판</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/circularList">회보</a>
+                <a class="nav-link" href="/circulars">회보</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/content/investmentPerformance">투자 성과</a>
+                <a class="nav-link" href="/contents/investmentPerformance">투자 성과</a>
             </li>
         </ul>
     </div>

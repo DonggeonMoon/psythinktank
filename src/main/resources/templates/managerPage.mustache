@@ -47,12 +47,14 @@
                         -
                     {{/toDto.isAdmin}}
                     {{^toDto.isAdmin}}
-                        <form class="d-inline" action="changeUserLevel" method="post">
+                        <form class="d-inline" action="/members/change/userLevel" method="post">
+                            <input type="hidden" name="_method" value="put">
                             <input type="hidden" name="memberId" value="{{memberId}}">
                             <input type="hidden" name="userLevel" value="2">
                             <input type="submit" value="관리자 승격">
                         </form>
-                        <form class="d-inline" action="changeUserLevel" method="post">
+                        <form class="d-inline" action="/members/change/userLevel" method="post">
+                            <input type="hidden" name="_method" value="put">
                             <input type="hidden" name="memberId" value="{{memberId}}">
                             <input type="hidden" name="userLevel" value="1">
                             <input type="submit" value="회원으로 강등">
@@ -67,12 +69,12 @@
         <ul class="pagination">
             {{#members.hasPrevious}}
                 <li class="page-item">
-                    <a class="page-link" href="managerPage?page={{members.previousPageable.getPageNumber}}">이전</a>
+                    <a class="page-link" href="/members?page={{members.previousPageable.getPageNumber}}">이전</a>
                 </li>
             {{/members.hasPrevious}}
             {{#members.hasNext}}
                 <li class="page-item">
-                    <a class="page-link" href="managerPage?page={{members.nextPageable.getPageNumber}}">다음</a>
+                    <a class="page-link" href="/members?page={{members.nextPageable.getPageNumber}}">다음</a>
                 </li>
             {{/members.hasNext}}
         </ul>

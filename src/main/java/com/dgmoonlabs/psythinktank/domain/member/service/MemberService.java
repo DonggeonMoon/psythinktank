@@ -104,7 +104,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void changeUserLevel(MemberRequest memberRequest) {
+    public void changeUserLevel(MemberUserLevelRequest memberRequest) {
         Member newMember = memberRepository.findByMemberId(memberRequest.memberId())
                 .orElseThrow(IllegalArgumentException::new);
         newMember.changeUserLevel(memberRequest.userLevel());

@@ -24,24 +24,33 @@ public class SecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
                         .antMatchers(
-                                "/managerPage",
-                                "/changeUserLeve"
+                                "/members",
+                                "/changeUserLevel"
                         )
                         .hasRole("ADMIN")
                         .antMatchers(
-                                HttpMethod.DELETE, "/circular"
+                                HttpMethod.DELETE, "/api/circulars"
                         )
                         .hasRole("ADMIN")
+                        .antMatchers(
+                                HttpMethod.GET, "/boards/add"
+                        ).authenticated()
+                        .antMatchers(
+                                HttpMethod.GET, "/boards/modify/**"
+                        ).authenticated()
                         .antMatchers(
                                 "/",
-                                "/boardList",
-                                "/board",
-                                "/stockList",
-                                "/stock",
-                                "/circularList",
-                                "/circular",
-                                "/content/**",
-                                "/member",
+                                "/boards/**",
+                                "/api/boards/search/title",
+                                "/api/boards/search/content",
+                                "/api/boards/search/memberId",
+                                "/stocks/**",
+                                "/api/stocks/search/symbol",
+                                "/api/stocks/search/stockName",
+                                "/circulars/**",
+                                "/api/circulars/**",
+                                "/contents/**",
+                                "/members/**",
                                 "/login",
                                 "/logout",
                                 "/assets/**",
@@ -49,12 +58,11 @@ public class SecurityConfig {
                                 "/error/**",
                                 "/js/**",
                                 "/web/**",
-                                "/findIdAndPw",
-                                "/findId",
-                                "/findPw",
-                                "/checkId",
-                                "/checkEmail",
-                                "/goodBye"
+                                "/api/members/find/id",
+                                "/api/members/find/password",
+                                "/api/members/check/id",
+                                "/api/members/check/email",
+                                "/members/goodBye"
                         )
                         .permitAll()
                         .antMatchers(

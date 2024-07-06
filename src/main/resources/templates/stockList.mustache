@@ -12,7 +12,7 @@
                 if (regex.test(searchText)) {
                     $
                             .ajax({
-                                url: "searchBySymbol",
+                                url: "/api/stocks/search/symbol",
                                 type: "post",
                                 data: JSON.stringify({
                                     searchText: searchText
@@ -30,7 +30,7 @@
                                                             "<tr><td>"
                                                             + list[i].symbol
                                                             + "</td>"
-                                                            + "<td><a href='stock?symbol="
+                                                            + "<td><a href='stocks/"
                                                             + list[i].symbol
                                                             + "'>"
                                                             + list[i].name
@@ -48,7 +48,7 @@
                 } else {
                     $
                             .ajax({
-                                url: "searchByStockName",
+                                url: "/api/stocks/search/stockName",
                                 type: "post",
                                 data: JSON.stringify({
                                     searchText: searchText
@@ -66,7 +66,7 @@
                                                             "<tr><td>"
                                                             + list[i].symbol
                                                             + "</td>"
-                                                            + "<td><a href='stock?symbol="
+                                                            + "<td><a href='stocks/"
                                                             + list[i].symbol
                                                             + "'>"
                                                             + list[i].name
@@ -120,7 +120,7 @@
                     {{symbol}}
                 </td>
                 <td>
-                    <a href="/stock?symbol={{symbol}}">{{name}}</a>
+                    <a href="/stocks/{{symbol}}">{{name}}</a>
                 </td>
                 <td>
                     {{corporationClass}}
@@ -133,12 +133,12 @@
         <ul class="pagination">
             {{#stocks.hasPrevious}}
                 <li class="page-item">
-                    <a class="page-link" href="stockList?page={{stocks.previousPageable.getPageNumber}}">이전</a>
+                    <a class="page-link" href="/stocks?page={{stocks.previousPageable.getPageNumber}}">이전</a>
                 </li>
             {{/stocks.hasPrevious}}
             {{#stocks.hasNext}}
                 <li class="page-item">
-                    <a class="page-link" href="stockList?page={{stocks.nextPageable.getPageNumber}}">다음</a>
+                    <a class="page-link" href="/stocks?page={{stocks.nextPageable.getPageNumber}}">다음</a>
                 </li>
             {{/stocks.hasNext}}
 

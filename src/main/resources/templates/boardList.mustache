@@ -13,7 +13,7 @@
                 switch (selectIndex) {
                     case 0:
                         $.ajax({
-                            url: "searchByBoardTitle",
+                            url: "/api/boards/search/title",
                             type: "post",
                             data: JSON.stringify({
                                 searchText: searchText
@@ -30,7 +30,7 @@
                                                 "<tr><td>"
                                                 + list[i].id
                                                 + "</td>"
-                                                + "<td><a href='board?id="
+                                                + "<td><a href='/boards/"
                                                 + list[i].id
                                                 + "'>"
                                                 + list[i].title
@@ -53,7 +53,7 @@
                         break;
                     case 1:
                         $.ajax({
-                            url: "searchByBoardContent",
+                            url: "/api/boards/search/content",
                             type: "post",
                             data: JSON.stringify({
                                 searchText: searchText
@@ -70,7 +70,7 @@
                                                 "<tr><td>"
                                                 + list[i].id
                                                 + "</td>"
-                                                + "<td><a href='board?id="
+                                                + "<td><a href='/board/"
                                                 + list[i].id
                                                 + "'>"
                                                 + list[i].title
@@ -93,7 +93,7 @@
                         break;
                     case 2:
                         $.ajax({
-                            url: "searchByMemberId",
+                            url: "api/boards/search/memberId",
                             type: "post",
                             data: JSON.stringify({
                                 searchText: searchText
@@ -110,7 +110,7 @@
                                                 "<tr><td>"
                                                 + list[i].id
                                                 + "</td>"
-                                                + "<td><a href='board?id="
+                                                + "<td><a href='/boards/"
                                                 + list[i].id
                                                 + "'>"
                                                 + list[i].title
@@ -171,8 +171,8 @@
                     {{^isNotice}}{{id}}{{/isNotice}}
                 </td>
                 <td>
-                    {{#isNotice}}<b><a href="/board?id={{id}}">{{title}}</a></b>{{/isNotice}}
-                    {{^isNotice}}<a href="/board?id={{id}}">{{title}}</a>{{/isNotice}}
+                    {{#isNotice}}<b><a href="/boards/{{id}}">{{title}}</a></b>{{/isNotice}}
+                    {{^isNotice}}<a href="/boards/{{id}}">{{title}}</a>{{/isNotice}}
                 </td>
                 <td>
                     {{memberId}}
@@ -187,7 +187,7 @@
         {{/boards.toList}}
         </tbody>
     </table>
-    <button class="btn btn-dark m-2" onclick="location.href='insertBoard'">글 작성</button>
+    <button class="btn btn-dark m-2" onclick="location.href='/boards/add'">글 작성</button>
     <div class="d-flex justify-content-center">
         <select id="select" class="form-select mx-2" style="width: 100px">
             <option>제목</option>
@@ -202,13 +202,13 @@
         <ul class="pagination">
             {{#boards.hasPrevious}}
                 <li class="page-item">
-                    <a class="page-link" href="boardList?page={{boards.previousPageable.getPageNumber}}">이전</a>
+                    <a class="page-link" href="/boards?page={{boards.previousPageable.getPageNumber}}">이전</a>
                 </li>
             {{/boards.hasPrevious}}
 
             {{#boards.hasNext}}
                 <li class="page-item">
-                    <a class="page-link" href="boardList?page={{boards.nextPageable.getPageNumber}}">다음</a>
+                    <a class="page-link" href="/boards?page={{boards.nextPageable.getPageNumber}}">다음</a>
                 </li>
             {{/boards.hasNext}}
         </ul>

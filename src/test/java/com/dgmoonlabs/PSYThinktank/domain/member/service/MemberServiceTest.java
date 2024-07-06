@@ -29,7 +29,7 @@ class MemberServiceTest {
     public static final CheckEmailResponse CHECK_EMAIL_RESPONSE = CheckEmailResponse.from(true);
     public static final CheckIdResponse CHECK_ID_RESPONSE = CheckIdResponse.from(true);
     public static final FindIdResponse FIND_ID_RESPONSE = FindIdResponse.of(true, MEMBER_ID);
-    public static final MemberRequest MEMBER_REQUEST = new MemberRequest(MEMBER_ID, MEMBER_PASSWORD, MEMBER_EMAIL, UserLevel.MANAGER.getLevel());
+    public static final MemberUserLevelRequest MEMBER_USER_LEVEL_REQUEST = new MemberUserLevelRequest(MEMBER_ID, UserLevel.MANAGER.getLevel());
     private static final Member MEMBER_1 = Member.builder()
             .memberId(MEMBER_ID)
             .password(BCrypt.hashpw(MEMBER_PASSWORD, BCrypt.gensalt()))
@@ -86,7 +86,7 @@ class MemberServiceTest {
         when(memberRepository.findByMemberId(anyString()))
                 .thenReturn(Optional.of(MEMBER_2));
 
-        memberService.changeUserLevel(MEMBER_REQUEST);
+        memberService.changeUserLevel(MEMBER_USER_LEVEL_REQUEST);
 
         assertThat(MEMBER_2.getUserLevel())
                 .isEqualTo(UserLevel.MANAGER.getLevel());

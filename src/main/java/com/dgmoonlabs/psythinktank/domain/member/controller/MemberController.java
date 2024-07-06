@@ -1,6 +1,7 @@
 package com.dgmoonlabs.psythinktank.domain.member.controller;
 
 import com.dgmoonlabs.psythinktank.domain.member.dto.MemberRequest;
+import com.dgmoonlabs.psythinktank.domain.member.dto.MemberUserLevelRequest;
 import com.dgmoonlabs.psythinktank.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -17,21 +18,22 @@ import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/members")
 public class MemberController {
     private final MemberService memberService;
 
-    @GetMapping("/managerPage")
+    @GetMapping
     public String getMembers(Pageable pageable, Model model) {
         model.addAttribute(MEMBERS_KEY.getText(), memberService.selectMembers(pageable));
         return MANAGER_PAGE.getText();
     }
 
-    @GetMapping("/member")
+    @GetMapping("/add")
     public String getAddMemberForm() {
         return JOIN.getText();
     }
 
-    @PostMapping("/member")
+    @PostMapping
     public String insertMember(@Valid MemberRequest memberRequest) {
         memberService.addMember(memberRequest);
         return LOGIN.redirect();
@@ -42,7 +44,7 @@ public class MemberController {
         return FIND_ID_AND_PASSWORD.getText();
     }
 
-    @GetMapping("/editMemberInfo")
+    @GetMapping("/modify")
     public String getModifyMemberForm(Model model, @SessionAttribute Map<String, String> member) {
         model.addAttribute(
                 MEMBER_KEY.getText(),
@@ -51,13 +53,13 @@ public class MemberController {
         return EDIT_MEMBER_INFO.getText();
     }
 
-    @PutMapping("/member")
+    @PutMapping
     public String updateMember(@Valid MemberRequest memberRequest) {
         memberService.editMember(memberRequest);
         return BOARD_LIST.redirect();
     }
 
-    @DeleteMapping("/member")
+    @DeleteMapping
     public String deleteMember(String memberId, HttpSession session) {
         memberService.deleteMember(memberId);
         session.removeAttribute(SESSION_KEY.getText());
@@ -69,9 +71,9 @@ public class MemberController {
         return GOOD_BYE.getText();
     }
 
-    @PostMapping("/changeUserLevel")
-    public String changeUserLevel(@Valid MemberRequest memberRequest) {
+    @PutMapping("/change/userLevel")
+    public String changeUserLevel(@Valid MemberUserLevelRequest memberRequest) {
         memberService.changeUserLevel(memberRequest);
-        return MANAGER_PAGE.redirect();
+        return "redirect:/members";
     }
 }
