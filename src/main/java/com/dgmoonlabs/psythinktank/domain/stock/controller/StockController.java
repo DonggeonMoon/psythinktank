@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.STOCK;
@@ -13,17 +15,18 @@ import static com.dgmoonlabs.psythinktank.global.constant.ViewName.STOCK_LIST;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/stocks")
 public class StockController {
     private final StockService stockService;
 
-    @GetMapping("/stockList")
+    @GetMapping
     public String getStocks(Pageable pageable, Model model) {
         model.addAttribute(STOCKS_KEY.getText(), stockService.selectStocks(pageable));
         return STOCK_LIST.getText();
     }
 
-    @GetMapping("/stock")
-    public String getStock(String symbol, Model model) {
+    @GetMapping("/{symbol}")
+    public String getStock(@PathVariable String symbol, Model model) {
         model.addAttribute(STOCK_KEY.getText(), stockService.selectStock(symbol));
         model.addAttribute(HRR_KEY.getText(), stockService.calculateGrowthPotential(symbol));
         model.addAttribute(SHARE_KEY.getText(), stockService.selectSharesBySymbol(symbol));

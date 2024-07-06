@@ -67,8 +67,8 @@
         <tr style="text-align:right;">
             <td colspan="2">
                 <input type="button" class="btn btn-secondary my-2" value="수정"
-                       onclick="location.href='updateBoard?id={{board.id}}'">
-                <form style="display:inline" action="board" method="post">
+                       onclick="location.href='/boards/modify/{{board.id}}'">
+                <form style="display:inline" action="/boards/{{board.id}}" method="post">
                     <input type="hidden" name="_method" value="delete">
                     <input type="submit" class="btn btn-secondary my-2" value="삭제">
                     <input type="hidden" name="memberId" value="{{board.memberId}}">
@@ -77,7 +77,7 @@
             </td>
         </tr>
     </table>
-    <button class="btn btn-dark my-2" onclick="location.href='boardList'">목록</button>
+    <button class="btn btn-dark my-2" onclick="location.href='/boards'">목록</button>
 
     <div class="container-fluid mb-5">
         <!--<table class="table">

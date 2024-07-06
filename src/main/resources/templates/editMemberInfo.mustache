@@ -73,7 +73,7 @@
     <div class="text-center">
         <h2 class="m-2">회원 정보 변경</h2>
         <div class="w-75 mx-auto">
-            <form id="form" class="text-start" action="member" method="post">
+            <form id="form" class="text-start" action="/members" method="post">
                 <input type="hidden" name="_method" value="put">
                 <div>
                     <div>
@@ -111,7 +111,7 @@
                 <input type="hidden" name="userLevel" value="{{memberInfo.userLevel}}">
             </form>
             <button type="submit" id="editBtn" class="btn btn-secondary mx-2">회원 정보 수정</button>
-            <form class="d-inline" action="member" method="post">
+            <form class="d-inline" action="/members" method="post">
                 <input type="hidden" name="_method" value="delete">
                 <input type="hidden" name="memberId" value="{{memberInfo.memberId}}">
                 <input type="submit" class="btn btn-secondary mx-2 d-inline" value="회원 탈퇴">

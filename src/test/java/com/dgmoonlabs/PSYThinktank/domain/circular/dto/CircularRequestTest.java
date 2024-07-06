@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,22 +42,15 @@ class CircularRequestTest {
             "제목, 회보 이름"
     })
     void valid_values(String title, String fileName) {
-        CircularRequest request = new CircularRequest(null, title, fileName, Mockito.mock(MultipartFile.class));
+        CircularRequest request = new CircularRequest(null, title, Mockito.mock(MultipartFile.class));
         Set<ConstraintViolation<CircularRequest>> violations = validator.validate(request);
         assertThat(violations).isEmpty();
     }
 
     @ParameterizedTest
-    @CsvSource({
-            ",",
-            "'',",
-            ",''",
-            "'',''",
-            "제목,",
-            ",회보 이름"
-    })
-    void invalid_values(String id, String fileName) {
-        CircularRequest request = new CircularRequest(null, id, fileName, Mockito.mock(MultipartFile.class));
+    @NullAndEmptySource
+    void invalid_values(String id) {
+        CircularRequest request = new CircularRequest(null, id, Mockito.mock(MultipartFile.class));
         Set<ConstraintViolation<CircularRequest>> violations = validator.validate(request);
         assertThat(violations).isNotEmpty();
         violations.forEach(violation -> log.info("violation = {}", violation));

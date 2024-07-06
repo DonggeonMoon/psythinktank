@@ -6,31 +6,33 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/members")
 public class MemberRestController {
     private final MemberService memberService;
 
-    @PostMapping("/checkId")
+    @PostMapping("/check/id")
     public ResponseEntity<CheckIdResponse> checkId(@RequestBody String memberId) {
         return ResponseEntity.ok(memberService.checkId(memberId));
     }
 
-    @PostMapping("/checkEmail")
+    @PostMapping("/check/email")
     public ResponseEntity<CheckEmailResponse> checkEmail(@RequestBody String memberEmail) {
         return ResponseEntity.ok(memberService.checkEmail(memberEmail));
     }
 
-    @PostMapping("/findId")
+    @PostMapping("/find/id")
     public ResponseEntity<FindIdResponse> findId(@Valid @RequestBody FindIdRequest request) {
         return ResponseEntity.ok(memberService.selectMemberByEmail(request.memberEmail()));
     }
 
-    @PostMapping("/findPw")
+    @PostMapping("/find/password")
     public ResponseEntity<FindPasswordResponse> findPassword(@Valid @RequestBody FindPasswordRequest request) {
         return ResponseEntity.ok(memberService.selectMemberByEmailAndMemberId(request));
     }

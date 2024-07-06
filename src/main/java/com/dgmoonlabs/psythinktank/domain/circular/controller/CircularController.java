@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
@@ -18,29 +19,30 @@ import static com.dgmoonlabs.psythinktank.global.constant.ViewName.INSERT_CIRCUL
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/circulars")
 public class CircularController {
     private final CircularService circularService;
 
-    @GetMapping("/circularList")
+    @GetMapping
     public String getCirculars(Pageable pageable, Model model) {
         model.addAttribute(CIRCULARS_KEY.getText(), circularService.selectCirculars(pageable));
         return CIRCULAR_LIST.getText();
     }
 
-    @GetMapping("/insertCircular")
+    @GetMapping("/add")
     public String getAddCircularForm() {
         return INSERT_CIRCULAR.getText();
     }
 
-    @PostMapping("/circular")
+    @PostMapping
     public String insertCircular(@Valid CircularRequest circularRequest) {
         circularService.addCircular(circularRequest);
-        return CIRCULAR_LIST.redirect();
+        return "redirect:/circulars";
     }
 
-    @DeleteMapping("/circular")
+    @DeleteMapping
     public String deleteCircular(long id) {
         circularService.deleteCircular(id);
-        return CIRCULAR_LIST.redirect();
+        return "redirect:/circulars";
     }
 }
