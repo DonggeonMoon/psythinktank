@@ -2,16 +2,15 @@ package com.dgmoonlabs.psythinktank.domain.board.dto;
 
 import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 
-import java.sql.Timestamp;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 public record BoardRequest(
         Long id,
-        String memberId,
-        String title,
-        String content,
-        Boolean isNotice,
-        Timestamp createdAt
+        @NotBlank(message = "memberId가 누락되었습니다.") String memberId,
+        @NotBlank(message = "제목을 입력해주세요.") String title,
+        @NotBlank(message = "내용을 입력해주세요.") String content,
+        Boolean isNotice
 ) {
     public BoardRequest {
         if (Objects.isNull(isNotice)) {
@@ -26,7 +25,6 @@ public record BoardRequest(
                 .title(title)
                 .content(content)
                 .isNotice(isNotice)
-                .createdAt(createdAt)
                 .build();
     }
 }

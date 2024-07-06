@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +29,7 @@ class MemberServiceTest {
     public static final CheckEmailResponse CHECK_EMAIL_RESPONSE = CheckEmailResponse.from(true);
     public static final CheckIdResponse CHECK_ID_RESPONSE = CheckIdResponse.from(true);
     public static final FindIdResponse FIND_ID_RESPONSE = FindIdResponse.of(true, MEMBER_ID);
-    public static final MemberRequest MEMBER_REQUEST = new MemberRequest(MEMBER_ID, MEMBER_PASSWORD, MEMBER_EMAIL, LocalDate.now(), UserLevel.MANAGER.getLevel());
+    public static final MemberRequest MEMBER_REQUEST = new MemberRequest(MEMBER_ID, MEMBER_PASSWORD, MEMBER_EMAIL, UserLevel.MANAGER.getLevel());
     private static final Member MEMBER_1 = Member.builder()
             .memberId(MEMBER_ID)
             .password(BCrypt.hashpw(MEMBER_PASSWORD, BCrypt.gensalt()))

@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.Map;
 
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
@@ -31,7 +32,7 @@ public class MemberController {
     }
 
     @PostMapping("/member")
-    public String insertMember(MemberRequest memberRequest) {
+    public String insertMember(@Valid MemberRequest memberRequest) {
         memberService.addMember(memberRequest);
         return LOGIN.redirect();
     }
@@ -51,7 +52,7 @@ public class MemberController {
     }
 
     @PutMapping("/member")
-    public String updateMember(MemberRequest memberRequest) {
+    public String updateMember(@Valid MemberRequest memberRequest) {
         memberService.editMember(memberRequest);
         return BOARD_LIST.redirect();
     }
@@ -69,7 +70,7 @@ public class MemberController {
     }
 
     @PostMapping("/changeUserLevel")
-    public String changeUserLevel(MemberRequest memberRequest) {
+    public String changeUserLevel(@Valid MemberRequest memberRequest) {
         memberService.changeUserLevel(memberRequest);
         return MANAGER_PAGE.redirect();
     }
