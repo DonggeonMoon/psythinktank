@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum ViewName {
     ROOT(""),
     BOARD_LIST("boardList"),
-    BOARD("board"),
+    BOARD("viewBoard"),
+    VIEW_BOARD("viewBoard"),
     INSERT_BOARD("insertBoard"),
     UPDATE_BOARD("updateBoard"),
     CIRCULAR_LIST("circularList"),
