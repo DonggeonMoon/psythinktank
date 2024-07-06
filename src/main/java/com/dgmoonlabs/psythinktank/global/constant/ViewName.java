@@ -9,6 +9,7 @@ public enum ViewName {
     ROOT(""),
     BOARD_LIST("boardList"),
     BOARD("board"),
+    VIEW_BOARD("viewBoard"),
     INSERT_BOARD("insertBoard"),
     UPDATE_BOARD("updateBoard"),
     CIRCULAR_LIST("circularList"),
