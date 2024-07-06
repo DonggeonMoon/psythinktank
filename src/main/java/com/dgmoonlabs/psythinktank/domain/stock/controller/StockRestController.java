@@ -9,18 +9,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 public class StockRestController {
     private final StockService stockService;
 
     @PostMapping("/searchBySymbol")
-    public ResponseEntity<StockSearchResponse> searchBySymbol(@RequestBody StockSearchRequest stockSearchRequest) {
+    public ResponseEntity<StockSearchResponse> searchBySymbol(@Valid @RequestBody StockSearchRequest stockSearchRequest) {
         return ResponseEntity.ok(stockService.selectStocksBySymbol(stockSearchRequest));
     }
 
     @PostMapping("/searchByStockName")
-    public ResponseEntity<StockSearchResponse> searchByName(@RequestBody StockSearchRequest stockSearchRequest) {
+    public ResponseEntity<StockSearchResponse> searchByName(@Valid @RequestBody StockSearchRequest stockSearchRequest) {
         return ResponseEntity.ok(stockService.selectStocksByName(stockSearchRequest));
     }
 }

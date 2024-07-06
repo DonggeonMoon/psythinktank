@@ -9,23 +9,37 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 public class BoardRestController {
     private final BoardService boardService;
 
     @PostMapping("/searchByBoardTitle")
-    public ResponseEntity<BoardSearchResponse> searchBoardByTitle(@RequestBody BoardSearchRequest boardSearchRequest) {
+    public ResponseEntity<BoardSearchResponse> searchBoardByTitle(
+            @Valid
+            @RequestBody
+            BoardSearchRequest boardSearchRequest
+    ) {
         return ResponseEntity.ok(boardService.searchBoardByTitle(boardSearchRequest));
     }
 
     @PostMapping("/searchByBoardContent")
-    public ResponseEntity<BoardSearchResponse> searchBoardByContent(@RequestBody BoardSearchRequest boardSearchRequest) {
+    public ResponseEntity<BoardSearchResponse> searchBoardByContent(
+            @Valid
+            @RequestBody
+            BoardSearchRequest boardSearchRequest
+    ) {
         return ResponseEntity.ok(boardService.searchBoardByContent(boardSearchRequest));
     }
 
     @PostMapping("/searchByMemberId")
-    public ResponseEntity<BoardSearchResponse> searchBoardByMemberId(@RequestBody BoardSearchRequest boardSearchRequest) {
+    public ResponseEntity<BoardSearchResponse> searchBoardByMemberId(
+            @Valid
+            @RequestBody
+            BoardSearchRequest boardSearchRequest
+    ) {
         return ResponseEntity.ok(boardService.searchBoardByMemberId(boardSearchRequest));
     }
 }

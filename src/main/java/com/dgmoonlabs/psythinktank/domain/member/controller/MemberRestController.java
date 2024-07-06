@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 public class MemberRestController {
@@ -24,12 +26,12 @@ public class MemberRestController {
     }
 
     @PostMapping("/findId")
-    public ResponseEntity<FindIdResponse> findId(@RequestBody FindIdRequest request) {
+    public ResponseEntity<FindIdResponse> findId(@Valid @RequestBody FindIdRequest request) {
         return ResponseEntity.ok(memberService.selectMemberByEmail(request.memberEmail()));
     }
 
     @PostMapping("/findPw")
-    public ResponseEntity<FindPasswordResponse> findPassword(@RequestBody FindPasswordRequest request) {
+    public ResponseEntity<FindPasswordResponse> findPassword(@Valid @RequestBody FindPasswordRequest request) {
         return ResponseEntity.ok(memberService.selectMemberByEmailAndMemberId(request));
     }
 }
