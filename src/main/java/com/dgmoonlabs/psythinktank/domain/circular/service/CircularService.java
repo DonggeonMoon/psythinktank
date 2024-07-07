@@ -85,7 +85,7 @@ public class CircularService {
             multipartFile.transferTo(file);
             circularRepository.save(circular);
         } catch (Exception e) {
-            log.info(e.getMessage());
+            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -100,6 +100,7 @@ public class CircularService {
             circularRepository.deleteById(id);
         } catch (Exception e) {
             log.info(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 }
