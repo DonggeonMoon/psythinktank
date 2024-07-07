@@ -86,6 +86,7 @@ public class CircularService {
             circularRepository.save(circular);
         } catch (Exception e) {
             log.info(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
