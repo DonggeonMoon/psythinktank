@@ -61,6 +61,7 @@ public class SecurityConfig {
                                 "/error/**",
                                 "/js/**",
                                 "/web/**",
+                                "/members/findIdAndPw",
                                 "/api/members/find/id",
                                 "/api/members/find/password",
                                 "/api/members/check/id",
