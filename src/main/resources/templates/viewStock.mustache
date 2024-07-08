@@ -86,6 +86,7 @@
         <tr>
             <td class="table-light text-center">PSY THINKTANK 빅데이터 기반 평가</td>
             <td>
+                {{#member}}
                 <table class="table">
                     <tr>
                         <td class="table-light text-center w-25">성장성(Growth Potential)</td>
@@ -118,6 +119,10 @@
                         <td>준비 중</td>
                     </tr>
                 </table>
+                {{/member}}
+                {{^member}}
+                    로그인 후 열람 가능합니다.
+                {{/member}}
             </td>
         </tr>
     </table>
