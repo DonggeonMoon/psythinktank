@@ -35,44 +35,9 @@
             border-radius: 4px;
         }
     </style>
+    <script src="/js/chat.js"></script>
     <script>
-        class Chat {
-            constructor(memberId, address) {
-                this.memberId = memberId;
-                this.webSocket = new WebSocket(address);
-
-                this.webSocket.onopen = () => {
-                    console.log("Chat Service Connected.")
-                };
-
-                this.webSocket.onmessage = (event) => {
-                    const chatLog = document.getElementById("chat-container");
-                    chatLog.innerHTML = '';
-
-                    const array = JSON.parse(event.data);
-
-                    chatLog.innerHTML = array.join('<br>');
-                }
-
-                this.webSocket.onerror = (error) => {
-                    console.error('Websocket error:{}', error)
-                };
-
-                this.webSocket.onclose = () => {
-                    console.log("Chat Service Disconnected.")
-                };
-            }
-
-            sendMessage() {
-                const input = document.getElementById("messageInput");
-                const message = input.value;
-                this.webSocket.send(this.memberId + ":" + message)
-                input.value = '';
-            }
-        }
-
-        const address = location.protocol.replace('http', 'ws') + "//" + location.host + "/ws/chat"
-        const chat = new Chat('{{member.memberId}}', address)
+        const chat = new Chat('{{member.memberId}}')
 
         document.addEventListener('DOMContentLoaded', () => {
             const inputButton = document.getElementById("sendButton");
