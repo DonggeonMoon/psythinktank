@@ -71,7 +71,8 @@
             }
         }
 
-        const chat = new Chat('{{member.memberId}}', "ws://localhost:8080/ws/chat")
+        const address = location.protocol.replace('http', 'ws') + "//" + location.host + "/ws/chat"
+        const chat = new Chat('{{member.memberId}}', address)
 
         document.addEventListener('DOMContentLoaded', () => {
             const inputButton = document.getElementById("sendButton");
