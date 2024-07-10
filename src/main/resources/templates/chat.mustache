@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>채팅</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        #chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            height: 50vh;
+        }
+
+        #input-container {
+            display: flex;
+            margin: 10px 0 10px 0;
+        }
+
+        #messageInput {
+            flex: 1;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+    <script>
+        class Chat {
+            constructor(memberId, address) {
+                this.memberId = memberId;
+                this.webSocket = new WebSocket(address);
+
+                this.webSocket.onopen = () => {
+                    console.log("Chat Service Connected.")
+                };
+
+                this.webSocket.onmessage = (event) => {
+                    const chatLog = document.getElementById("chat-container");
+                    chatLog.innerHTML = '';
+
+                    const array = JSON.parse(event.data);
+
+                    chatLog.innerHTML = array.join('<br>');
+                }
+
+                this.webSocket.onerror = (error) => {
+                    console.error('Websocket error:{}', error)
+                };
+
+                this.webSocket.onclose = () => {
+                    console.log("Chat Service Disconnected.")
+                };
+            }
+
+            sendMessage() {
+                const input = document.getElementById("messageInput");
+                const message = input.value;
+                this.webSocket.send(this.memberId + ":" + message)
+                input.value = '';
+            }
+        }
+
+        const chat = new Chat('{{member.memberId}}', "ws://localhost:8080/ws/chat")
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputButton = document.getElementById("sendButton");
+            inputButton.onclick = () => {
+                chat.sendMessage();
+            };
+            const input = document.getElementById("messageInput");
+            input.onkeyup = (event) => {
+                if (event.key === 'Enter') {
+                    chat.sendMessage();
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+{{>layout/header}}
+
+<div class="container-fluid py-5">
+    <h2 class="m-2">채팅</h2>
+
+    <div id="chat-container"></div>
+
+    <div id="input-container">
+        <input type="text" id="messageInput" placeholder="메시지를 입력하세요."/>
+        <button id="sendButton" class="btn btn-success m-1" onclick="sendMessage()">보내기</button>
+    </div>
+</div>
+{{>layout/footer}}
+</body>

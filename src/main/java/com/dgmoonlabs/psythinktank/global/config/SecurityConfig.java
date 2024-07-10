@@ -36,10 +36,10 @@ public class SecurityConfig {
                         )
                         .hasRole("ADMIN")
                         .antMatchers(
-                                HttpMethod.GET, "/boards/add"
-                        ).authenticated()
-                        .antMatchers(
-                                HttpMethod.GET, "/boards/modify/**"
+                                HttpMethod.GET,
+                                "/boards/add",
+                                "/boards/modify/**",
+                                "/chat"
                         ).authenticated()
                         .antMatchers(
                                 "/",
