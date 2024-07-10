@@ -36,7 +36,7 @@ public class ChatHandler extends TextWebSocketHandler {
 
     @Override
     public void handleMessage(final WebSocketSession session, final WebSocketMessage<?> message) {
-        messages.add(message.getPayload().toString());
+        messages.push(message.getPayload().toString());
 
         sessions.forEach(openSession -> {
             try {
