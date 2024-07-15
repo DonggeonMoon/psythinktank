@@ -1,0 +1,92 @@
+server:
+  port: ${SERVER_PORT}
+  servlet:
+    context-path: ${CONTEXT_PATH}
+    encoding:
+      charset: ${SERVLET_ENCODING}
+      enabled: ${SERVLET_ENCODING_ENABLED}
+      force: ${SERVLET_ENCODING_FORCE}
+  error:
+    path: ${SERVLET_ERROR_PATH}
+    whitelabel:
+      enabled: ${WHITELABEL_ENABLED}
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: ${HIDDEN_METHOD_FILTER_ENABLED}
+  mustache:
+    expose-session-attributes: ${MUSTACHE_EXPOSE_SESSION_ATTRIBUTES}
+
+  datasource:
+    driver-class-name: ${DB_DRIVER_CLASS_NAME}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  data:
+    web:
+      pageable:
+        default-page-size: ${PAGEABLE_DEFAULT_PAGE_SIZE}
+    mongodb:
+      database: ${MONGODB_DATABASE}
+
+  jpa:
+    open-in-view: ${JPA_OPEN_IN_VIEW}
+    hibernate:
+      ddl-auto: ${JPA_DDL-AUTO}
+      naming:
+        physical-strategy: ${JPA_NAMING_PHYSICAL_STRATEGY}
+      use-new-id-generator-mappings: ${JPA_USE_NEW_ID_GENERATOR_MAPPINGS}
+    show-sql: ${JPA_SHOW_SQL}
+    properties:
+      hibernate:
+        format:
+          sql: ${JPA_HIBERNATE_FORMAT_SQL}
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: ${JACKSON_SERIALIZATION_FAIL_ON_EMPTY_BEANS}
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: ${SMTP_STARTTLS_ENABLE}
+            required: ${SMTP_STARTTLS_REQUIRED}
+          auth: ${SMTP_AUTH}
+
+  servlet:
+    multipart:
+      max-file-size: ${UPLOAD_MAX_SIZE}
+      max-request-size: ${UPLOAD_MAX_REQUEST_SIZE}
+      location: ${UPLOAD_PATH}
+
+management:
+  server:
+    port: ${MANAGEMENT_SERVER_PORT}
+  endpoints:
+    enabled-by-default: ${MANAGEMENT_ENDPOINTS_ENABLED_BY_DEFAULT}
+    jmx:
+      exposure:
+        exclude: ${MANAGEMENT_ENDPOINTS_JMX_EXPOSURE_EXCLUDE}
+    web:
+      base-path: ${MANAGEMENT_ENDPOINTS_WEB_BASE_PATH}
+      exposure:
+        include: ${MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE}
+  endpoint:
+    metrics:
+      enabled: ${MANAGEMENT_ENDPOINT_METRICS_ENABLED}
+    prometheus:
+      enabled: ${MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED}
+  metrics:
+    tags:
+      application: \${spring.application.name}
+
