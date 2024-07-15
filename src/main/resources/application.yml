@@ -30,6 +30,8 @@ spring:
     web:
       pageable:
         default-page-size: ${PAGEABLE_DEFAULT_PAGE_SIZE}
+    mongodb:
+      database: ${MONGODB_DATABASE}
 
   jpa:
     open-in-view: ${JPA_OPEN_IN_VIEW}
@@ -87,3 +89,4 @@ management:
   metrics:
     tags:
       application: \${spring.application.name}
+

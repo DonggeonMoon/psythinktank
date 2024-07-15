@@ -12,23 +12,31 @@ public class ShareholderService {
     private final ShareholderRepository shareholderRepository;
 
     public String calculateStockHypeIndex(String symbol) {
-        String thisYear = shareholderRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
-                        symbol,
-                        OpenDartApiName.MINOR_HOLDER_STATUS.getApiName(),
-                        StockHypeIndex.BUSINESS_YEAR.getText(),
-                        StockHypeIndex.REPORT_CODE.getText()
-                ).orElseThrow(RuntimeException::new)
-                .getShareholderTotalCount();
+        double thisYear = Double.parseDouble(
+                shareholderRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+                                symbol,
+                                OpenDartApiName.MINOR_HOLDER_STATUS.getApiName(),
+                                StockHypeIndex.BUSINESS_YEAR.getText(),
+                                StockHypeIndex.REPORT_CODE.getText()
+                        ).orElseThrow(RuntimeException::new)
+                        .getShareholderTotalCount()
+                        .replace(",", "")
+        );
 
-        String lastYear = shareholderRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
-                        symbol,
-                        OpenDartApiName.MINOR_HOLDER_STATUS.getApiName(),
-                        StockHypeIndex.BUSINESS_YEAR.getText(),
-                        StockHypeIndex.REPORT_CODE.getText()
-                ).orElseThrow(RuntimeException::new)
-                .getShareholderTotalCount();
+        double lastYear = Double.parseDouble(
+                shareholderRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+                                symbol,
+                                OpenDartApiName.MINOR_HOLDER_STATUS.getApiName(),
+                                StockHypeIndex.LAST_BUSINESS_YEAR.getText(),
+                                StockHypeIndex.REPORT_CODE.getText()
+                        ).orElseThrow(RuntimeException::new)
+                        .getShareholderTotalCount()
+                        .replace(",", "")
+        );
+
         try {
-            return String.valueOf((Integer.getInteger(thisYear) - Integer.getInteger(lastYear)) / Integer.getInteger(lastYear) * 100);
+            double stockHypeIndex = Math.round((thisYear - lastYear) / lastYear * 100.0 * 100.0) / 100.0;
+            return String.valueOf(stockHypeIndex);
         } catch (Exception e) {
             return "error";
         }
