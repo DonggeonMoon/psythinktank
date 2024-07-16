@@ -39,6 +39,7 @@ services:
     command: [ 'java', '-jar', '/usr/src/app/PSYThinktank-0.0.1.jar' ]
     depends_on:
       - postgres
+      - mongo
     restart: always
   postgres:
     container_name: postgres
