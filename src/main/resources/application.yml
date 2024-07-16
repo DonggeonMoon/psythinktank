@@ -31,8 +31,9 @@ spring:
       pageable:
         default-page-size: ${PAGEABLE_DEFAULT_PAGE_SIZE}
     mongodb:
+      host: ${MONGO_HOST}
+      port: ${MONGO_PORT}
       database: ${MONGODB_DATABASE}
-      uri: ${MONGODB_URI}
       username: ${MONGO_USER}
       password: ${MONGO_PASSWORD}
 
