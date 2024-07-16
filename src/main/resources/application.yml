@@ -31,12 +31,13 @@ spring:
       pageable:
         default-page-size: ${PAGEABLE_DEFAULT_PAGE_SIZE}
     mongodb:
-      host: ${MONGO_HOST}
-      port: ${MONGO_PORT}
-      database: ${MONGODB_DATABASE}
-      username: ${MONGO_USER}
-      password: ${MONGO_PASSWORD}
-      authentication-database: ${MONGO_AUTHENTICATION_DB}
+      uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGODB_DATABASE}?authSource=${MONGO_AUTHENTICATION_DB}
+  #      host: ${MONGO_HOST}
+  #      port: ${MONGO_PORT}
+  #      database: ${MONGODB_DATABASE}
+  #      username: ${MONGO_USER}
+  #      password: ${MONGO_PASSWORD}
+  #      authentication-database: ${MONGO_AUTHENTICATION_DB}
 
   jpa:
     open-in-view: ${JPA_OPEN_IN_VIEW}

@@ -46,7 +46,7 @@ services:
     image: postgres:14.11-alpine
     platform: linux/amd64
     ports:
-      - 5432:5432
+      - "5432:5432"
     networks:
       - backend
     env_file:
