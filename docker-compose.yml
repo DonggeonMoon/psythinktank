@@ -57,6 +57,18 @@ services:
     volumes:
       - "./data:/var/lib/postgresql/data"
     restart: always
+  mongo:
+    container_name: mongo
+    image: mongo:7.0.8
+    platform: linux/amd64
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - ${MONGO_VOLUME}
+    restart: always
 networks:
   backend:
     driver: bridge
