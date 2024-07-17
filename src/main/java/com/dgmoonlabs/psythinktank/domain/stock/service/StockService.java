@@ -64,7 +64,7 @@ public class StockService {
     @Transactional(readOnly = true)
     public StockSearchResponse selectStocksByName(StockSearchRequest stockSearchRequest) {
         return StockSearchResponse.from(
-                stockInfoRepository.findByNameContains(stockSearchRequest.searchText())
+                stockInfoRepository.findByNameContainsIgnoreCase(stockSearchRequest.searchText())
                         .stream()
                         .map(StockResponse::from)
                         .toList()
