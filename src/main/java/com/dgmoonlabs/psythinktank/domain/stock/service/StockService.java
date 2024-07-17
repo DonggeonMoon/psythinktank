@@ -75,6 +75,12 @@ public class StockService {
     public ShareSearchResponse selectSharesBySymbol(String symbol) {
         return ShareSearchResponse.from(shareRepository.findBySymbol(symbol)
                 .stream()
+                .sorted(
+                        Comparator.comparing(Share::getDate)
+                                .reversed()
+                                .thenComparing(Share::getValue)
+                                .reversed()
+                )
                 .map(ShareResponse::from)
                 .toList()
         );
@@ -121,7 +127,15 @@ public class StockService {
 
     @Transactional(readOnly = true)
     public ChartData selectDataBySymbol(final String symbol) {
-        List<Share> shares = shareRepository.findBySymbol(symbol);
+        List<Share> shares = shareRepository.findBySymbol(symbol)
+                .stream()
+                .sorted(
+                        Comparator.comparing(Share::getDate)
+                                .reversed()
+                                .thenComparing(Share::getValue)
+                                .reversed()
+                )
+                .toList();
 
         List<String> dates = shares.stream()
                 .map(share -> share.getDate().toString())
