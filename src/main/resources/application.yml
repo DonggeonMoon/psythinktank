@@ -12,7 +12,7 @@ server:
       enabled: ${WHITELABEL_ENABLED}
 spring:
   config:
-    import: optional:file:.env[.properties]
+    import: ${SPRING_CONFIG_IMPORT}
   mvc:
     hiddenmethod:
       filter:
