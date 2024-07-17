@@ -116,7 +116,7 @@ class StockServiceTest {
 
     @Test
     void selectStocksByName() {
-        when(stockInfoRepository.findByNameContains(anyString()))
+        when(stockInfoRepository.findByNameContainsIgnoreCase(anyString()))
                 .thenReturn(STOCKS);
 
         assertThat(stockService.selectStocksByName(STOCK_SEARCH_REQUEST))
