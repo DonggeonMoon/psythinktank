@@ -22,6 +22,7 @@
         crossorigin="anonymous"></script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3858475418928277"
         crossorigin="anonymous"></script>
+<script src="/js/chat-notification.js"></script>
 <nav class="navbar navbar-expand-sm bg-light navbar-light">
     <div class="container-fluid mr-5">
         <ul class="navbar-nav">
@@ -75,7 +76,15 @@
                 <a class="nav-link" href="/contents/investmentPerformance">투자 성과</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/chat">채팅(준비중)</a>
+                <a id="chat-menu" class="nav-link" href="/chat">
+                    <span class="position-relative p-1">
+                        채팅(준비중)
+                        <span id="chat-notification"
+                              class="position-absolute top-0 start-100 translate-middle p-1 bg-warning border border-warning rounded-circle d-none">
+                            <span class="visually-hidden">New alerts</span>
+                        </span>
+                    </span>
+                </a>
             </li>
         </ul>
     </div>

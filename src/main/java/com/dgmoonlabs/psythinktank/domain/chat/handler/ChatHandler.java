@@ -1,5 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.chat.handler;
 
+import com.dgmoonlabs.psythinktank.domain.chat.service.ChatNotificationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ public class ChatHandler extends TextWebSocketHandler {
     private static final List<WebSocketSession> sessions = new ArrayList<>();
     private static final FixedSizeQueue<String> messages = new FixedSizeQueue<>(50);
 
+    private final ChatNotificationService chatNotificationService;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -42,6 +44,7 @@ public class ChatHandler extends TextWebSocketHandler {
             try {
                 String json = objectMapper.writeValueAsString(messages.toStringArray());
                 openSession.sendMessage(new TextMessage(json));
+                chatNotificationService.sendEvent("new message");
             } catch (IOException e) {
                 log.error("error: {}", e.getMessage());
             }
