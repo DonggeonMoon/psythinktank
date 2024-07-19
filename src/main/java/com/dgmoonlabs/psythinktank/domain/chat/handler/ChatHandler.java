@@ -46,7 +46,7 @@ public class ChatHandler extends TextWebSocketHandler {
                 openSession.sendMessage(new TextMessage(json));
                 chatNotificationService.publish("new message");
             } catch (IOException e) {
-                log.error("error: {}", e.getMessage());
+                log.error("Error: {}", e.getMessage());
             }
         });
     }
@@ -81,14 +81,14 @@ public class ChatHandler extends TextWebSocketHandler {
             return queue.isEmpty();
         }
 
-        @Override
-        public String toString() {
-            return Arrays.toString(queue.toArray());
-        }
-
         public String[] toStringArray() {
             String[] array = new String[messages.queue.size()];
             return messages.queue.toArray(array);
+        }
+
+        @Override
+        public String toString() {
+            return Arrays.toString(queue.toArray());
         }
     }
 }

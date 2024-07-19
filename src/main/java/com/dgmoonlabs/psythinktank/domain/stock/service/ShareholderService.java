@@ -6,6 +6,8 @@ import com.dgmoonlabs.psythinktank.global.constant.StockHypeIndex;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static com.dgmoonlabs.psythinktank.global.constant.Message.ERROR;
+
 @Service
 @RequiredArgsConstructor
 public class ShareholderService {
@@ -38,7 +40,7 @@ public class ShareholderService {
             double stockHypeIndex = Math.round((thisYear - lastYear) / lastYear * 100.0 * 100.0) / 100.0;
             return String.valueOf(stockHypeIndex);
         } catch (Exception e) {
-            return "error";
+            return ERROR.getText();
         }
     }
 }

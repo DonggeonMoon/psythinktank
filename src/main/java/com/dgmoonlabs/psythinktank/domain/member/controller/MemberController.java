@@ -3,6 +3,7 @@ package com.dgmoonlabs.psythinktank.domain.member.controller;
 import com.dgmoonlabs.psythinktank.domain.member.dto.MemberRequest;
 import com.dgmoonlabs.psythinktank.domain.member.dto.MemberUserLevelRequest;
 import com.dgmoonlabs.psythinktank.domain.member.service.MemberService;
+import com.dgmoonlabs.psythinktank.global.constant.ViewName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Map;
 
+import static com.dgmoonlabs.psythinktank.global.constant.ApiName.LOGIN;
+import static com.dgmoonlabs.psythinktank.global.constant.ApiName.MEMBERS;
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
 
@@ -36,7 +39,7 @@ public class MemberController {
     @PostMapping
     public String insertMember(@Valid MemberRequest memberRequest) {
         memberService.addMember(memberRequest);
-        return LOGIN.redirect();
+        return ViewName.LOGIN.redirect();
     }
 
     @GetMapping("/modify")
@@ -51,14 +54,14 @@ public class MemberController {
     @PutMapping
     public String updateMember(@Valid MemberRequest memberRequest) {
         memberService.editMember(memberRequest);
-        return "redirect:/login";
+        return LOGIN.redirect();
     }
 
     @DeleteMapping
     public String deleteMember(String memberId, HttpSession session) {
         memberService.deleteMember(memberId);
         session.removeAttribute(SESSION_KEY.getText());
-        return "redirect:/members/goodBye";
+        return GOOD_BYE.redirect();
     }
 
     @GetMapping("/findIdAndPw")
@@ -69,7 +72,7 @@ public class MemberController {
     @PutMapping("/change/userLevel")
     public String changeUserLevel(@Valid MemberUserLevelRequest memberRequest) {
         memberService.changeUserLevel(memberRequest);
-        return "redirect:/members";
+        return MEMBERS.redirect();
     }
 
     @GetMapping("/goodBye")
