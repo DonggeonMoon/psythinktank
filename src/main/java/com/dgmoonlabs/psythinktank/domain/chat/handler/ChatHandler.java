@@ -44,7 +44,7 @@ public class ChatHandler extends TextWebSocketHandler {
             try {
                 String json = objectMapper.writeValueAsString(messages.toStringArray());
                 openSession.sendMessage(new TextMessage(json));
-                chatNotificationService.sendEvent("new message");
+                chatNotificationService.publish("new message");
             } catch (IOException e) {
                 log.error("error: {}", e.getMessage());
             }

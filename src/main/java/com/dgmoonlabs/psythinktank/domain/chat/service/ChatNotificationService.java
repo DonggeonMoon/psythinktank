@@ -12,11 +12,12 @@ public class ChatNotificationService {
     private static final CopyOnWriteArrayList<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
     public SseEmitter subscribe() {
-        SseEmitter emitter = new SseEmitter(600000L);
+        SseEmitter emitter = new SseEmitter(60000L);
 
         emitters.add(emitter);
 
         emitter.onCompletion(() -> emitters.remove(emitter));
+
         emitter.onTimeout(() -> {
             emitters.remove(emitter);
             log.info("SSE Connection Timeout");
@@ -26,7 +27,7 @@ public class ChatNotificationService {
         return emitter;
     }
 
-    public void sendEvent(String event) {
+    public void publish(String event) {
         emitters.forEach(emitter -> {
             try {
                 emitter.send(SseEmitter.event().data(event));
