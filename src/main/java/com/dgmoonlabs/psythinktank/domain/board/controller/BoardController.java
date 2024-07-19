@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.dgmoonlabs.psythinktank.global.constant.ApiName.BOARD;
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
 
@@ -43,7 +44,7 @@ public class BoardController {
     @PostMapping
     public String insertBoard(@Valid BoardRequest boardRequest) {
         boardService.addBoard(boardRequest);
-        return "redirect:/boards";
+        return BOARD.redirect();
     }
 
     @GetMapping("/modify/{id}")
@@ -55,12 +56,12 @@ public class BoardController {
     @PutMapping
     public String updateBoard(@Valid BoardRequest boardRequest) {
         boardService.updateBoard(boardRequest);
-        return "redirect:/boards/" + boardRequest.id();
+        return BOARD.redirect() + boardRequest.id();
     }
 
     @DeleteMapping("/{id}")
     public String deleteBoard(@PathVariable long id) {
         boardService.deleteBoard(id);
-        return "redirect:/boards";
+        return BOARD.redirect();
     }
 }

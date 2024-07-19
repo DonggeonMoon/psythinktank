@@ -21,7 +21,8 @@ public enum ViewName {
     EDIT_MEMBER_INFO("editMemberInfo"),
     GOOD_BYE("goodBye"),
     STOCK_LIST("stockList"),
-    STOCK("viewStock");
+    STOCK("viewStock"),
+    CHAT("chat");
 
     private static final String REDIRECTION_PREFIX = "redirect:/";
     private final String text;

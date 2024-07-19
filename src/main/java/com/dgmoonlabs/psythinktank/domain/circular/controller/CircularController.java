@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.dgmoonlabs.psythinktank.global.constant.ApiName.CIRCULAR;
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.CIRCULARS_KEY;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.CIRCULAR_LIST;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.INSERT_CIRCULAR;
@@ -34,12 +35,12 @@ public class CircularController {
     @PostMapping
     public String insertCircular(@Valid CircularRequest circularRequest) {
         circularService.addCircular(circularRequest);
-        return "redirect:/circulars";
+        return CIRCULAR.redirect();
     }
 
     @DeleteMapping("/{id}")
     public String deleteCircular(@PathVariable long id) {
         circularService.deleteCircular(id);
-        return "redirect:/circulars";
+        return CIRCULAR.redirect();
     }
 }
