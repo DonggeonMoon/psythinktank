@@ -13,7 +13,6 @@ public class ChatNotificationService {
 
     public SseEmitter subscribe() {
         SseEmitter emitter = new SseEmitter(60000L);
-
         emitters.add(emitter);
 
         emitter.onCompletion(() -> emitters.remove(emitter));
@@ -23,16 +22,23 @@ public class ChatNotificationService {
             log.info("SSE Connection Timeout");
         });
 
-        emitter.onError(exception -> emitters.remove(emitter));
+        emitter.onError(exception -> {
+            emitters.remove(emitter);
+            log.info("SSE Connection Error");
+        });
         return emitter;
     }
 
     public void publish(String event) {
         emitters.forEach(emitter -> {
             try {
-                emitter.send(SseEmitter.event().data(event));
+                emitter.send(
+                        SseEmitter.event()
+                                .data(event)
+                );
             } catch (Exception exception) {
                 emitters.remove(emitter);
+                log.info("SSE Publish Error");
             }
         });
     }
