@@ -1,15 +1,13 @@
 package com.dgmoonlabs.psythinktank.domain.stock.model.opendart;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "open_dart")
+@Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
@@ -27,8 +25,20 @@ public class Shareholder {
     private String reportCode;
     private ShareholderData data;
 
-    public String getShareholderTotalCount() {
-        return data.shareholderTotalCount;
+    public static Shareholder from() {
+        return Shareholder.builder()
+                .build();
+    }
+
+    public static Shareholder emptyDocument() {
+        return Shareholder.builder().build();
+    }
+
+    public Double getShareholderTotalCount() {
+        if (data == null || data.shareholderTotalCount == null) {
+            return 0.0;
+        }
+        return Double.parseDouble(data.shareholderTotalCount.replace(",", ""));
     }
 
     public static class ShareholderData {
