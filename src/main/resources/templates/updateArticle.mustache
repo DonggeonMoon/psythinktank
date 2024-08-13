@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>게시글 작성</title>
+    <title>게시글 수정</title>
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.css"/>
     <link rel="stylesheet" href="https://uicdn.toast.com/chart/latest/toastui-chart.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"/>
@@ -24,40 +24,36 @@
     <script src="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.js"></script>
     <script src="https://uicdn.toast.com/editor-plugin-table-merged-cell/latest/toastui-editor-plugin-table-merged-cell.min.js"></script>
     <script src="https://uicdn.toast.com/editor-plugin-uml/latest/toastui-editor-plugin-uml.min.js"></script>
-
-    <script type="text/javascript">
-        function checkNotice() {
-            let isNotice = $("#isNotice").val();
-            if (isNotice == 'true') $("#isNotice").val('false');
-            else $("#isNotice").val('true');
-        }
-    </script>
 </head>
 <body>
 {{>layout/header}}
-<div class="container-fluid py-5" style="min-height:800px;">
-    <h2 class="m-2">게시글 작성</h2>
+<div class="container-fluid">
+    <h2 class="m-2">게시글 수정</h2>
     <div class="border rounded-3 m-2 p-3">
-        <form id="form" action="/boards" method="post">
+        <form id="form" action="/articles" method="post">
+            <input type="hidden" name="_method" value="put">
             <div class="mb-3 mt-3">
                 <label for="title" class="form-label">제목</label>
                 <input type="text" class="form-control" id="title" name="title" size="135" maxlength="200"
-                       required>
+                       value="{{article.title}}">
             </div>
             <div class="mb-3 mt-3">
                 <label for="comment">내용</label>
                 <div id="editor"></div>
             </div>
             <div class="mb-3 mt-3 text-center">
-                <label><input type="checkbox" id="isNotice" name="isNotice" value="false"
-                              onchange="checkNotice()">공지</label>
+                <label>
+                    <input type="checkbox" id="isNotice" name="isNotice"
+                           {{#article.isNotice}}checked{{/article.isNotice}}>공지
+                </label>
             </div>
-            <input type="button" class="btn btn-secondary mx-2" value="글 입력" onclick="submitForm();">
-            <button type="button" class="btn btn-secondary mx-2" onclick="location.href='/boards'">목록</button>
+            <input type="button" class="btn btn-secondary mx-2" value="글 수정" onclick="submitForm();">
+            <button type="button" class="btn btn-secondary mx-2" onclick="location.href='/articles'">목록</button>
             <input id="content" type="hidden" name="content" value="">
-            {{#member}}
-                <input type="hidden" name="memberId" value="{{member.memberId}}">
-            {{/member}}
+            <input type="hidden" name="id" value="{{article.id}}"/>
+            <input type="hidden" name="hit" value="{{article.hit}}"/>
+            <input type="hidden" name="createdAt" value="{{article.createdAt}}"/>
+            <input type="hidden" name="memberId" value="{{article.memberId}}"/>
         </form>
     </div>
 </div>
@@ -73,13 +69,14 @@
         maxHeight: 300
     };
 
+    let content = "{{{article.content}}}";
     const editor = new Editor.Editor({
         usageStatistics: false,
         language: 'ko',
         el: document.querySelector('#editor'),
         previewStyle: 'tab',
         height: '500px',
-        initialValue: '',
+        initialValue: content,
         initialEditType: 'wysiwyg',
         plugins: [[chart, chartOptions], [codeSyntaxHighlight, {highlighter: Prism}], colorSyntax, tableMergedCell, uml]
     });

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum ApiName {
-    BOARD("boards"),
+    ARTICLE("articles"),
     CIRCULAR("circulars"),
     LOGIN("login"),
     MEMBERS("members"),

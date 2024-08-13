@@ -37,6 +37,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         response.addCookie(new Cookie("error", null));
         response.addCookie(new Cookie("loginTryCount", null));
-        response.sendRedirect("/boards");
+        response.sendRedirect("/articles");
     }
 }

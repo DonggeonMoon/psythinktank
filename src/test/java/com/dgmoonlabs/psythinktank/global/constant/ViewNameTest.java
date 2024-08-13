@@ -9,7 +9,7 @@ class ViewNameTest {
 
     @Test
     void redirect() {
-        assertThat(ViewName.BOARD.redirect())
-                .isEqualTo(REDIRECT_PREFIX + ViewName.BOARD.getText());
+        assertThat(ViewName.ARTICLE.redirect())
+                .isEqualTo(REDIRECT_PREFIX + ViewName.ARTICLE.getText());
     }
 }

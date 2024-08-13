@@ -1,6 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.board.model;
 
-import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
+import com.dgmoonlabs.psythinktank.domain.board.dto.ArticleRequest;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @Builder
 @Getter
 @Setter
-public class Board {
+public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_no")
@@ -41,7 +41,7 @@ public class Board {
     @Column(name = "write_date")
     private Timestamp createdAt;
 
-    public void update(BoardRequest request) {
+    public void update(ArticleRequest request) {
         this.title = request.title();
         this.content = request.title();
         this.isNotice = request.isNotice();

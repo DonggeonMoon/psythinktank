@@ -37,16 +37,16 @@ public class SecurityConfig {
                         .hasRole("ADMIN")
                         .antMatchers(
                                 HttpMethod.GET,
-                                "/boards/add",
-                                "/boards/modify/**",
+                                "/articles/add",
+                                "/articles/modify/**",
                                 "/chat"
                         ).authenticated()
                         .antMatchers(
                                 "/",
-                                "/boards/**",
-                                "/api/boards/search/title",
-                                "/api/boards/search/content",
-                                "/api/boards/search/memberId",
+                                "/articles/**",
+                                "/api/articles/search/title",
+                                "/api/articles/search/content",
+                                "/api/articles/search/memberId",
                                 "/stocks/**",
                                 "/api/stocks/search/symbol",
                                 "/api/stocks/search/stockName",

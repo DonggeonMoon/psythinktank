@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
     private static final long CIRCULAR_ID = 1L;
-    private static final long BOARD_ID = 1L;
+    private static final long ARTICLE_ID = 1L;
     private static final Comment COMMENT = Comment.builder()
             .id(CIRCULAR_ID)
             .build();
@@ -28,11 +28,11 @@ class CommentServiceTest {
     private CommentService commentService;
 
     @Test
-    void selectCommentsByBoardId() {
+    void selectCommentsByArticleId() {
         when(commentRepository.findAllById(anyLong()))
                 .thenReturn(COMMENTS);
 
-        assertThat(commentService.selectCommentsByBoardId(BOARD_ID))
+        assertThat(commentService.selectCommentsByArticleId(ARTICLE_ID))
                 .isEqualTo(COMMENTS);
     }
 }

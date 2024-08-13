@@ -5,7 +5,7 @@ import com.dgmoonlabs.psythinktank.domain.comment.model.Comment;
 import java.time.LocalDateTime;
 
 public record CommentResponse(
-        Long boardId,
+        Long articleId,
         Long id,
         Long parent,
         int depth,
@@ -16,7 +16,7 @@ public record CommentResponse(
 ) {
     public static CommentResponse from(Comment comment) {
         return new CommentResponse(
-                comment.getBoardId(),
+                comment.getArticleId(),
                 comment.getId(),
                 comment.getParent(),
                 comment.getDepth(),

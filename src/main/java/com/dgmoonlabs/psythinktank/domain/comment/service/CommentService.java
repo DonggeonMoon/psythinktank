@@ -15,8 +15,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional(readOnly = true)
-    public List<Comment> selectCommentsByBoardId(long boardId) {
-        return commentRepository.findAllById(boardId);
+    public List<Comment> selectCommentsByArticleId(long articleId) {
+        return commentRepository.findAllById(articleId);
     }
 
     @Transactional

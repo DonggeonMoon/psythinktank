@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-import static com.dgmoonlabs.psythinktank.global.constant.ViewName.BOARD;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.ARTICLE;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,18 +19,18 @@ public class CommentController {
     @PostMapping("/comment")
     public String insertComment(CommentRequest commentRequest) {
         commentService.addComment(commentRequest);
-        return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
+        return ARTICLE.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.articleId());
     }
 
     @PutMapping("/comment")
     public String updateComment(CommentRequest commentRequest) {
         commentService.updateComment(commentRequest);
-        return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
+        return ARTICLE.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.articleId());
     }
 
     @DeleteMapping("/comment")
     public String deleteComment(CommentRequest commentRequest) {
         commentService.deleteComment(commentRequest.id());
-        return BOARD.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.boardId());
+        return ARTICLE.redirect() + QueryParameter.addParameter(QueryParameter.ID, commentRequest.articleId());
     }
 }
