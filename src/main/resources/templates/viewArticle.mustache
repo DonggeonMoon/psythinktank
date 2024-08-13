@@ -37,25 +37,25 @@
         <tr>
             <td class="table-light">제목</td>
             <td>
-                {{board.title}}
+                {{article.title}}
             </td>
         </tr>
         <tr>
             <td class="table-light">작성자</td>
             <td>
-                {{board.memberId}}
+                {{article.memberId}}
             </td>
         </tr>
         <tr>
             <td class="table-light">조회수</td>
             <td>
-                {{board.hit}}
+                {{article.hit}}
             </td>
         </tr>
         <tr>
             <td class="table-light">작성일</td>
             <td>
-                {{board.createdAt}}
+                {{article.createdAt}}
             </td>
         </tr>
         <tr>
@@ -67,16 +67,16 @@
         <tr style="text-align:right;">
             <td colspan="2">
                 <input type="button" class="btn btn-secondary my-2" value="수정"
-                       onclick="location.href='/boards/modify/{{board.id}}'">
-                <form style="display:inline" action="/boards/{{board.id}}" method="post">
+                       onclick="location.href='/articles/modify/{{article.id}}'">
+                <form style="display:inline" action="/articles/{{article.id}}" method="post">
                     <input type="hidden" name="_method" value="delete">
                     <input type="submit" class="btn btn-secondary my-2" value="삭제">
-                    <input type="hidden" name="memberId" value="{{board.memberId}}">
+                    <input type="hidden" name="memberId" value="{{article.memberId}}">
                 </form>
             </td>
         </tr>
     </table>
-    <button class="btn btn-dark my-2" onclick="location.href='/boards'">목록</button>
+    <button class="btn btn-dark my-2" onclick="location.href='/articles'">목록</button>
 
     <div class="container-fluid mb-5">
         <!--<table class="table">
@@ -106,7 +106,7 @@
                         " />">댓글 수정</button>
                         <form style="display:inline;" action="comment" method="post">
                             <input type="hidden" name="_method" value="delete">
-                            <input type="hidden" name="boardId" value="<c:out value='${board.boardId}' />">
+                            <input type="hidden" name="articleId" value="<c:out value='${article.articleId}' />">
                             <input type="hidden" name="id" value="${i.id}">
                             <button type="submit" class="badge bg-secondary my-2">댓글 삭제</button>
                         </form>
@@ -115,7 +115,7 @@
                     " />" class="collapse">
                     <div>
                         <form class="d-inline" action="comment" method="post">
-                            <input type="hidden" name="id" value="<c:out value='${board.id}' />">
+                            <input type="hidden" name="id" value="<c:out value='${article.id}' />">
                             <input type="hidden" name="parent" value="<c:out value='${i.id}' />">
                             <input type="hidden" name="depth" value="<c:out value='${i.depth + 1}' />">
                             <input type="hidden" name="sequence" value="<c:out value='${i.sequence + 1}' />">
@@ -133,7 +133,7 @@
         <div>
             <form class="d-inline" action="comment" method="post">
                 <input type="hidden" name="_method" value="put">
-                <input type="hidden" name="boardId" value="<c:out value='${board.boardId}' />">
+                <input type="hidden" name="articleId" value="<c:out value='${article.articleId}' />">
                 <input type="hidden" name="id" value="${i.id}">
                 <input type="hidden" name="commentParent" value="<c:out value='${i.parent}' />">
                 <input type="hidden" name="depth" value="<c:out value='${i.depth}' />">
@@ -160,7 +160,7 @@
     <td colspan="6">
         <form class="d-flex justify-content-end" action="comment" method="post">
             <textarea class="w-100" name="commentContent" cols="100" required></textarea>
-            <input type="hidden" name="boardId" value="<c:out value='${board.boardId}' />">
+            <input type="hidden" name="articleId" value="<c:out value='${article.articleId}' />">
             <input type="hidden" name="commentDepth" value="<c:out value='1' />">
             <input type="hidden" name="commentSeq" value="<c:out value='1' />">
             <input type="hidden" name="memberId" value="<c:out value='${sessionScope.member.memberId}' />">
@@ -184,7 +184,7 @@
         maxHeight: 300
     };
 
-    let content = "{{{board.content}}}";
+    let content = "{{{article.content}}}";
     const viewer = new Editor.factory({
         usageStatistics: false,
         language: 'ko',

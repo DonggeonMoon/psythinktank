@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -15,7 +16,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-class BoardRequestTest {
+class ArticleSearchRequestTest {
     private static ValidatorFactory factory;
     private static Validator validator;
 
@@ -32,25 +33,19 @@ class BoardRequestTest {
 
     @ParameterizedTest
     @CsvSource({
-            "test11, 제목, 내용, true"
+            "게시물 제목"
     })
-    void valid_values(String memberId, String title, String content, Boolean isNotice) {
-        BoardRequest request = new BoardRequest(null, memberId, title, content, isNotice);
-        Set<ConstraintViolation<BoardRequest>> violations = validator.validate(request);
+    void valid_values(String searchText) {
+        ArticleSearchRequest request = new ArticleSearchRequest(searchText);
+        Set<ConstraintViolation<ArticleSearchRequest>> violations = validator.validate(request);
         assertThat(violations).isEmpty();
     }
 
     @ParameterizedTest
-    @CsvSource({
-            ",,",
-            "'','',''",
-            "test11,,내용",
-            "test11,제목,",
-            "test11,제목,"
-    })
-    void invalid_values(String memberId, String title, String content) {
-        BoardRequest request = new BoardRequest(null, memberId, title, content, false);
-        Set<ConstraintViolation<BoardRequest>> violations = validator.validate(request);
+    @NullAndEmptySource
+    void invalid_values(String searchText) {
+        ArticleSearchRequest request = new ArticleSearchRequest(searchText);
+        Set<ConstraintViolation<ArticleSearchRequest>> violations = validator.validate(request);
         assertThat(violations).isNotEmpty();
         violations.forEach(violation -> log.info("violation = {}", violation));
     }

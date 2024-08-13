@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum ViewName {
     ROOT(""),
-    BOARD_LIST("boardList"),
-    BOARD("board"),
-    VIEW_BOARD("viewBoard"),
-    INSERT_BOARD("insertBoard"),
-    UPDATE_BOARD("updateBoard"),
+    ARTICLE_LIST("articleList"),
+    ARTICLE("ARTICLE"),
+    VIEW_ARTICLE("viewArticle"),
+    INSERT_ARTICLE("insertArticle"),
+    UPDATE_ARTICLE("updateArticle"),
     CIRCULAR_LIST("circularList"),
     INSERT_CIRCULAR("insertCircular"),
     LOGIN("login"),

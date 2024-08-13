@@ -5,7 +5,7 @@ import com.dgmoonlabs.psythinktank.domain.comment.model.Comment;
 import java.time.LocalDateTime;
 
 public record CommentRequest(
-        Long boardId,
+        Long articleId,
         Long id,
         Long parent,
         int depth,
@@ -16,7 +16,7 @@ public record CommentRequest(
 ) {
     public Comment toEntity() {
         return Comment.builder()
-                .boardId(boardId)
+                .articleId(articleId)
                 .id(id)
                 .parent(parent)
                 .depth(depth)

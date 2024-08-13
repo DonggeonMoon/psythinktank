@@ -6,8 +6,8 @@ services:
     image: nginx:stable-alpine
     platform: linux/amd64
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     networks:
       - backend
     volumes:
@@ -30,13 +30,15 @@ services:
     image: openjdk:17-alpine
     platform: linux/amd64
     ports:
-      - 8080:8080
+      - "8080:8080"
     networks:
       - backend
     volumes:
       - ./deploy:/usr/src/app
     working_dir: /usr/src/app
     command: [ 'java', '-jar', '/usr/src/app/PSYThinktank-0.0.1.jar' ]
+    environment:
+      TZ: "Asia/Seoul"
     depends_on:
       - postgres
       - mongo
@@ -66,6 +68,8 @@ services:
       - "27017:27017"
     networks:
       - backend
+    env_file:
+      - .env
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
