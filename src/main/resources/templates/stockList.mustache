@@ -89,8 +89,8 @@
 
         $(document).ready(function () {
             $("#searchBtn").click(search);
-            $("#searchText").focus().keypress(function (event) {
-                if (event.keyCode == 13) {
+            $("#searchText").keypress(function (event) {
+                if (event.keyCode === 13) {
                     search();
                 }
             });
