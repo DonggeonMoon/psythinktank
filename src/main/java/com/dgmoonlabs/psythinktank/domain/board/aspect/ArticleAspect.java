@@ -17,11 +17,6 @@ import org.springframework.stereotype.Component;
 public class ArticleAspect {
     private final ArticleRepository articleRepository;
 
-    @Around("execution(* com..AticleController.getAddArticleForm(..)) && args(id, ..)")
-    public Object protectAddArticleForm(final ProceedingJoinPoint joinPoint, final long id) throws Throwable {
-        return protectArticle(joinPoint, id);
-    }
-
     @Around("execution(* com..ArticleController.getModifyArticleForm(..)) && args(id, ..)")
     public Object protectUpdateArticleForm(final ProceedingJoinPoint joinPoint, final long id) throws Throwable {
         return protectArticle(joinPoint, id);

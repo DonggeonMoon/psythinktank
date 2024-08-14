@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 "/api/articles/search/title",
                                 "/api/articles/search/content",
                                 "/api/articles/search/memberId",
+                                "/boards/**/articles",
                                 "/stocks/**",
                                 "/api/stocks/search/symbol",
                                 "/api/stocks/search/stockName",
