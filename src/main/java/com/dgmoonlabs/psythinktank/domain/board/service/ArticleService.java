@@ -22,6 +22,21 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     @Transactional(readOnly = true)
+    public Page<ArticleResponse> selectBoardArticles(Long boardId, Pageable pageable) {
+        return articleRepository.findByBoardId(
+                boardId,
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        Pagination.SIZE.getValue(),
+                        Sort.by(CriteriaField.IS_NOTICE.getName())
+                                .descending()
+                                .and(Sort.by(CriteriaField.ID.getName())
+                                        .descending())
+                )
+        ).map(ArticleResponse::from);
+    }
+
+    @Transactional(readOnly = true)
     public Page<ArticleResponse> selectArticles(Pageable pageable) {
         return articleRepository.findAll(
                 PageRequest.of(

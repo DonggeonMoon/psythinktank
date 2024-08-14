@@ -37,6 +37,10 @@ public class Article {
     @Column(name = "is_notice", nullable = false)
     private Boolean isNotice = false;
 
+    @ManyToOne
+    @JoinColumn(name = "board_id")
+    private Board board;
+
     @CreationTimestamp
     @Column(name = "write_date")
     private Timestamp createdAt;
