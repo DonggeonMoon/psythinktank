@@ -88,56 +88,56 @@ class StockServiceTest {
     private StockService stockService;
 
     @Test
-    void selectStocks() {
+    void getStocks() {
         when(stockInfoRepository.findAll(any(PageRequest.class)))
                 .thenReturn(STOCK_PAGES);
 
-        assertThat(stockService.selectStocks(PAGE_REQUEST))
+        assertThat(stockService.getStocks(PAGE_REQUEST))
                 .isEqualTo(STOCK_PAGES);
     }
 
     @Test
-    void selectStock() {
+    void getStock() {
         when(stockInfoRepository.findBySymbol(anyString()))
                 .thenReturn(Optional.of(STOCK));
 
-        assertThat(stockService.selectStock(SYMBOL))
+        assertThat(stockService.getStock(SYMBOL))
                 .isEqualTo(STOCK_RESPONSE);
     }
 
     @Test
-    void selectStocksBySymbol() {
+    void getStocksBySymbol() {
         when(stockInfoRepository.findBySymbolContains(SYMBOL))
                 .thenReturn(STOCKS);
 
-        assertThat(stockService.selectStocksBySymbol(STOCK_SEARCH_REQUEST))
+        assertThat(stockService.getStocksBySymbol(STOCK_SEARCH_REQUEST))
                 .isEqualTo(STOCK_SEARCH_RESPONSE);
     }
 
     @Test
-    void selectStocksByName() {
+    void getStocksByName() {
         when(stockInfoRepository.findByNameContainsIgnoreCase(anyString()))
                 .thenReturn(STOCKS);
 
-        assertThat(stockService.selectStocksByName(STOCK_SEARCH_REQUEST))
+        assertThat(stockService.getStocksByName(STOCK_SEARCH_REQUEST))
                 .isEqualTo(STOCK_SEARCH_RESPONSE);
     }
 
     @Test
-    void selectSharesBySymbol() {
+    void getSharesBySymbol() {
         when(shareRepository.findBySymbol(SYMBOL))
                 .thenReturn(SHARES);
 
-        assertThat(stockService.selectSharesBySymbol(SYMBOL))
+        assertThat(stockService.getSharesBySymbol(SYMBOL))
                 .isEqualTo(SHARE_SEARCH_RESPONSE);
     }
 
     @Test
-    void selectDividendBySymbol() {
+    void getDividendBySymbol() {
         when(dividendRepository.findBySymbol(anyString()))
                 .thenReturn(Optional.of(DIVIDEND));
 
-        assertThat(stockService.selectDividendBySymbol(SYMBOL))
+        assertThat(stockService.getDividendBySymbol(SYMBOL))
                 .isEqualTo(DividendResponse.from(DIVIDEND));
     }
 
@@ -169,11 +169,11 @@ class StockServiceTest {
     }
 
     @Test
-    void selectDataBySymbol() {
+    void getDataBySymbol() {
         when(shareRepository.findBySymbol(SYMBOL))
                 .thenReturn(SHARES);
 
-        assertThat(stockService.selectDataBySymbol(SYMBOL))
+        assertThat(stockService.getDataBySymbol(SYMBOL))
                 .isEqualTo(CHART_DATA);
     }
 }

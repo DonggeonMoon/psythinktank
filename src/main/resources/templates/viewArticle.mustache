@@ -70,13 +70,13 @@
                        onclick="location.href='/articles/modify/{{article.id}}'">
                 <form style="display:inline" action="/articles/{{article.id}}" method="post">
                     <input type="hidden" name="_method" value="delete">
+                    <input type="hidden" name="boardId" value="{{article.boardId}}">
                     <input type="submit" class="btn btn-secondary my-2" value="삭제">
-                    <input type="hidden" name="memberId" value="{{article.memberId}}">
                 </form>
             </td>
         </tr>
     </table>
-    <button class="btn btn-dark my-2" onclick="location.href='/articles'">목록</button>
+    <button class="btn btn-dark my-2" onclick="location.href='/articles?boardId={{article.boardId}}'">목록</button>
 
     <div class="container-fluid mb-5">
         <!--<table class="table">

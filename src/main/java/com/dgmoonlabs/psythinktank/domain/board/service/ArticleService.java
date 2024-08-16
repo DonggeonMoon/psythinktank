@@ -21,10 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
+    @Transactional
+    public void createArticle(ArticleRequest request) {
+        articleRepository.save(request.toEntity());
+    }
+
     @Transactional(readOnly = true)
-    public Page<ArticleResponse> selectBoardArticles(Long boardId, Pageable pageable) {
-        return articleRepository.findByBoardId(
-                boardId,
+    public Page<ArticleResponse> getBoardArticles(Long boardId, Pageable pageable) {
+
+        return articleRepository.findAllByBoardId(
                 PageRequest.of(
                         pageable.getPageNumber(),
                         Pagination.SIZE.getValue(),
@@ -32,12 +37,13 @@ public class ArticleService {
                                 .descending()
                                 .and(Sort.by(CriteriaField.ID.getName())
                                         .descending())
-                )
+                ),
+                boardId
         ).map(ArticleResponse::from);
     }
 
     @Transactional(readOnly = true)
-    public Page<ArticleResponse> selectArticles(Pageable pageable) {
+    public Page<ArticleResponse> getArticles(Pageable pageable) {
         return articleRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),
@@ -51,7 +57,7 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public ArticleResponse selectArticle(long id) {
+    public ArticleResponse getArticle(long id) {
         return ArticleResponse.from(
                 articleRepository.findById(id)
                         .orElseThrow(IllegalStateException::new)
@@ -90,11 +96,6 @@ public class ArticleService {
     }
 
     @Transactional
-    public void addArticle(ArticleRequest request) {
-        articleRepository.save(request.toEntity());
-    }
-
-    @Transactional
     public void updateArticle(ArticleRequest request) {
         articleRepository.findById(request.id())
                 .orElseThrow(IllegalArgumentException::new)
@@ -110,7 +111,6 @@ public class ArticleService {
     public void addHit(long id) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(IllegalStateException::new);
-        int currentHit = article.getHit();
-        article.setHit(++currentHit);
+        article.increaseHit();
     }
 }

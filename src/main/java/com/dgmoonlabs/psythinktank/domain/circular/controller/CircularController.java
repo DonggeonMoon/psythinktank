@@ -21,21 +21,21 @@ import static com.dgmoonlabs.psythinktank.global.constant.ViewName.INSERT_CIRCUL
 public class CircularController {
     private final CircularService circularService;
 
-    @GetMapping
-    public String getCirculars(Pageable pageable, Model model) {
-        model.addAttribute(CIRCULARS_KEY.getText(), circularService.selectCirculars(pageable));
-        return CIRCULAR_LIST.getText();
-    }
-
     @GetMapping("/add")
-    public String getAddCircularForm() {
+    public String getCreateCircularForm() {
         return INSERT_CIRCULAR.getText();
     }
 
     @PostMapping
-    public String insertCircular(@Valid CircularRequest circularRequest) {
-        circularService.addCircular(circularRequest);
+    public String createCircular(@Valid CircularRequest circularRequest) {
+        circularService.createCircular(circularRequest);
         return CIRCULAR.redirect();
+    }
+
+    @GetMapping
+    public String getCirculars(Pageable pageable, Model model) {
+        model.addAttribute(CIRCULARS_KEY.getText(), circularService.getCirculars(pageable));
+        return CIRCULAR_LIST.getText();
     }
 
     @DeleteMapping("/{id}")

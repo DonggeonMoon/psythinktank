@@ -14,14 +14,14 @@ import java.util.List;
 public class CommentService {
     private final CommentRepository commentRepository;
 
-    @Transactional(readOnly = true)
-    public List<Comment> selectCommentsByArticleId(long articleId) {
-        return commentRepository.findAllById(articleId);
+    @Transactional
+    public void createComment(CommentRequest commentRequest) {
+        commentRepository.save(commentRequest.toEntity());
     }
 
-    @Transactional
-    public void addComment(CommentRequest commentRequest) {
-        commentRepository.save(commentRequest.toEntity());
+    @Transactional(readOnly = true)
+    public List<Comment> getCommentsByArticleId(long articleId) {
+        return commentRepository.findAllById(articleId);
     }
 
     @Transactional

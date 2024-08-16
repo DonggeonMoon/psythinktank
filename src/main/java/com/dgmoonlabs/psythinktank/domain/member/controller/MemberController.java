@@ -25,25 +25,25 @@ import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
 public class MemberController {
     private final MemberService memberService;
 
-    @GetMapping
-    public String getMembers(Pageable pageable, Model model) {
-        model.addAttribute(MEMBERS_KEY.getText(), memberService.selectMembers(pageable));
-        return MANAGER_PAGE.getText();
-    }
-
     @GetMapping("/add")
-    public String getAddMemberForm() {
+    public String getCreateMemberForm() {
         return JOIN.getText();
     }
 
     @PostMapping
-    public String insertMember(@Valid MemberRequest memberRequest) {
-        memberService.addMember(memberRequest);
+    public String createMember(@Valid MemberRequest memberRequest) {
+        memberService.createMember(memberRequest);
         return ViewName.LOGIN.redirect();
     }
 
+    @GetMapping
+    public String getMembers(Pageable pageable, Model model) {
+        model.addAttribute(MEMBERS_KEY.getText(), memberService.getMembers(pageable));
+        return MANAGER_PAGE.getText();
+    }
+
     @GetMapping("/modify")
-    public String getModifyMemberForm(Model model, @SessionAttribute Map<String, String> member) {
+    public String getUpdateMemberForm(Model model, @SessionAttribute Map<String, String> member) {
         model.addAttribute(
                 MEMBER_KEY.getText(),
                 memberService.getMember(member.get("memberId"))
@@ -53,7 +53,7 @@ public class MemberController {
 
     @PutMapping
     public String updateMember(@Valid MemberRequest memberRequest) {
-        memberService.editMember(memberRequest);
+        memberService.updateMember(memberRequest);
         return LOGIN.redirect();
     }
 

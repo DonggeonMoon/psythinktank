@@ -28,8 +28,15 @@ public class MemberService {
     private final Random random;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
+    public void createMember(MemberRequest memberRequest) {
+        Member member = memberRequest.toEntity();
+        member.changePassword(passwordEncoder.encode(memberRequest.password()));
+        memberRepository.save(member);
+    }
+
     @Transactional(readOnly = true)
-    public Page<MemberResponse> selectMembers(Pageable pageable) {
+    public Page<MemberResponse> getMembers(Pageable pageable) {
         return memberRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(), Pagination.MEMBER_SIZE.getValue(),
@@ -48,28 +55,8 @@ public class MemberService {
         );
     }
 
-    @Transactional
-    public void addMember(MemberRequest memberRequest) {
-        Member member = memberRequest.toEntity();
-        member.changePassword(passwordEncoder.encode(memberRequest.password()));
-        memberRepository.save(member);
-    }
-
-    @Transactional
-    public void editMember(MemberRequest memberRequest) {
-        Member newMember = memberRepository.findByMemberId(memberRequest.memberId())
-                .orElseThrow(IllegalArgumentException::new);
-        newMember.changePassword(passwordEncoder.encode(memberRequest.password()));
-        newMember.changeEmail(memberRequest.email());
-    }
-
-    @Transactional
-    public void deleteMember(String memberId) {
-        memberRepository.deleteByMemberId(memberId);
-    }
-
     @Transactional(readOnly = true)
-    public FindIdResponse selectMemberByEmail(String memberEmail) {
+    public FindIdResponse getMemberByEmail(String memberEmail) {
         Optional<Member> memberToFind = memberRepository.findByEmail(memberEmail);
         return memberToFind.map(
                 member -> FindIdResponse.of(true, member.getMemberId())
@@ -79,7 +66,7 @@ public class MemberService {
     }
 
     @Transactional
-    public FindPasswordResponse selectMemberByEmailAndMemberId(FindPasswordRequest request) {
+    public FindPasswordResponse getMemberByEmailAndMemberId(FindPasswordRequest request) {
         Optional<Member> memberToFind = memberRepository.findByEmailAndMemberId(request.memberEmail(), request.memberId());
         if (memberToFind.isEmpty()) {
             return FindPasswordResponse.from(false);
@@ -101,6 +88,19 @@ public class MemberService {
         });
 
         return FindPasswordResponse.from(true);
+    }
+
+    @Transactional
+    public void updateMember(MemberRequest memberRequest) {
+        Member newMember = memberRepository.findByMemberId(memberRequest.memberId())
+                .orElseThrow(IllegalArgumentException::new);
+        newMember.changePassword(passwordEncoder.encode(memberRequest.password()));
+        newMember.changeEmail(memberRequest.email());
+    }
+
+    @Transactional
+    public void deleteMember(String memberId) {
+        memberRepository.deleteByMemberId(memberId);
     }
 
     @Transactional

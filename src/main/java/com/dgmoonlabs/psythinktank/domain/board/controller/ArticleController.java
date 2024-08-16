@@ -4,6 +4,7 @@ import com.dgmoonlabs.psythinktank.domain.board.dto.ArticleRequest;
 import com.dgmoonlabs.psythinktank.domain.board.service.ArticleService;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
 import com.dgmoonlabs.psythinktank.global.constant.ApiName;
+import com.dgmoonlabs.psythinktank.global.constant.QueryParameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -22,34 +23,41 @@ public class ArticleController {
     private final ArticleService articleService;
     private final CommentService commentService;
 
+    @GetMapping("/add")
+    public String getCreateArticleForm(@RequestParam long boardId, Model model) {
+        model.addAttribute(BOARD_ID_KEY.getText(), boardId);
+        return INSERT_ARTICLE.getText();
+    }
+
+    @PostMapping
+    public String createArticle(@Valid ArticleRequest articleRequest) {
+        articleService.createArticle(articleRequest);
+        return ApiName.ARTICLE.redirect()
+                + QueryParameter.addParameter(QueryParameter.BOARD_ID, articleRequest.boardId());
+    }
+
     @GetMapping
-    public String getArticles(Pageable pageable, Model model) {
-        model.addAttribute(ARTICLES_KEY.getText(), articleService.selectArticles(pageable));
+    public String getArticles(
+            @RequestParam(defaultValue = "1") long boardId,
+            Pageable pageable,
+            Model model
+    ) {
+        model.addAttribute(ARTICLES_KEY.getText(), articleService.getBoardArticles(boardId, pageable));
+        model.addAttribute(BOARD_ID_KEY.getText(), boardId);
         return ARTICLE_LIST.getText();
     }
 
     @GetMapping("/{id}")
     public String getArticle(@PathVariable long id, Model model) {
         articleService.addHit(id);
-        model.addAttribute(ARTICLE_KEY.getText(), articleService.selectArticle(id));
-        model.addAttribute(COMMENTS_KEY.getText(), commentService.selectCommentsByArticleId(id));
+        model.addAttribute(ARTICLE_KEY.getText(), articleService.getArticle(id));
+        model.addAttribute(COMMENTS_KEY.getText(), commentService.getCommentsByArticleId(id));
         return VIEW_ARTICLE.getText();
     }
 
-    @GetMapping("/add")
-    public String getAddArticleForm() {
-        return INSERT_ARTICLE.getText();
-    }
-
-    @PostMapping
-    public String insertArticle(@Valid ArticleRequest articleRequest) {
-        articleService.addArticle(articleRequest);
-        return ApiName.ARTICLE.redirect();
-    }
-
     @GetMapping("/modify/{id}")
-    public String getModifyArticleForm(@PathVariable long id, Model model) {
-        model.addAttribute(ARTICLE_KEY.getText(), articleService.selectArticle(id));
+    public String getUpdateArticleForm(@PathVariable long id, Model model) {
+        model.addAttribute(ARTICLE_KEY.getText(), articleService.getArticle(id));
         return UPDATE_ARTICLE.getText();
     }
 
@@ -60,8 +68,9 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteArticle(@PathVariable long id) {
+    public String deleteArticle(@RequestParam long boardId, @PathVariable long id) {
         articleService.deleteArticle(id);
-        return ApiName.ARTICLE.redirect();
+        return ApiName.ARTICLE.redirect()
+                + QueryParameter.addParameter(QueryParameter.BOARD_ID, boardId);
     }
 }

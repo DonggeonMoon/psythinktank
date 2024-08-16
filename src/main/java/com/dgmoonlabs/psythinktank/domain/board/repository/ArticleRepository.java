@@ -14,5 +14,5 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     List<Article> findByMemberIdOrderByIdDesc(String memberId);
 
-    Page<Article> findByBoardId(Long boardId, Pageable pageable);
+    Page<Article> findAllByBoardId(Pageable pageable, Long boardId);
 }

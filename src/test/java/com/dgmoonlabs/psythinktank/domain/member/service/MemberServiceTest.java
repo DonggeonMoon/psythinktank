@@ -54,11 +54,11 @@ class MemberServiceTest {
     private MemberService memberService;
 
     @Test
-    void selectMembers() {
+    void getMembers() {
         when(memberRepository.findAll(any(PageRequest.class)))
                 .thenReturn(MEMBER_PAGE);
 
-        assertThat(memberService.selectMembers(PAGE_REQUEST))
+        assertThat(memberService.getMembers(PAGE_REQUEST))
                 .isEqualTo(MEMBER_RESPONSE_PAGE);
     }
 
@@ -72,11 +72,11 @@ class MemberServiceTest {
     }
 
     @Test
-    void selectMemberByEmail() {
+    void getMemberByEmail() {
         when(memberRepository.findByEmail(anyString()))
                 .thenReturn(Optional.of(MEMBER_1));
 
-        assertThat(memberService.selectMemberByEmail(MEMBER_EMAIL))
+        assertThat(memberService.getMemberByEmail(MEMBER_EMAIL))
                 .isEqualTo(FIND_ID_RESPONSE);
     }
 

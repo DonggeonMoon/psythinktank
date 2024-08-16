@@ -33,7 +33,7 @@ public class StockService {
     private final CorporateBoardStabilityRepository corporateBoardStabilityRepository;
 
     @Transactional(readOnly = true)
-    public Page<StockInfo> selectStocks(Pageable pageable) {
+    public Page<StockInfo> getStocks(Pageable pageable) {
         return stockInfoRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),
@@ -44,7 +44,7 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public StockResponse selectStock(String symbol) {
+    public StockResponse getStock(String symbol) {
         return StockResponse.from(
                 stockInfoRepository.findBySymbol(symbol)
                         .orElse(StockInfo.builder().build())
@@ -52,7 +52,7 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public StockSearchResponse selectStocksBySymbol(StockSearchRequest stockSearchRequest) {
+    public StockSearchResponse getStocksBySymbol(StockSearchRequest stockSearchRequest) {
         return StockSearchResponse.from(
                 stockInfoRepository.findBySymbolContains(stockSearchRequest.searchText())
                         .stream()
@@ -62,7 +62,7 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public StockSearchResponse selectStocksByName(StockSearchRequest stockSearchRequest) {
+    public StockSearchResponse getStocksByName(StockSearchRequest stockSearchRequest) {
         return StockSearchResponse.from(
                 stockInfoRepository.findByNameContainsIgnoreCase(stockSearchRequest.searchText())
                         .stream()
@@ -72,7 +72,7 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public ShareSearchResponse selectSharesBySymbol(String symbol) {
+    public ShareSearchResponse getSharesBySymbol(String symbol) {
         return ShareSearchResponse.from(shareRepository.findBySymbol(symbol)
                 .stream()
                 .sorted(
@@ -87,7 +87,7 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public DividendResponse selectDividendBySymbol(String symbol) {
+    public DividendResponse getDividendBySymbol(String symbol) {
         return DividendResponse.from(
                 dividendRepository.findBySymbol(symbol)
                         .orElse(Dividend.builder().value(0).build())
@@ -126,7 +126,7 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public ChartData selectDataBySymbol(final String symbol) {
+    public ChartData getDataBySymbol(final String symbol) {
         List<Share> shares = shareRepository.findBySymbol(symbol)
                 .stream()
                 .sorted(

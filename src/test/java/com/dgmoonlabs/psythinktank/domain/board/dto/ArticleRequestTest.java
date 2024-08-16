@@ -32,24 +32,24 @@ class ArticleRequestTest {
 
     @ParameterizedTest
     @CsvSource({
-            "test11, 제목, 내용, true"
+            "1, test11, 제목, 내용, true"
     })
-    void valid_values(String memberId, String title, String content, Boolean isNotice) {
-        ArticleRequest request = new ArticleRequest(null, memberId, title, content, isNotice);
+    void valid_values(Long boardId, String memberId, String title, String content, Boolean isNotice) {
+        ArticleRequest request = new ArticleRequest(null, boardId, memberId, title, content, isNotice);
         Set<ConstraintViolation<ArticleRequest>> violations = validator.validate(request);
         assertThat(violations).isEmpty();
     }
 
     @ParameterizedTest
     @CsvSource({
-            ",,",
-            "'','',''",
-            "test11,,내용",
-            "test11,제목,",
-            "test11,제목,"
+            ",,,",
+            ",'','',''",
+            ",test11,,내용",
+            ",test11,제목,",
+            ",test11,제목,"
     })
-    void invalid_values(String memberId, String title, String content) {
-        ArticleRequest request = new ArticleRequest(null, memberId, title, content, false);
+    void invalid_values(Long boardId, String memberId, String title, String content) {
+        ArticleRequest request = new ArticleRequest(boardId, null, memberId, title, content, false);
         Set<ConstraintViolation<ArticleRequest>> violations = validator.validate(request);
         assertThat(violations).isNotEmpty();
         violations.forEach(violation -> log.info("violation = {}", violation));

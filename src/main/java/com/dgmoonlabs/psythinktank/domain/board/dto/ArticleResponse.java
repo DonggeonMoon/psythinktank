@@ -5,6 +5,7 @@ import com.dgmoonlabs.psythinktank.global.constant.DateTimeFormat;
 
 public record ArticleResponse(
         Long id,
+        Long boardId,
         String memberId,
         String title,
         String content,
@@ -15,6 +16,7 @@ public record ArticleResponse(
     public static ArticleResponse from(final Article article) {
         return new ArticleResponse(
                 article.getId(),
+                article.getBoard().getId(),
                 article.getMemberId(),
                 article.getTitle(),
                 article.getContent(),
