@@ -65,20 +65,20 @@ class ArticleServiceTest {
     private ArticleService articleService;
 
     @Test
-    void selectArticles() {
+    void getArticles() {
         when(articleRepository.findAll(any(Pageable.class)))
                 .thenReturn(ARTICLE_PAGE);
 
-        assertThat(articleService.selectArticles(PAGE_REQUEST))
+        assertThat(articleService.getArticles(PAGE_REQUEST))
                 .isEqualTo(ARTICLE_RESPONSE_PAGE);
     }
 
     @Test
-    void selectArticle() {
+    void getArticle() {
         when(articleRepository.findById(anyLong()))
                 .thenReturn(Optional.of(ARTICLE_1));
 
-        assertThat(articleService.selectArticle(ARTICLE_ID_1))
+        assertThat(articleService.getArticle(ARTICLE_ID_1))
                 .isEqualTo(ArticleResponse.from(ARTICLE_1));
     }
 

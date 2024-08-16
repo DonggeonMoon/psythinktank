@@ -21,8 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
+    @Transactional
+    public void createArticle(ArticleRequest request) {
+        articleRepository.save(request.toEntity());
+    }
+
     @Transactional(readOnly = true)
-    public Page<ArticleResponse> selectBoardArticles(Long boardId, Pageable pageable) {
+    public Page<ArticleResponse> getBoardArticles(Long boardId, Pageable pageable) {
 
         return articleRepository.findAllByBoardId(
                 PageRequest.of(
@@ -38,7 +43,7 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ArticleResponse> selectArticles(Pageable pageable) {
+    public Page<ArticleResponse> getArticles(Pageable pageable) {
         return articleRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),
@@ -52,7 +57,7 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public ArticleResponse selectArticle(long id) {
+    public ArticleResponse getArticle(long id) {
         return ArticleResponse.from(
                 articleRepository.findById(id)
                         .orElseThrow(IllegalStateException::new)
@@ -88,11 +93,6 @@ public class ArticleService {
                         .map(ArticleResponse::from)
                         .toList()
         );
-    }
-
-    @Transactional
-    public void addArticle(ArticleRequest request) {
-        articleRepository.save(request.toEntity());
     }
 
     @Transactional

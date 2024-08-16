@@ -23,17 +23,17 @@ public class StockController {
 
     @GetMapping
     public String getStocks(Pageable pageable, Model model) {
-        model.addAttribute(STOCKS_KEY.getText(), stockService.selectStocks(pageable));
+        model.addAttribute(STOCKS_KEY.getText(), stockService.getStocks(pageable));
         return STOCK_LIST.getText();
     }
 
     @GetMapping("/{symbol}")
     public String getStock(@PathVariable String symbol, Model model) {
-        model.addAttribute(STOCK_KEY.getText(), stockService.selectStock(symbol));
+        model.addAttribute(STOCK_KEY.getText(), stockService.getStock(symbol));
         model.addAttribute(HRR_KEY.getText(), stockService.calculateGrowthPotential(symbol));
-        model.addAttribute(SHARE_KEY.getText(), stockService.selectSharesBySymbol(symbol));
-        model.addAttribute(CHART_DATASET_KEY.getText(), stockService.selectDataBySymbol(symbol));
-        model.addAttribute(DIVIDEND_KEY.getText(), stockService.selectDividendBySymbol(symbol));
+        model.addAttribute(SHARE_KEY.getText(), stockService.getSharesBySymbol(symbol));
+        model.addAttribute(CHART_DATASET_KEY.getText(), stockService.getDataBySymbol(symbol));
+        model.addAttribute(DIVIDEND_KEY.getText(), stockService.getDividendBySymbol(symbol));
         model.addAttribute(GOVERNANCE_KEY.getText(), stockService.calculateGovernance(symbol));
         model.addAttribute(CORPORATE_BOARD_STABILITY.getText(), stockService.calculateBoardStability(symbol));
         model.addAttribute(STOCK_HYPE_INDEX.getText(), shareholderService.calculateStockHypeIndex(symbol));

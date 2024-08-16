@@ -33,8 +33,30 @@ public class CircularService {
     private final CircularRepository circularRepository;
     private final MultipartProperties multipartProperties;
 
+    @Transactional
+    public void createCircular(CircularRequest circularRequest) {
+        Circular circular = circularRequest.toEntity();
+        MultipartFile multipartFile = circularRequest.file();
+        try {
+            if (!multipartFile.isEmpty()) {
+                String originalFilename = multipartFile.getOriginalFilename();
+                assert originalFilename != null;
+                int dotIndex = originalFilename.lastIndexOf(".");
+                String extension = originalFilename.substring(++dotIndex);
+                String fileName = UUID.randomUUID() + "." + extension;
+                circular.setFileName(fileName);
+            }
+            File file = new File(circular.getFileName());
+            multipartFile.transferTo(file);
+            circularRepository.save(circular);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @Transactional(readOnly = true)
-    public Page<CircularResponse> selectCirculars(Pageable pageable) {
+    public Page<CircularResponse> getCirculars(Pageable pageable) {
         return circularRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),
@@ -46,7 +68,7 @@ public class CircularService {
     }
 
     @Transactional(readOnly = true)
-    public CircularResponse selectCircular(long id) {
+    public CircularResponse getCircular(long id) {
         return CircularResponse.from(
                 circularRepository.findById(id)
                         .orElseThrow(IllegalStateException::new)
@@ -66,28 +88,6 @@ public class CircularService {
             log.info(e.getMessage());
         }
         return resource;
-    }
-
-    @Transactional
-    public void addCircular(CircularRequest circularRequest) {
-        Circular circular = circularRequest.toEntity();
-        MultipartFile multipartFile = circularRequest.file();
-        try {
-            if (!multipartFile.isEmpty()) {
-                String originalFilename = multipartFile.getOriginalFilename();
-                assert originalFilename != null;
-                int dotIndex = originalFilename.lastIndexOf(".");
-                String extension = originalFilename.substring(++dotIndex);
-                String fileName = UUID.randomUUID() + "." + extension;
-                circular.setFileName(fileName);
-            }
-            File file = new File(circular.getFileName());
-            multipartFile.transferTo(file);
-            circularRepository.save(circular);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
-        }
     }
 
     @Transactional

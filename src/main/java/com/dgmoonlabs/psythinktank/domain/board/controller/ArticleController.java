@@ -24,15 +24,16 @@ public class ArticleController {
     private final CommentService commentService;
 
     @GetMapping("/add")
-    public String getAddArticleForm(@RequestParam long boardId, Model model) {
+    public String getCreateArticleForm(@RequestParam long boardId, Model model) {
         model.addAttribute(BOARD_ID_KEY.getText(), boardId);
         return INSERT_ARTICLE.getText();
     }
 
     @PostMapping
-    public String insertArticle(@Valid ArticleRequest articleRequest) {
-        articleService.addArticle(articleRequest);
-        return ApiName.ARTICLE.redirect() + QueryParameter.addParameter(QueryParameter.BOARD_ID, articleRequest.boardId());
+    public String createArticle(@Valid ArticleRequest articleRequest) {
+        articleService.createArticle(articleRequest);
+        return ApiName.ARTICLE.redirect()
+                + QueryParameter.addParameter(QueryParameter.BOARD_ID, articleRequest.boardId());
     }
 
     @GetMapping
@@ -41,7 +42,7 @@ public class ArticleController {
             Pageable pageable,
             Model model
     ) {
-        model.addAttribute(ARTICLES_KEY.getText(), articleService.selectBoardArticles(boardId, pageable));
+        model.addAttribute(ARTICLES_KEY.getText(), articleService.getBoardArticles(boardId, pageable));
         model.addAttribute(BOARD_ID_KEY.getText(), boardId);
         return ARTICLE_LIST.getText();
     }
@@ -49,14 +50,14 @@ public class ArticleController {
     @GetMapping("/{id}")
     public String getArticle(@PathVariable long id, Model model) {
         articleService.addHit(id);
-        model.addAttribute(ARTICLE_KEY.getText(), articleService.selectArticle(id));
-        model.addAttribute(COMMENTS_KEY.getText(), commentService.selectCommentsByArticleId(id));
+        model.addAttribute(ARTICLE_KEY.getText(), articleService.getArticle(id));
+        model.addAttribute(COMMENTS_KEY.getText(), commentService.getCommentsByArticleId(id));
         return VIEW_ARTICLE.getText();
     }
 
     @GetMapping("/modify/{id}")
-    public String getModifyArticleForm(@PathVariable long id, Model model) {
-        model.addAttribute(ARTICLE_KEY.getText(), articleService.selectArticle(id));
+    public String getUpdateArticleForm(@PathVariable long id, Model model) {
+        model.addAttribute(ARTICLE_KEY.getText(), articleService.getArticle(id));
         return UPDATE_ARTICLE.getText();
     }
 
@@ -69,6 +70,7 @@ public class ArticleController {
     @DeleteMapping("/{id}")
     public String deleteArticle(@RequestParam long boardId, @PathVariable long id) {
         articleService.deleteArticle(id);
-        return ApiName.ARTICLE.redirect() + QueryParameter.addParameter(QueryParameter.BOARD_ID, boardId);
+        return ApiName.ARTICLE.redirect()
+                + QueryParameter.addParameter(QueryParameter.BOARD_ID, boardId);
     }
 }

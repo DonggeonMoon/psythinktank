@@ -28,11 +28,11 @@ class CommentServiceTest {
     private CommentService commentService;
 
     @Test
-    void selectCommentsByArticleId() {
+    void getCommentsByArticleId() {
         when(commentRepository.findAllById(anyLong()))
                 .thenReturn(COMMENTS);
 
-        assertThat(commentService.selectCommentsByArticleId(ARTICLE_ID))
+        assertThat(commentService.getCommentsByArticleId(ARTICLE_ID))
                 .isEqualTo(COMMENTS);
     }
 }

@@ -51,20 +51,20 @@ class CircularServiceTest {
     private CircularService circularService;
 
     @Test
-    void selectCirculars() {
+    void getCirculars() {
         when(circularRepository.findAll(any(Pageable.class)))
                 .thenReturn(CIRCULAR_PAGE);
 
-        assertThat(circularService.selectCirculars(PAGE_REQUEST))
+        assertThat(circularService.getCirculars(PAGE_REQUEST))
                 .isEqualTo(CIRCULAR_RESPONSE_PAGE);
     }
 
     @Test
-    void selectCircular() {
+    void getCircular() {
         when(circularRepository.findById(CIRCULAR_ID_1))
                 .thenReturn(Optional.of(CIRCULAR_1));
 
-        assertThat(circularService.selectCircular(CIRCULAR_ID_1))
+        assertThat(circularService.getCircular(CIRCULAR_ID_1))
                 .isEqualTo(CircularResponse.from(CIRCULAR_1));
     }
 }

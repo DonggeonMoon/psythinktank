@@ -29,11 +29,11 @@ public class MemberRestController {
 
     @PostMapping("/find/id")
     public ResponseEntity<FindIdResponse> findId(@Valid @RequestBody FindIdRequest request) {
-        return ResponseEntity.ok(memberService.selectMemberByEmail(request.memberEmail()));
+        return ResponseEntity.ok(memberService.getMemberByEmail(request.memberEmail()));
     }
 
     @PostMapping("/find/password")
     public ResponseEntity<FindPasswordResponse> findPassword(@Valid @RequestBody FindPasswordRequest request) {
-        return ResponseEntity.ok(memberService.selectMemberByEmailAndMemberId(request));
+        return ResponseEntity.ok(memberService.getMemberByEmailAndMemberId(request));
     }
 }
