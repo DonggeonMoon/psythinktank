@@ -24,7 +24,9 @@ public class ArticleRestController {
             @RequestBody
             ArticleSearchRequest articleSearchRequest
     ) {
-        return ResponseEntity.ok(articleService.searchArticleByTitle(articleSearchRequest));
+        return ResponseEntity.ok(
+                articleService.searchArticleByTitle(articleSearchRequest)
+        );
     }
 
     @PostMapping("/search/content")
@@ -33,7 +35,9 @@ public class ArticleRestController {
             @RequestBody
             ArticleSearchRequest articleSearchRequest
     ) {
-        return ResponseEntity.ok(articleService.searchArticleByContent(articleSearchRequest));
+        return ResponseEntity.ok(
+                articleService.searchArticleByContent(articleSearchRequest)
+        );
     }
 
     @PostMapping("/search/memberId")
@@ -42,6 +46,8 @@ public class ArticleRestController {
             @RequestBody
             ArticleSearchRequest articleSearchRequest
     ) {
-        return ResponseEntity.ok(articleService.searchArticleByMemberId(articleSearchRequest));
+        return ResponseEntity.ok(
+                articleService.searchArticleByMemberId(articleSearchRequest)
+        );
     }
 }

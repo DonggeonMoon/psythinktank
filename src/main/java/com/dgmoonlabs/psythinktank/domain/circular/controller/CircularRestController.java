@@ -24,7 +24,9 @@ public class CircularRestController {
     public ResponseEntity<Resource> getCircular(@PathVariable long id, Model model) {
         model.addAttribute(CIRCULAR_KEY.getText(), circularService.getCircular(id));
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
-                .body(circularService.downloadCircular(id));
+                .header(
+                        HttpHeaders.CONTENT_TYPE,
+                        MediaType.APPLICATION_PDF_VALUE
+                ).body(circularService.downloadCircular(id));
     }
 }

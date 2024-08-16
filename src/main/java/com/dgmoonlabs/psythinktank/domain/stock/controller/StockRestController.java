@@ -23,7 +23,9 @@ public class StockRestController {
             @Valid
             @RequestBody
             StockSearchRequest stockSearchRequest) {
-        return ResponseEntity.ok(stockService.getStocksBySymbol(stockSearchRequest));
+        return ResponseEntity.ok(
+                stockService.getStocksBySymbol(stockSearchRequest)
+        );
     }
 
     @PostMapping("/search/stockName")
@@ -31,6 +33,8 @@ public class StockRestController {
             @Valid
             @RequestBody
             StockSearchRequest stockSearchRequest) {
-        return ResponseEntity.ok(stockService.getStocksByName(stockSearchRequest));
+        return ResponseEntity.ok(
+                stockService.getStocksByName(stockSearchRequest)
+        );
     }
 }
