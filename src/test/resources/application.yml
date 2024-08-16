@@ -3,11 +3,11 @@ server:
   servlet:
     context-path: ${CONTEXT_PATH}
     encoding:
-      charset: ${SERVLET_ENCODING}
+      charset: ${SERVLET_ENCODING_CHARSET}
       enabled: ${SERVLET_ENCODING_ENABLED}
       force: ${SERVLET_ENCODING_FORCE}
   error:
-    path: ${SERVLET_ERROR_PATH}
+    path: ${ERROR_PATH}
     whitelabel:
       enabled: ${WHITELABEL_ENABLED}
 spring:
@@ -20,23 +20,22 @@ spring:
   mustache:
     expose-session-attributes: ${MUSTACHE_EXPOSE_SESSION_ATTRIBUTES}
 
-  datasource:
-    driver-class-name: ${DB_DRIVER_CLASS_NAME}
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-
   data:
     web:
       pageable:
         default-page-size: ${PAGEABLE_DEFAULT_PAGE_SIZE}
     mongodb:
-      database: ${MONGODB_DATABASE}
+      host: ${MONGO_HOST}
+      port: ${MONGO_PORT}
+      database: ${MONGO_DB}
+      username: ${MONGO_USERNAME}
+      password: ${MONGO_PASSWORD}
+      authentication-database: ${MONGO_AUTHENTICATION_DB}
 
   jpa:
     open-in-view: ${JPA_OPEN_IN_VIEW}
     hibernate:
-      ddl-auto: ${JPA_DDL-AUTO}
+      ddl-auto: create
       naming:
         physical-strategy: ${JPA_NAMING_PHYSICAL_STRATEGY}
       use-new-id-generator-mappings: ${JPA_USE_NEW_ID_GENERATOR_MAPPINGS}
@@ -65,9 +64,9 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: ${UPLOAD_MAX_SIZE}
+      max-file-size: ${UPLOAD_MAX_FILE_SIZE}
       max-request-size: ${UPLOAD_MAX_REQUEST_SIZE}
-      location: ${UPLOAD_PATH}
+      location: ${UPLOAD_LOCATION}
 
 management:
   server:

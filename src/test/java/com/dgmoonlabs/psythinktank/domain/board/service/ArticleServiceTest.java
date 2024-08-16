@@ -4,6 +4,7 @@ import com.dgmoonlabs.psythinktank.domain.board.dto.ArticleResponse;
 import com.dgmoonlabs.psythinktank.domain.board.dto.ArticleSearchRequest;
 import com.dgmoonlabs.psythinktank.domain.board.dto.ArticleSearchResponse;
 import com.dgmoonlabs.psythinktank.domain.board.model.Article;
+import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.repository.ArticleRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +35,9 @@ class ArticleServiceTest {
     public static final ArticleSearchRequest ARTICLE_SEARCH_BY_TITLE_REQUEST = new ArticleSearchRequest(SEARCH_BY_TITLE_TEXT);
     private static final long ARTICLE_ID_1 = 1L;
     private static final long ARTICLE_ID_2 = 2L;
+    public static final Board BOARD = Board.builder()
+            .id(1L)
+            .build();
     private static final Article ARTICLE_1 = Article.builder()
             .id(ARTICLE_ID_1)
             .title("제목1")
@@ -42,6 +46,7 @@ class ArticleServiceTest {
             .memberId("회원1")
             .isNotice(false)
             .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+            .board(BOARD)
             .build();
     private static final Article ARTICLE_2 = Article.builder()
             .id(ARTICLE_ID_2)
@@ -51,6 +56,7 @@ class ArticleServiceTest {
             .memberId("회원2")
             .isNotice(false)
             .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+            .board(BOARD)
             .build();
     private static final ArticleResponse ARTICLE_RESPONSE_1 = ArticleResponse.from(ARTICLE_1);
     private static final ArticleSearchResponse ARTICLE_SEARCH_RESPONSE = new ArticleSearchResponse(List.of(ArticleResponse.from(ARTICLE_1)));
