@@ -2,7 +2,6 @@ package com.dgmoonlabs.psythinktank.domain.board.model;
 
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
 import com.dgmoonlabs.psythinktank.global.model.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,7 +23,6 @@ public class Board extends BaseEntity {
     private Boolean isPublic;
 
     @OneToMany(mappedBy = "board")
-    @JsonIgnore
     private List<Article> articles;
 
     public void update(BoardRequest request) {

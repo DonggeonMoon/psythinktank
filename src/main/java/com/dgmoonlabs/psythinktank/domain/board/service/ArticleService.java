@@ -23,8 +23,8 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public Page<ArticleResponse> selectBoardArticles(Long boardId, Pageable pageable) {
-        return articleRepository.findByBoardId(
-                boardId,
+
+        return articleRepository.findAllByBoardId(
                 PageRequest.of(
                         pageable.getPageNumber(),
                         Pagination.SIZE.getValue(),
@@ -32,7 +32,8 @@ public class ArticleService {
                                 .descending()
                                 .and(Sort.by(CriteriaField.ID.getName())
                                         .descending())
-                )
+                ),
+                boardId
         ).map(ArticleResponse::from);
     }
 
@@ -110,7 +111,6 @@ public class ArticleService {
     public void addHit(long id) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(IllegalStateException::new);
-        int currentHit = article.getHit();
-        article.setHit(++currentHit);
+        article.increaseHit();
     }
 }

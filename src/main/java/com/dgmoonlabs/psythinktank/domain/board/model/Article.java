@@ -10,10 +10,9 @@ import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-@Setter
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,5 +48,9 @@ public class Article {
         this.title = request.title();
         this.content = request.title();
         this.isNotice = request.isNotice();
+    }
+
+    public void increaseHit() {
+        this.hit++;
     }
 }

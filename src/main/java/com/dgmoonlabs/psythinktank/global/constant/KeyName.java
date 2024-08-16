@@ -9,6 +9,7 @@ public enum KeyName {
     AJAX_RESPONSE_KEY("result"),
     SESSION_KEY("member"),
     ARTICLES_KEY("articles"),
+    BOARD_ID_KEY("boardId"),
     CIRCULARS_KEY("circulars"),
     COMMENTS_KEY("commentList"),
     MEMBERS_KEY("members"),
