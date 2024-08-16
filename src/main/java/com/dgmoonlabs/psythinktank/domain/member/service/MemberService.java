@@ -14,6 +14,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -68,23 +69,25 @@ public class MemberService {
     @Transactional
     public FindPasswordResponse getMemberByEmailAndMemberId(FindPasswordRequest request) {
         Optional<Member> memberToFind = memberRepository.findByEmailAndMemberId(request.memberEmail(), request.memberId());
+
         if (memberToFind.isEmpty()) {
             return FindPasswordResponse.from(false);
         }
-        Member member = memberToFind.get();
 
-        StringBuilder stringBuilder = new StringBuilder();
-        IntStream.range(0, TemporaryPassword.LENGTH.getValue())
-                .forEach(it -> stringBuilder.append((char) (random.nextInt(RandomNumber.BOUND.getValue()) + 'A')));
-        String randomizedLetters = stringBuilder.toString();
-        member.changePassword(passwordEncoder.encode(randomizedLetters));
-        member.resetLoginTryCount();
-        mailService.sendMail(mimeMessage -> {
-            final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, StandardCharsets.UTF_8.name());
-            helper.setFrom(EmailForm.SENDER_ADDRESS.getText());
-            helper.setTo(member.getEmail());
-            helper.setSubject(EmailForm.TEMPORARY_PASSWORD_TITLE.getText());
-            helper.setText(String.format(EmailForm.TEMPORARY_PASSWORD_TEXT.getText(), randomizedLetters), true);
+        memberToFind.ifPresent(member -> {
+            StringBuilder stringBuilder = new StringBuilder();
+            IntStream.range(0, TemporaryPassword.LENGTH.getValue())
+                    .forEach(it -> stringBuilder.append((char) (random.nextInt(RandomNumber.BOUND.getValue()) + 'A')));
+            String randomizedLetters = stringBuilder.toString();
+            member.changePassword(passwordEncoder.encode(randomizedLetters));
+            member.resetLoginTryCount();
+            mailService.sendMail(mimeMessage -> {
+                final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, StandardCharsets.UTF_8.name());
+                helper.setFrom(EmailForm.SENDER_ADDRESS.getText());
+                helper.setTo(member.getEmail());
+                helper.setSubject(EmailForm.TEMPORARY_PASSWORD_TITLE.getText());
+                helper.setText(String.format(EmailForm.TEMPORARY_PASSWORD_TEXT.getText(), randomizedLetters), true);
+            });
         });
 
         return FindPasswordResponse.from(true);
@@ -92,10 +95,10 @@ public class MemberService {
 
     @Transactional
     public void updateMember(MemberRequest memberRequest) {
-        Member newMember = memberRepository.findByMemberId(memberRequest.memberId())
+        Member memberToUpdate = memberRepository.findByMemberId(memberRequest.memberId())
                 .orElseThrow(IllegalArgumentException::new);
-        newMember.changePassword(passwordEncoder.encode(memberRequest.password()));
-        newMember.changeEmail(memberRequest.email());
+        memberToUpdate.changePassword(passwordEncoder.encode(memberRequest.password()));
+        memberToUpdate.changeEmail(memberRequest.email());
     }
 
     @Transactional
@@ -105,9 +108,9 @@ public class MemberService {
 
     @Transactional
     public void changeUserLevel(MemberUserLevelRequest memberRequest) {
-        Member newMember = memberRepository.findByMemberId(memberRequest.memberId())
-                .orElseThrow(IllegalArgumentException::new);
-        newMember.changeUserLevel(memberRequest.userLevel());
+        memberRepository.findByMemberId(memberRequest.memberId())
+                .orElseThrow(IllegalArgumentException::new)
+                .changeUserLevel(memberRequest.userLevel());
     }
 
     @Transactional(readOnly = true)
@@ -122,21 +125,21 @@ public class MemberService {
 
     @Transactional
     public void resetLoginTryCount(String memberId) {
-        if (memberId.isEmpty() || memberId.isBlank()) {
+        if (!StringUtils.hasText(memberId)) {
             return;
         }
-        Member member = memberRepository.findByMemberId(memberId)
-                .orElseThrow(IllegalStateException::new);
-        member.resetLoginTryCount();
+        memberRepository.findByMemberId(memberId)
+                .orElseThrow(IllegalStateException::new)
+                .resetLoginTryCount();
     }
 
     @Transactional
     public void increaseLoginTryCount(String memberId) {
-        if (memberId.isEmpty() || memberId.isBlank()) {
+        if (!StringUtils.hasText(memberId)) {
             return;
         }
-        Member member = memberRepository.findByMemberId(memberId)
-                .orElse(Member.builder().build());
-        member.increaseLoginTryCount();
+        memberRepository.findByMemberId(memberId)
+                .orElseGet(() -> Member.builder().build())
+                .increaseLoginTryCount();
     }
 }
