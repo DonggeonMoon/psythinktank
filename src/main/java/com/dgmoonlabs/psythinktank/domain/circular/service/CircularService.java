@@ -79,7 +79,7 @@ public class CircularService {
 
     @Transactional(readOnly = true)
     public Resource downloadCircular(long id) {
-        Resource resource = null;
+        Resource resource;
         try {
             Circular circular = circularRepository.findById(id)
                     .orElseThrow(IllegalStateException::new);
