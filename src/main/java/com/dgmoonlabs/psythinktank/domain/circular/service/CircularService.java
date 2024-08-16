@@ -6,6 +6,10 @@ import com.dgmoonlabs.psythinktank.domain.circular.model.Circular;
 import com.dgmoonlabs.psythinktank.domain.circular.repository.CircularRepository;
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
 import com.dgmoonlabs.psythinktank.global.constant.Pagination;
+import com.dgmoonlabs.psythinktank.global.exception.CircularNotExistException;
+import com.dgmoonlabs.psythinktank.global.exception.FileDeletionException;
+import com.dgmoonlabs.psythinktank.global.exception.FileDownloadException;
+import com.dgmoonlabs.psythinktank.global.exception.FileSaveFailedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
@@ -50,8 +54,7 @@ public class CircularService {
             multipartFile.transferTo(file);
             circularRepository.save(circular);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new FileSaveFailedException(e);
         }
     }
 
@@ -71,8 +74,7 @@ public class CircularService {
     public CircularResponse getCircular(long id) {
         return CircularResponse.from(
                 circularRepository.findById(id)
-                        .orElseThrow(IllegalStateException::new)
-        );
+                        .orElseThrow(CircularNotExistException::new));
     }
 
     @Transactional(readOnly = true)
@@ -83,9 +85,9 @@ public class CircularService {
                     .orElseThrow(IllegalStateException::new);
             Path filePath = Paths.get(multipartProperties.getLocation(), circular.getFileName());
             resource = new UrlResource(filePath.toUri());
-            log.info("uri: " + filePath.toUri());
+            log.info("uri: {}", filePath.toUri());
         } catch (MalformedURLException e) {
-            log.info(e.getMessage());
+            throw new FileDownloadException(e);
         }
         return resource;
     }
@@ -99,8 +101,7 @@ public class CircularService {
             Files.delete(path);
             circularRepository.deleteById(id);
         } catch (Exception e) {
-            log.info(e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            throw new FileDeletionException(e);
         }
     }
 }
