@@ -19,21 +19,29 @@ public class MemberRestController {
 
     @PostMapping("/check/id")
     public ResponseEntity<CheckIdResponse> checkId(@RequestBody String memberId) {
-        return ResponseEntity.ok(memberService.checkId(memberId));
+        return ResponseEntity.ok(
+                memberService.checkId(memberId)
+        );
     }
 
     @PostMapping("/check/email")
     public ResponseEntity<CheckEmailResponse> checkEmail(@RequestBody String memberEmail) {
-        return ResponseEntity.ok(memberService.checkEmail(memberEmail));
+        return ResponseEntity.ok(
+                memberService.checkEmail(memberEmail)
+        );
     }
 
     @PostMapping("/find/id")
     public ResponseEntity<FindIdResponse> findId(@Valid @RequestBody FindIdRequest request) {
-        return ResponseEntity.ok(memberService.getMemberByEmail(request.memberEmail()));
+        return ResponseEntity.ok(
+                memberService.getMemberByEmail(request.memberEmail())
+        );
     }
 
     @PostMapping("/find/password")
     public ResponseEntity<FindPasswordResponse> findPassword(@Valid @RequestBody FindPasswordRequest request) {
-        return ResponseEntity.ok(memberService.getMemberByEmailAndMemberId(request));
+        return ResponseEntity.ok(
+                memberService.getMemberByEmailAndMemberId(request)
+        );
     }
 }
