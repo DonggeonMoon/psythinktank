@@ -1,11 +1,10 @@
 package com.dgmoonlabs.psythinktank.domain.comment.model;
 
 import com.dgmoonlabs.psythinktank.domain.comment.dto.CommentRequest;
+import com.dgmoonlabs.psythinktank.global.model.BaseEntity;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -13,33 +12,29 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class Comment {
-    @Column(name = "board_no")
+public class Comment extends BaseEntity {
+    @Column(name = "article_id")
     private Long articleId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_no")
+    @Column
     private Long id;
 
-    @Column(name = "comment_parent")
+    @Column
     private Long parent;
 
-    @Column(name = "comment_depth", nullable = false)
+    @Column(nullable = false)
     private int depth;
 
-    @Column(name = "comment_seq", nullable = false)
+    @Column(nullable = false)
     private long sequence;
 
     @Column(name = "member_id", nullable = false)
     private String memberId;
 
-    @Column(name = "comment_content", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String content;
-
-    @CreationTimestamp
-    @Column(name = "comment_date")
-    private LocalDateTime createdAt;
 
     public void update(final CommentRequest request) {
         this.content = request.content();

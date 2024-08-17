@@ -4,18 +4,17 @@ import com.dgmoonlabs.psythinktank.domain.member.constant.UserLevel;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.global.constant.DateTimeFormat;
 
-import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record MemberResponse(
         String memberId,
         String password,
         String email,
-        LocalDate createdAt,
+        LocalDateTime createdAt,
         int userLevel,
         int loginTryCount,
         String lastLoggedInAt
-) implements Serializable {
+) {
     public static MemberResponse from(Member member) {
         return new MemberResponse(
                 member.getMemberId(),

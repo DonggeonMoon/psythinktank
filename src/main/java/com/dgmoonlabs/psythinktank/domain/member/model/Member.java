@@ -1,14 +1,13 @@
 package com.dgmoonlabs.psythinktank.domain.member.model;
 
 import com.dgmoonlabs.psythinktank.global.constant.LoginTry;
+import com.dgmoonlabs.psythinktank.global.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -17,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Member implements Serializable {
+public class Member extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,15 +24,11 @@ public class Member implements Serializable {
     @Column(name = "member_id", nullable = false, length = 50)
     private String memberId;
 
-    @Column(name = "member_pw", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String password;
 
-    @Column(name = "member_email", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String email;
-
-    @CreationTimestamp
-    @Column(name = "register_date", nullable = false)
-    private LocalDate createdAt;
 
     @Column(name = "user_level", nullable = false)
     private int userLevel;
@@ -42,10 +37,10 @@ public class Member implements Serializable {
     @ColumnDefault(value = "0")
     private int loginTryCount;
 
-    @Column(name = "last_login_datetime")
+    @Column(name = "last_logged_in_at")
     private LocalDateTime lastLoggedInAt;
 
-    @Column(name = "last_password_change_datetime")
+    @Column(name = "password_last_changed_at")
     private LocalDateTime passwordLastChangedAt;
 
     @JsonIgnore

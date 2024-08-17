@@ -14,10 +14,10 @@ import java.time.LocalDate;
 public class Share {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "share_id")
+    @Column
     private Long id;
 
-    @Column(name = "stock_code", length = 6)
+    @Column(length = 6)
     private String symbol;
 
     @Column(name = "stock_name", length = 40, nullable = false)

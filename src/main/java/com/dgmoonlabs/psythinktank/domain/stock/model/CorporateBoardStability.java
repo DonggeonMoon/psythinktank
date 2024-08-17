@@ -16,7 +16,7 @@ public class CorporateBoardStability {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "stock_code", length = 6, columnDefinition = "char")
+    @Column(length = 6, columnDefinition = "char")
     private String symbol;
 
     @Column(name = "stock_name", length = 40)
@@ -31,13 +31,13 @@ public class CorporateBoardStability {
     @Column(name = "reprt_code", length = 5, columnDefinition = "char")
     private String reportCode;
 
-    @Column(name = "ubmsta")
+    @Column
     private Long ubmsta;
 
-    @Column(name = "bmaasta")
+    @Column
     private Long bmaasta;
 
-    @Column(name = "esta")
+    @Column
     private Long esta;
 
     @Column(name = "board_stability")
