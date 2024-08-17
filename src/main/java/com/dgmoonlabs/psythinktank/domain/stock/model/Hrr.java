@@ -13,10 +13,10 @@ import javax.persistence.*;
 public class Hrr {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "hrr_id")
+    @Column
     private Long id;
 
-    @Column(name = "stock_code", nullable = false, length = 6)
+    @Column(nullable = false, length = 6)
     private String symbol;
 
     @Column(name = "stock_name", nullable = false, length = 40)

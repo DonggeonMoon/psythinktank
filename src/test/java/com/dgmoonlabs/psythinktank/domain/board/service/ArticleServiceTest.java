@@ -16,8 +16,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +43,6 @@ class ArticleServiceTest {
             .hit(0)
             .memberId("회원1")
             .isNotice(false)
-            .createdAt(Timestamp.valueOf(LocalDateTime.now()))
             .board(BOARD)
             .build();
     private static final Article ARTICLE_2 = Article.builder()
@@ -55,7 +52,6 @@ class ArticleServiceTest {
             .hit(0)
             .memberId("회원2")
             .isNotice(false)
-            .createdAt(Timestamp.valueOf(LocalDateTime.now()))
             .board(BOARD)
             .build();
     private static final ArticleResponse ARTICLE_RESPONSE_1 = ArticleResponse.from(ARTICLE_1);

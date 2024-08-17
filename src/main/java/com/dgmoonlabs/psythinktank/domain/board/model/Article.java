@@ -1,35 +1,34 @@
 package com.dgmoonlabs.psythinktank.domain.board.model;
 
 import com.dgmoonlabs.psythinktank.domain.board.dto.ArticleRequest;
+import com.dgmoonlabs.psythinktank.global.model.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class Article {
+public class Article extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "board_no")
+    @Column
     private Long id;
 
     @Column(name = "member_id", nullable = false)
     private String memberId;
 
-    @Column(name = "board_title", nullable = false, length = 200)
+    @Column(nullable = false, length = 200)
     private String title;
 
-    @Column(name = "board_content", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @ColumnDefault("0")
-    @Column(name = "board_hit")
+    @Column
     private int hit;
 
     @Builder.Default
@@ -39,10 +38,6 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
-
-    @CreationTimestamp
-    @Column(name = "write_date")
-    private Timestamp createdAt;
 
     public void update(ArticleRequest request) {
         this.title = request.title();

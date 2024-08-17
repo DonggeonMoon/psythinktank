@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,13 +28,11 @@ class CircularServiceTest {
             .id(CIRCULAR_ID_1)
             .title("제목1")
             .fileName("파일명1")
-            .createdAt(LocalDateTime.now())
             .build();
     private static final Circular CIRCULAR_2 = Circular.builder()
             .id(CIRCULAR_ID_2)
             .title("제목2")
             .fileName("파일명2")
-            .createdAt(LocalDateTime.now())
             .build();
     private static final List<Circular> CIRCULARS = List.of(CIRCULAR_1, CIRCULAR_2);
     private static final List<CircularResponse> CIRCULAR_RESPONSES = List.of(

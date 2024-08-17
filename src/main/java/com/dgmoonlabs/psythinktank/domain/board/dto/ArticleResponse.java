@@ -22,7 +22,7 @@ public record ArticleResponse(
                 article.getContent(),
                 article.getHit(),
                 article.getIsNotice(),
-                article.getCreatedAt().toLocalDateTime().format(DateTimeFormat.DATE_TIME.getFormatter())
+                (article.getCreatedAt() != null) ? article.getCreatedAt().format(DateTimeFormat.DATE_TIME.getFormatter()) : ""
         );
     }
 }

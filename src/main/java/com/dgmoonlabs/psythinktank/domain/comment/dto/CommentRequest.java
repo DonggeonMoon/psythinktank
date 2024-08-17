@@ -23,7 +23,6 @@ public record CommentRequest(
                 .sequence(sequence)
                 .memberId(memberId)
                 .content(content)
-                .createdAt(createdAt)
                 .build();
     }
 }

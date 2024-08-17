@@ -15,7 +15,7 @@ public class Dividend {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "stock_code", nullable = false, length = 6)
+    @Column(nullable = false, length = 6)
     private String symbol;
 
     @Column(name = "stock_name", nullable = false, length = 40)

@@ -19,8 +19,9 @@ public class Board extends BaseEntity {
 
     private String name;
 
+    @Builder.Default
     @Column(name = "is_public")
-    private Boolean isPublic;
+    private Boolean isPublic = true;
 
     @OneToMany(mappedBy = "board")
     private List<Article> articles;
