@@ -4,7 +4,6 @@ import com.dgmoonlabs.psythinktank.global.constant.Role;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -12,7 +11,7 @@ import java.io.Serializable;
 @Builder
 @Getter
 @Setter
-public class Authority implements Serializable {
+public class Authority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
