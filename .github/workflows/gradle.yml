@@ -59,6 +59,6 @@ jobs:
       run: |
         scp -o StrictHostKeyChecking=no -P ${{ secrets.EC2_SSH_PORT }} ./build/libs/PSYThinktank-0.0.1.jar ${{ secrets.USERNAME }}@${{ secrets.EC2_PUBLIC_IP }}:${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}
 
-    - name: Restart docker compose
+    - name: Restart Java Container
       run: |
-        ssh -o StrictHostKeyChecking=no -p ${{ secrets.EC2_SSH_PORT }} ${{ secrets.USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "sudo docker-compose restart"
+        ssh -o StrictHostKeyChecking=no -p ${{ secrets.EC2_SSH_PORT }} ${{ secrets.USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "sudo docker restart java"
