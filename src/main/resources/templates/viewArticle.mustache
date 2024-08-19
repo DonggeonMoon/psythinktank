@@ -14,7 +14,6 @@
     <link rel="stylesheet"
           href="https://uicdn.toast.com/editor-plugin-table-merged-cell/latest/toastui-editor-plugin-table-merged-cell.min.css"/>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script src="https://uicdn.toast.com/editor/latest/i18n/ko-kr.js"></script>
     <script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
@@ -61,6 +60,7 @@
         <tr>
             <td class="table-light">내용</td>
             <td class="text-start" style="white-space:pre-line">
+                <input type="hidden" id="content" name="content" value="{{article.content}}">
                 <div id="viewer"></div>
             </td>
         </tr>
@@ -173,26 +173,6 @@
     </div>
 </div>
 {{>layout/footer}}
-<script>
-    const Editor = toastui.Editor;
-    const {chart, codeSyntaxHighlight, colorSyntax, tableMergedCell, uml} = toastui.Editor.plugin;
-
-    const chartOptions = {
-        minWidth: 100,
-        maxWidth: 600,
-        minHeight: 100,
-        maxHeight: 300
-    };
-
-    let content = "{{{article.content}}}";
-    const viewer = new Editor.factory({
-        usageStatistics: false,
-        language: 'ko',
-        el: document.querySelector('#viewer'),
-        viewer: true,
-        initialValue: content,
-        plugins: [[chart, chartOptions], [codeSyntaxHighlight, {highlighter: Prism}], colorSyntax, tableMergedCell, uml]
-    });
-</script>
+<script src="/js/view-article.js"></script>
 </body>
 </html>

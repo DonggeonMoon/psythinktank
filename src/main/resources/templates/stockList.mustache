@@ -3,99 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>주식 검색</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script type="text/javascript">
-        function search() {
-            let searchText = $("#searchText").val();
-            if (searchText != "") {
-                let regex = /^([0-9]+)$/;
-                if (regex.test(searchText)) {
-                    $
-                            .ajax({
-                                url: "/api/stocks/search/symbol",
-                                type: "post",
-                                data: JSON.stringify({
-                                    searchText: searchText
-                                }),
-                                dataType: "json",
-                                contentType: "application/json; charset=utf-8"
-                            })
-                            .done(
-                                    function (data) {
-                                        var list = data.result;
-                                        $("#result").empty();
-                                        for (var i = 0; i < list.length; i++) {
-                                            $("#result")
-                                                    .append(
-                                                            "<tr><td>"
-                                                            + list[i].symbol
-                                                            + "</td>"
-                                                            + "<td><a href='stocks/"
-                                                            + list[i].symbol
-                                                            + "'>"
-                                                            + list[i].name
-                                                            + "</a></td>"
-                                                            + "<td>"
-                                                            + list[i].corporationClass
-                                                            + "</td>"
-                                                            + "</td></tr>");
-                                        }
-
-                                        $(".pagination").remove();
-                                    }).fail(function (error) {
-                        alert(error);
-                    });
-                } else {
-                    $
-                            .ajax({
-                                url: "/api/stocks/search/stockName",
-                                type: "post",
-                                data: JSON.stringify({
-                                    searchText: searchText
-                                }),
-                                dataType: "json",
-                                contentType: "application/json; charset=utf-8"
-                            })
-                            .done(
-                                    function (data) {
-                                        var list = data.result;
-                                        $("#result").empty();
-                                        for (var i = 0; i < list.length; i++) {
-                                            $("#result")
-                                                    .append(
-                                                            "<tr><td>"
-                                                            + list[i].symbol
-                                                            + "</td>"
-                                                            + "<td><a href='stocks/"
-                                                            + list[i].symbol
-                                                            + "'>"
-                                                            + list[i].name
-                                                            + "</a></td>"
-                                                            + "<td>"
-                                                            + list[i].corporationClass
-                                                            + "</td>"
-                                                            + "</td></tr>");
-                                        }
-
-                                        $(".pagination").remove();
-                                    }).fail(function (error) {
-                        alert(error);
-                    });
-                }
-            } else {
-                alert("검색어가 없습니다.");
-            }
-        }
-
-        $(document).ready(function () {
-            $("#searchBtn").click(search);
-            $("#searchText").keypress(function (event) {
-                if (event.keyCode === 13) {
-                    search();
-                }
-            });
-        });
-    </script>
 </head>
 <body>
 {{>layout/header}}
@@ -146,5 +53,6 @@
     </div>
 </div>
 {{>layout/footer}}
+<script src="/js/stock-list.js"></script>
 </body>
 </html>

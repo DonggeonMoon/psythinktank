@@ -3,115 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 가입</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script type="text/javascript">
-        let idChk = false;
-        let emailChk = false;
-        let checkedId = "";
-        let checkedEmail = "";
-
-        $(document).ready(function () {
-            $("#checkIdBtn").click(function () {
-                let memberId = $("#memberId").val();
-                let regex = /^[^\s]+$/;
-                if (memberId != "") {
-                    if (regex.test(memberId)) {
-                        $.ajax({
-                            async: true,
-                            type: "POST",
-                            data: memberId,
-                            url: "/api/members/check/id",
-                            dataType: "json",
-                            contentType: "application/json; charset=UTF-8"
-                        }).done(function (data) {
-                            if (data.isUnique) {
-                                idChk = true;
-                                alert("사용할 수 있는 아이디입니다.");
-                                $("#memberPw").focus();
-                                checkedId = memberId;
-                            } else {
-                                alert("이미 존재하는 아이디입니다.");
-                                $("#memberId").focus();
-                            }
-                        }).fail(function (request, status, error) {
-                            alert("status: " + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                        });
-                    } else {
-                        alert("공백이 포함된 아이디는 사용할 수 없습니다.");
-                    }
-
-                } else {
-                    alert("아이디를 입력해주세요.");
-                }
-            });
-
-            $("#checkEmailBtn").click(function () {
-                let memberEmail = $("#memberEmail").val();
-                if (memberEmail != "") {
-                    $.ajax({
-                        async: true,
-                        type: "POST",
-                        data: memberEmail,
-                        url: "/api/members/check/email",
-                        dataType: "json",
-                        contentType: "application/json; charset=UTF-8"
-                    }).done(function (data) {
-                        if (data.isUnique2) {
-                            emailChk = true;
-                            alert("사용할 수 있는 이메일입니다.");
-                            checkedEmail = memberEmail;
-                        } else {
-                            alert("이미 존재하는 이메일입니다.");
-                        }
-                    }).fail(function (request, status, error) {
-                        alert("status: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
-                    });
-                } else {
-                    alert("이메일을 입력해주세요.");
-                }
-            });
-        });
-
-        function confirmPw() {
-            let memberPw = $("#memberPw").val();
-            let memberPw2 = $("#memberPw2").val();
-            return (memberPw == memberPw2) ? true : false;
-        }
-
-        function validateEmail(str) {
-            if (str == "") {
-                alert("이메일을 입력해주세요.");
-                return false;
-            }
-            let regex = /^([A-z0-9!@#$%\^&\*+-/=?_`\{\}\|~;. ]+)@([A-z0-9\-]+).([A-z.]+)$/;
-
-            return (regex.test(str)) ? true : false;
-        }
-
-        function submitForm() {
-            if (idChk && checkedId == ($("#memberId").val())) {
-                if (emailChk && checkedEmail == ($("#memberEmail").val())) {
-                    if ($("#memberPw").val() != "") {
-                        if (confirmPw()) {
-                            if (validateEmail($("#memberEmail").val())) {
-                                $("#form").submit();
-                            } else {
-                                alert("이메일 형식을 확인해주세요.");
-                            }
-                        } else {
-                            alert("비밀번호가 일치하지 않습니다.");
-                        }
-                    } else {
-                        alert("비밀번호를 입력해주세요.");
-                    }
-                } else {
-                    alert("이메일 중복 확인을 해주세요.");
-                }
-            } else {
-                alert("아이디 중복 확인을 해주세요.");
-            }
-        }
-    </script>
 </head>
 <body>
 {{>layout/header}}
@@ -165,5 +56,6 @@
     </div>
 </div>
 {{>layout/footer}}
+<script src="/js/join.js"></script>
 </body>
 </html>

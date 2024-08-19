@@ -12,52 +12,7 @@
             integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#findIdBtn").click(function () {
-                let data = {
-                    memberEmail: $("#memberEmail").val(),
-                }
-                $.ajax({
-                    url: "/api/members/find/id",
-                    type: "post",
-                    data: JSON.stringify(data),
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8"
-                }).done(function (data) {
-                    if (data.exists) {
-                        alert("회원님의 아이디는 " + data.id + "입니다.");
-                    } else {
-                        alert("아이디가 존재하지 않습니다.");
-                    }
-                }).fail(function (error) {
-                    alert("오류: " + error);
-                });
-            });
-
-            $("#findPwBtn").click(function () {
-                let data = {
-                    memberEmail: $("#memberEmail2").val(),
-                    memberId: $("#memberId").val()
-                }
-                $.ajax({
-                    url: "/api/members/find/password",
-                    type: "post",
-                    data: JSON.stringify(data),
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8"
-                }).done(function (data) {
-                    if (data.exists) {
-                        alert("회원님의 이메일로 임시비밀번호를 발송하였습니다.");
-                    } else {
-                        alert("회원 정보가 존재하지 않습니다.");
-                    }
-                }).fail(function (error) {
-                    alert("오류: " + error);
-                });
-            });
-        });
-    </script>
+    <script src="/js/find-id-and-pw.js"></script>
 </head>
 <body>
 <div class="container-fluid">
