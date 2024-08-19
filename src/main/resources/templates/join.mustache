@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    {{>common/meta}}
     <title>회원 가입</title>
+    {{>common/link}}
+    {{>common/script}}
+    <script src="/js/join.js"></script>
 </head>
 <body>
 {{>layout/header}}
@@ -56,6 +59,5 @@
     </div>
 </div>
 {{>layout/footer}}
-<script src="/js/join.js"></script>
 </body>
 </html>
