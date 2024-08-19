@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    {{>common/meta}}
     <title>게시판</title>
+    {{>common/link}}
+    {{>common/script}}
+    <script src="/js/article-list.js"></script>
 </head>
 <body>
 {{>layout/header}}
@@ -71,6 +74,5 @@
     </div>
 </div>
 {{>layout/footer}}
-<script src="/js/article-list.js"></script>
 </body>
 </html>

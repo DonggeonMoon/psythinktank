@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    {{>common/meta}}
     <title>게시글 작성</title>
+    {{>common/link}}
+    {{>common/script}}
+    <script src="/js/insert-circular.js"></script>
 </head>
 <body>
 {{>layout/header}}
@@ -28,6 +31,5 @@
     </div>
 </div>
 {{>layout/footer}}
-<script src="/js/insert-circular.js"></script>
 </body>
 </html>

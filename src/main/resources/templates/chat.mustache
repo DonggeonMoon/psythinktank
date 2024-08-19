@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
+    {{>common/meta}}
     <title>채팅</title>
+    {{>common/link}}
     <link rel="stylesheet" type="text/css" href="/css/chat.css"/>
+    {{>common/script}}
     <script src="/js/chat.js"></script>
     <script>
         const chat = new Chat('{{member.memberId}}')
@@ -25,7 +27,6 @@
 </head>
 <body>
 {{>layout/header}}
-
 <div class="container-fluid py-5">
     <h2 class="m-2">채팅</h2>
 

@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    {{>common/meta}}
     <title>회원 정보 변경</title>
+    {{>common/link}}
+    {{>common/script}}
+    <script src="/js/edit-member-info.js"></script>
 </head>
 <body>
 {{>layout/header}}
@@ -59,6 +62,5 @@
     </div>
 </div>
 {{>layout/footer}}
-<script src="/js/edit-member-info.js"></script>
 </body>
 </html>

@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    {{>common/meta}}
     <title>주식 검색</title>
+    {{>common/link}}
+    {{>common/script}}
+    <script src="/js/stock-list.js"></script>
 </head>
 <body>
 {{>layout/header}}
@@ -53,6 +56,5 @@
     </div>
 </div>
 {{>layout/footer}}
-<script src="/js/stock-list.js"></script>
 </body>
 </html>

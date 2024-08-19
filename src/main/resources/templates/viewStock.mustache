@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    {{>common/meta}}
     <title>종목 보기</title>
+    {{>common/link}}
+    {{>common/script}}
+    {{>common/toast-ui}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@kurkle/color@0.3.2/dist/color.esm.min.js"></script>
+    <script src="/js/view-stock.js"></script>
 </head>
 <body>
 {{>layout/header}}
@@ -66,7 +70,6 @@
                         </tr>
                     {{/share.result}}
                 </table>
-                <script src="/js/view-stock.js"></script>
             </td>
         </tr>
         <tr>
@@ -79,43 +82,43 @@
             <td class="table-light text-center">PSY THINKTANK 빅데이터 기반 평가</td>
             <td>
                 {{#member}}
-                <table class="table">
-                    <tr>
-                        <td class="table-light text-center w-25">성장성(Growth Potential)</td>
-                        <td>
-                            <!-- 10 5 0 -->
-                            {{hrr}}
-                            {{^hrr}}데이터 준비 중{{/hrr}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="table-light text-center w-25">지배구조(Governance)</td>
-                        <td>
-                            <!-- 40 30 20 -->
-                            {{governance}}
-                            {{^governance}}데이터 준비 중{{/governance}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="table-light text-center w-25">이사회 안정성(Board Stability)</td>
-                        <td>
-                            <!-- 14 9 4 -->
-                            {{corporateBoardStability}}
-                            {{^corporateBoardStability}}
-                                데이터 준비 중
-                            {{/corporateBoardStability}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="table-light text-center w-25">대외 환경(External Environment)</td>
-                        <td>
-                            {{stockHypeIndex}}
-                            {{^stockHypeIndex}}
-                                데이터 준비 중
-                            {{/stockHypeIndex}}
-                        </td>
-                    </tr>
-                </table>
+                    <table class="table">
+                        <tr>
+                            <td class="table-light text-center w-25">성장성(Growth Potential)</td>
+                            <td>
+                                <!-- 10 5 0 -->
+                                {{hrr}}
+                                {{^hrr}}데이터 준비 중{{/hrr}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-light text-center w-25">지배구조(Governance)</td>
+                            <td>
+                                <!-- 40 30 20 -->
+                                {{governance}}
+                                {{^governance}}데이터 준비 중{{/governance}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-light text-center w-25">이사회 안정성(Board Stability)</td>
+                            <td>
+                                <!-- 14 9 4 -->
+                                {{corporateBoardStability}}
+                                {{^corporateBoardStability}}
+                                    데이터 준비 중
+                                {{/corporateBoardStability}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-light text-center w-25">대외 환경(External Environment)</td>
+                            <td>
+                                {{stockHypeIndex}}
+                                {{^stockHypeIndex}}
+                                    데이터 준비 중
+                                {{/stockHypeIndex}}
+                            </td>
+                        </tr>
+                    </table>
                 {{/member}}
                 {{^member}}
                     로그인 후 열람 가능합니다.
@@ -134,7 +137,7 @@
         'rgb(54, 162, 235)',
         'rgb(153, 102, 255)',
         'rgb(201, 203, 207)'
-    ]
+    ];
     const CHART_COLORS_TRANSPARENT = [
         'rgba(255, 99, 132, 0.5)',
         'rgba(255, 159, 64, 0.5)',
@@ -143,7 +146,7 @@
         'rgba(54, 162, 235, 0.5)',
         'rgba(153, 102, 255, 0.5)',
         'rgba(201, 203, 207, 0.5)'
-    ]
+    ];
 
         {{#chartDataset}}
         new Chart(document.getElementById('myChart'),
