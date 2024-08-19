@@ -14,8 +14,9 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Map;
 
+import static com.dgmoonlabs.psythinktank.global.constant.ApiName.GOOD_BYE;
 import static com.dgmoonlabs.psythinktank.global.constant.ApiName.LOGIN;
-import static com.dgmoonlabs.psythinktank.global.constant.ApiName.MEMBERS;
+import static com.dgmoonlabs.psythinktank.global.constant.ApiName.*;
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
 import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
 
@@ -77,6 +78,6 @@ public class MemberController {
 
     @GetMapping("/goodBye")
     public String getGoodByePage() {
-        return GOOD_BYE.getText();
+        return ViewName.GOOD_BYE.getText();
     }
 }

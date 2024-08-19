@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>종목 보기</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@kurkle/color@0.3.2/dist/color.esm.min.js"></script>
 </head>
 <body>
 {{>layout/header}}
@@ -64,17 +66,7 @@
                         </tr>
                     {{/share.result}}
                 </table>
-                <script>
-                    document.getElementById('share').addEventListener('show.bs.collapse', function () {
-                        document.querySelector('.btn i').classList.remove('bi-caret-down-fill');
-                        document.querySelector('.btn i').classList.add('bi-caret-up-fill');
-                    });
-
-                    document.getElementById('share').addEventListener('hide.bs.collapse', function () {
-                        document.querySelector('.btn i').classList.remove('bi-caret-up-fill');
-                        document.querySelector('.btn i').classList.add('bi-caret-down-fill');
-                    });
-                </script>
+                <script src="/js/view-stock.js"></script>
             </td>
         </tr>
         <tr>
@@ -133,8 +125,6 @@
     </table>
     <button class="btn btn-dark m-2" onclick="location.href='/stocks'">목록</button>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@kurkle/color@0.3.2/dist/color.esm.min.js"></script>
 <script>
     const CHART_COLORS = [
         'rgb(255, 99, 132)',
