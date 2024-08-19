@@ -14,7 +14,6 @@
     <link rel="stylesheet"
           href="https://uicdn.toast.com/editor-plugin-table-merged-cell/latest/toastui-editor-plugin-table-merged-cell.min.css"/>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script src="https://uicdn.toast.com/editor/latest/i18n/ko-kr.js"></script>
     <script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
@@ -39,6 +38,7 @@
             </div>
             <div class="mb-3 mt-3">
                 <label for="comment">내용</label>
+                <input type="hidden" id="content" name="content" value="{{article.content}}">
                 <div id="editor"></div>
             </div>
             <div class="mb-3 mt-3 text-center">
@@ -51,7 +51,6 @@
             <button type="button" class="btn btn-secondary mx-2"
                     onclick="location.href='/articles?boardId={{article.boardId}}'">목록
             </button>
-            <input type="hidden" id="content" name="content" value="">
             <input type="hidden" id="boardId" name="boardId" value="{{article.boardId}}">
             <input type="hidden" name="id" value="{{article.id}}"/>
             <input type="hidden" name="hit" value="{{article.hit}}"/>
@@ -61,37 +60,6 @@
     </div>
 </div>
 {{>layout/footer}}
-<script>
-    const Editor = toastui;
-    const {chart, codeSyntaxHighlight, colorSyntax, tableMergedCell, uml} = toastui.Editor.plugin;
-
-    const chartOptions = {
-        minWidth: 100,
-        maxWidth: 600,
-        minHeight: 100,
-        maxHeight: 300
-    };
-
-    let content = "{{{article.content}}}";
-    const editor = new Editor.Editor({
-        usageStatistics: false,
-        language: 'ko',
-        el: document.querySelector('#editor'),
-        previewStyle: 'tab',
-        height: '500px',
-        initialValue: content,
-        initialEditType: 'wysiwyg',
-        plugins: [[chart, chartOptions], [codeSyntaxHighlight, {highlighter: Prism}], colorSyntax, tableMergedCell, uml]
-    });
-
-    function submitForm() {
-        if ($("#title").val().trim() != "") {
-            $("#content").val(editor.getHTML().replaceAll("\"", "\'"));
-            $("#form").submit();
-        } else {
-            alert("제목을 입력해주세요.");
-        }
-    }
-</script>
+<script src="/js/update-article.js"></script>
 </body>
 </html>

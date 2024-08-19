@@ -14,73 +14,7 @@
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3858475418928277"
             crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/51db22a717.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(() => {
-            let error = '';
-            let loginTryCount = '';
-            document.cookie.split(';').map(item => {
-                if (item.includes("error")) {
-                    error = item.split("=")[1];
-                }
-                if (item.includes("loginTryCount")) {
-                    loginTryCount = item.split("=")[1];
-                }
-            });
-            switch (Number(error)) {
-                case 1:
-                    $("#spinner").css("display", "block")
-                    $("#messageArea").empty();
-                    $("#messageArea").html("<div class='alert alert-info'><strong>아이디 또는 비밀번호가 입력되지 않았습니다.</strong></div>");
-                    setTimeout(function () {
-                        $("#spinner").css("display", "none");
-                    }, 50);
-                    $("#messageArea").fadeOut(10).fadeIn(10);
-                    break;
-                case 2:
-                    $("#spinner").css("display", "block")
-                    $("#messageArea").empty();
-                    $("#messageArea").html("<div class='alert alert-info'><strong>존재하지 않는 아이디 입니다</strong></div>");
-                    setTimeout(function () {
-                        $("#spinner").css("display", "none");
-                    }, 50);
-                    $("#messageArea").fadeOut(10).fadeIn(10);
-                    break;
-                case 3:
-                    $("#spinner").css("display", "block")
-                    $("#messageArea").empty();
-                    $("#messageArea").html("<div class='alert alert-info'><strong>비밀번호가 일치하지 않습니다.<br />(로그인 시도 횟수: " + loginTryCount + "/5)</strong></div>");
-                    setTimeout(function () {
-                        $("#spinner").css("display", "none");
-                    }, 50);
-                    $("#messageArea").fadeOut(10).fadeIn(10);
-                    break;
-                case 4:
-                    $("#spinner").css("display", "block")
-                    $("#messageArea").empty();
-                    $("#messageArea").html("<div class='alert alert-info'><strong>로그인 잠김. 비밀번호 찾기를 통해 임시 비밀번호를 발급받아 로그인해주세요.</strong></div>");
-                    setTimeout(function () {
-                        $("#spinner").css("display", "none");
-                    }, 50);
-                    $("#messageArea").fadeOut(10).fadeIn(10);
-                    break;
-                default:
-                    $("#spinner").css("display", "block")
-                    $("#messageArea").empty();
-                    $("#messageArea").html("");
-                    setTimeout(function () {
-                        $("#spinner").css("display", "none");
-                    }, 50);
-                    $("#messageArea").fadeOut(10).fadeIn(10);
-                    break;
-            }
-        });
-
-        function findIdAndPw() {
-            window.open("/members/findIdAndPw", "아이디/비밀번호 찾기", "width=800, height=700");
-        }
-    </script>
 </head>
 <body>
 <div id="spinner" class="position-absolute vw-100 vh-100" style="z-index:100; display:none">
@@ -122,5 +56,6 @@
         </div>
     </div>
 </div>
+<script src="/js/login.js"></script>
 </body>
 </html>
