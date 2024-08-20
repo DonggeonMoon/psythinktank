@@ -41,7 +41,7 @@ public class Article extends BaseEntity {
 
     public void update(ArticleRequest request) {
         this.title = request.title();
-        this.content = request.title();
+        this.content = request.content();
         this.isNotice = request.isNotice();
     }
 
