@@ -26,8 +26,4 @@ public record MemberResponse(
                 (member.getLastLoggedInAt() != null) ? member.getLastLoggedInAt().format(DateTimeFormat.DATE_TIME.getFormatter()) : null
         );
     }
-
-    public boolean isAdmin() {
-        return userLevel == UserLevel.ADMIN.getLevel();
-    }
 }
