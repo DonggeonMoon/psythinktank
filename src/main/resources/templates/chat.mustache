@@ -7,23 +7,6 @@
     <link rel="stylesheet" type="text/css" href="/css/chat.css"/>
     {{>common/script}}
     <script src="/js/chat.js"></script>
-    <script>
-        const chat = new Chat('{{member.memberId}}')
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const inputButton = document.getElementById("sendButton");
-            inputButton.onclick = () => {
-                chat.sendMessage();
-            };
-            const input = document.getElementById("messageInput");
-            input.onkeyup = (event) => {
-                if (event.key === 'Enter') {
-                    chat.sendMessage();
-                }
-            }
-            sessionStorage.removeItem("newChatNotification");
-        });
-    </script>
 </head>
 <body>
 {{>layout/header}}
@@ -33,8 +16,9 @@
     <div id="chat-container"></div>
 
     <div id="input-container">
+        <input type="hidden" id="memberId" name="memberId" value="{{member.memberId}}">
         <input type="text" id="messageInput" placeholder="메시지를 입력하세요."/>
-        <button id="sendButton" class="btn btn-success m-1" onclick="sendMessage()">보내기</button>
+        <button id="sendButton" class="btn btn-success m-1">보내기</button>
     </div>
 </div>
 {{>layout/footer}}
