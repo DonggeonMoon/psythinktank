@@ -128,6 +128,7 @@
     </table>
     <button class="btn btn-dark m-2" onclick="location.href='/stocks'">목록</button>
 </div>
+{{>layout/footer}}
 <script>
     const CHART_COLORS = [
         'rgb(255, 99, 132)',
@@ -183,6 +184,5 @@
         );
         {{/chartDataset}}
 </script>
-{{>layout/footer}}
 </body>
 </html>
