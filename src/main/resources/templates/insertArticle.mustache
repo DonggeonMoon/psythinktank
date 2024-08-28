@@ -2,7 +2,7 @@
 <html>
 <head>
     {{>common/meta}}
-    <title>게시글 작성</title>
+    <title>{{board.name}} - 게시글 작성</title>
     {{>common/link}}
     {{>common/script}}
     {{>common/toast-ui}}
@@ -10,10 +10,10 @@
 <body>
 {{>layout/header}}
 <div class="container-fluid py-5" style="min-height:800px;">
-    <h2 class="m-2">게시글 작성</h2>
+    <h2 class="m-2">{{board.name}} - 게시글 작성</h2>
     <div class="border rounded-3 m-2 p-3">
         <form id="form" action="/articles" method="post">
-            <input type="hidden" name="boardId" value="{{boardId}}">
+            <input type="hidden" name="boardId" value="{{board.id}}">
             <div class="mb-3 mt-3">
                 <label for="title" class="form-label">제목</label>
                 <input type="text" class="form-control" id="title" name="title" size="135" maxlength="200"
@@ -27,8 +27,8 @@
                 <label><input type="checkbox" id="isNotice" name="isNotice">공지</label>
             </div>
             <input type="button" class="btn btn-secondary mx-2" value="글 입력" onclick="submitForm();">
-            <button type="button" class="btn btn-secondary mx-2" onclick="location.href='/articles?boardId={{boardId}}
-            '">목록</button>
+            <button type="button" class="btn btn-secondary mx-2"
+                    onclick="location.href='/articles?boardId={{board.id}}'">목록</button>
             <input type="hidden" id="content" name="content" value="">
             {{#member}}
                 <input type="hidden" name="memberId" value="{{member.memberId}}">

@@ -2,6 +2,7 @@ package com.dgmoonlabs.psythinktank.domain.board.controller;
 
 import com.dgmoonlabs.psythinktank.domain.board.dto.ArticleRequest;
 import com.dgmoonlabs.psythinktank.domain.board.service.ArticleService;
+import com.dgmoonlabs.psythinktank.domain.board.service.BoardService;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
 import com.dgmoonlabs.psythinktank.global.constant.ApiName;
 import com.dgmoonlabs.psythinktank.global.constant.QueryParameter;
@@ -21,11 +22,12 @@ import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
 @RequestMapping("/articles")
 public class ArticleController {
     private final ArticleService articleService;
+    private final BoardService boardService;
     private final CommentService commentService;
 
     @GetMapping("/add")
     public String getCreateArticleForm(@RequestParam long boardId, Model model) {
-        model.addAttribute(BOARD_ID_KEY.getText(), boardId);
+        model.addAttribute(BOARD_KEY.getText(), boardService.getBoard(boardId));
         return INSERT_ARTICLE.getText();
     }
 
@@ -43,7 +45,7 @@ public class ArticleController {
             Model model
     ) {
         model.addAttribute(ARTICLES_KEY.getText(), articleService.getBoardArticles(boardId, pageable));
-        model.addAttribute(BOARD_ID_KEY.getText(), boardId);
+        model.addAttribute(BOARD_KEY.getText(), boardService.getBoard(boardId));
         return ARTICLE_LIST.getText();
     }
 
@@ -51,6 +53,7 @@ public class ArticleController {
     public String getArticle(@PathVariable long id, Model model) {
         articleService.addHit(id);
         model.addAttribute(ARTICLE_KEY.getText(), articleService.getArticle(id));
+        model.addAttribute(BOARD_KEY.getText(), articleService.getArticle(id).board());
         model.addAttribute(COMMENTS_KEY.getText(), commentService.getCommentsByArticleId(id));
         return VIEW_ARTICLE.getText();
     }
@@ -58,6 +61,7 @@ public class ArticleController {
     @GetMapping("/modify/{id}")
     public String getUpdateArticleForm(@PathVariable long id, Model model) {
         model.addAttribute(ARTICLE_KEY.getText(), articleService.getArticle(id));
+        model.addAttribute(BOARD_KEY.getText(), articleService.getArticle(id).board());
         return UPDATE_ARTICLE.getText();
     }
 
