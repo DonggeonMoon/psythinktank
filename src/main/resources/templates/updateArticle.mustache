@@ -9,8 +9,8 @@
 </head>
 <body>
 {{>layout/header}}
-<div class="container-fluid">
-    <h2 class="m-2">게시글 수정</h2>
+<div class="container-fluid py-5">
+    <h2 class="m-2">{{board.name}} - 게시글 수정</h2>
     <div class="border rounded-3 m-2 p-3">
         <form id="form" action="/articles" method="post">
             <input type="hidden" name="_method" value="put">
