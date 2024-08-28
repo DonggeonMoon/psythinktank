@@ -28,7 +28,6 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public Page<ArticleResponse> getBoardArticles(Long boardId, Pageable pageable) {
-
         return articleRepository.findAllByBoardId(
                 PageRequest.of(
                         pageable.getPageNumber(),

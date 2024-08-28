@@ -36,7 +36,8 @@ public enum KeyName {
     MEMBER_EMAIL_KEY("memberEmail"),
     CHART_LABEL_KEY("chartLabel"),
     CHART_DATASET_KEY("chartDataset"),
-    STOCK_HYPE_INDEX("stockHypeIndex");
+    STOCK_HYPE_INDEX("stockHypeIndex"),
+    TITLE_KEY("title");
 
     private final String text;
 }
