@@ -2,7 +2,7 @@
 <html>
 <head>
     {{>common/meta}}
-    <title>게시판</title>
+    <title>{{board.name}}</title>
     {{>common/link}}
     {{>common/script}}
     <script defer src="/js/article-list.js"></script>
@@ -10,7 +10,7 @@
 <body>
 {{>layout/header}}
 <div class="container-fluid py-5" style="min-height:800px;">
-    <h2 class="m-2">게시판</h2>
+    <h2 class="m-2">{{board.name}}</h2>
     <table class="table text-center">
         <thead class="table-dark">
         <tr>
@@ -45,7 +45,7 @@
         {{/articles.toList}}
         </tbody>
     </table>
-    <button class="btn btn-dark m-2" onclick="location.href='/articles/add?boardId={{boardId}}'">글 작성</button>
+    <button class="btn btn-dark m-2" onclick="location.href='/articles/add?boardId={{board.id}}'">글 작성</button>
     <div class="d-flex justify-content-center">
         <select id="select" class="form-select mx-2" style="width: 100px">
             <option>제목</option>

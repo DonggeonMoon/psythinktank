@@ -11,7 +11,8 @@ public record ArticleResponse(
         String content,
         int hit,
         Boolean isNotice,
-        String createdAt
+        String createdAt,
+        BoardResponse board
 ) {
     public static ArticleResponse from(final Article article) {
         return new ArticleResponse(
@@ -22,7 +23,8 @@ public record ArticleResponse(
                 article.getContent(),
                 article.getHit(),
                 article.getIsNotice(),
-                (article.getCreatedAt() != null) ? article.getCreatedAt().format(DateTimeFormat.DATE_TIME.getFormatter()) : ""
+                (article.getCreatedAt() != null) ? article.getCreatedAt().format(DateTimeFormat.DATE_TIME.getFormatter()) : "",
+                BoardResponse.from(article.getBoard())
         );
     }
 }
