@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {{>common/meta}}
+    <title>사이트맵 관리</title>
+    {{>common/link}}
+    {{>common/script}}
+</head>
+<body>
+{{>layout/header}}
+<div class="container-fluid py-5" style="min-height:800px;">
+    <h2 class="m-2">사이트맵 관리</h2>
+
+    <form action="/sitemap" method="post">
+        <button class="btn btn-warning m-2">사이트맵 생성</button>
+    </form>
+</div>
+{{>layout/footer}}
+</body>
+</html>
