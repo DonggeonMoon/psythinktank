@@ -33,7 +33,7 @@ public class StockService {
     private final CorporateBoardStabilityRepository corporateBoardStabilityRepository;
 
     @Transactional(readOnly = true)
-    public Page<StockInfo> getStocks(Pageable pageable) {
+    public Page<StockInfo> getStocks(final Pageable pageable) {
         return stockInfoRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),
@@ -44,7 +44,7 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public StockResponse getStock(String symbol) {
+    public StockResponse getStock(final String symbol) {
         return StockResponse.from(
                 stockInfoRepository.findBySymbol(symbol)
                         .orElse(StockInfo.builder().build())
@@ -52,7 +52,7 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public StockSearchResponse getStocksBySymbol(StockSearchRequest stockSearchRequest) {
+    public StockSearchResponse getStocksBySymbol(final StockSearchRequest stockSearchRequest) {
         return StockSearchResponse.from(
                 stockInfoRepository.findBySymbolContains(stockSearchRequest.searchText())
                         .stream()
@@ -62,7 +62,7 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public StockSearchResponse getStocksByName(StockSearchRequest stockSearchRequest) {
+    public StockSearchResponse getStocksByName(final StockSearchRequest stockSearchRequest) {
         return StockSearchResponse.from(
                 stockInfoRepository.findByNameContainsIgnoreCase(stockSearchRequest.searchText())
                         .stream()
@@ -72,7 +72,7 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public ShareSearchResponse getSharesBySymbol(String symbol) {
+    public ShareSearchResponse getSharesBySymbol(final String symbol) {
         return ShareSearchResponse.from(shareRepository.findBySymbol(symbol)
                 .stream()
                 .sorted(
@@ -87,7 +87,7 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public DividendResponse getDividendBySymbol(String symbol) {
+    public DividendResponse getDividendBySymbol(final String symbol) {
         return DividendResponse.from(
                 dividendRepository.findBySymbol(symbol)
                         .orElse(Dividend.builder().value(0).build())
@@ -96,8 +96,7 @@ public class StockService {
 
     @Transactional(readOnly = true)
     public String calculateBoardStability(final String symbol) {
-        Double boardStability;
-        boardStability = corporateBoardStabilityRepository.findBySymbolAndBusinessYear(symbol, BUSINESS_YEAR.getText())
+        Double boardStability = corporateBoardStabilityRepository.findBySymbolAndBusinessYear(symbol, BUSINESS_YEAR.getText())
                 .orElse(CorporateBoardStability.builder().build())
                 .getValue();
 
@@ -105,7 +104,7 @@ public class StockService {
     }
 
     @Transactional(readOnly = true)
-    public String calculateGrowthPotential(String symbol) {
+    public String calculateGrowthPotential(final String symbol) {
         Double hrr = hrrRepository.findBySymbolAndBusinessYearAndReportCode(
                         symbol,
                         com.dgmoonlabs.psythinktank.global.constant.Hrr.BUSINESS_YEAR.getText(),

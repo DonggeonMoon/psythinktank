@@ -15,7 +15,10 @@ public enum Rating {
     private final Integer growthPotentialCriteria;
     private final Integer governanceCriteria;
 
-    public static String evaluateBoardStability(final double boardStability) {
+    public static String evaluateBoardStability(final Double boardStability) {
+        if (boardStability == null) {
+            return "-";
+        }
         Figure figure = Figure.from(boardStability);
         if (figure.isGreaterOrEquals(A.boardStabilityCriteria)) {
             return A.grade;
@@ -29,7 +32,10 @@ public enum Rating {
         return D.grade;
     }
 
-    public static String evaluateGrowthPotential(final double hrr) {
+    public static String evaluateGrowthPotential(final Double hrr) {
+        if (hrr == null) {
+            return "-";
+        }
         Figure figure = Figure.from(hrr);
         if (figure.isGreaterOrEquals(A.governanceCriteria)) {
             return A.grade;
@@ -43,7 +49,10 @@ public enum Rating {
         return D.grade;
     }
 
-    public static String evaluateGovernance(final double currentShare) {
+    public static String evaluateGovernance(final Double currentShare) {
+        if (currentShare == null) {
+            return "-";
+        }
         Figure figure = Figure.from(currentShare);
         if (figure.isGreaterOrEquals(A.governanceCriteria)) {
             return A.grade;

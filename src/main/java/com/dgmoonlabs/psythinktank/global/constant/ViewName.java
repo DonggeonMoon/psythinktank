@@ -22,7 +22,8 @@ public enum ViewName {
     GOOD_BYE("goodBye"),
     STOCK_LIST("stockList"),
     STOCK("viewStock"),
-    CHAT("chat");
+    CHAT("chat"),
+    SITEMAP_MANAGEMENT("sitemapManagement");
 
     private static final String REDIRECTION_PREFIX = "redirect:/";
     private final String text;

@@ -15,7 +15,7 @@ public record StockResponse(
                 stockInfo.getName(),
                 stockInfo.getCorporationClass(),
                 stockInfo.getCorporationCode(),
-                stockInfo.getOverview()
+                (stockInfo.getOverview() != null) ? stockInfo.getOverview() : ""
         );
     }
 }

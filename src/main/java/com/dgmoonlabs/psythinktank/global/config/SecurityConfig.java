@@ -28,6 +28,14 @@ public class SecurityConfig {
                         )
                         .hasRole("ADMIN")
                         .antMatchers(
+                                HttpMethod.GET, "/sitemap"
+                        )
+                        .hasRole("ADMIN")
+                        .antMatchers(
+                                HttpMethod.POST, "/sitemap"
+                        )
+                        .hasRole("ADMIN")
+                        .antMatchers(
                                 HttpMethod.PUT, "/api/members/change/userLevel"
                         )
                         .hasRole("ADMIN")
