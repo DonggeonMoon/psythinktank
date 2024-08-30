@@ -5,6 +5,7 @@ import com.dgmoonlabs.psythinktank.domain.member.dto.*;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.repository.MemberRepository;
 import com.dgmoonlabs.psythinktank.global.constant.*;
+import com.dgmoonlabs.psythinktank.global.exception.MemberNotExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,7 +53,7 @@ public class MemberService {
     public MemberResponse getMember(String memberId) {
         return MemberResponse.from(
                 memberRepository.findByMemberId(memberId)
-                        .orElseThrow(IllegalStateException::new)
+                        .orElseThrow(MemberNotExistException::new)
         );
     }
 
@@ -96,7 +97,7 @@ public class MemberService {
     @Transactional
     public void updateMember(MemberRequest memberRequest) {
         Member memberToUpdate = memberRepository.findByMemberId(memberRequest.memberId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(MemberNotExistException::new);
         memberToUpdate.changePassword(passwordEncoder.encode(memberRequest.password()));
         memberToUpdate.changeEmail(memberRequest.email());
     }
@@ -109,7 +110,7 @@ public class MemberService {
     @Transactional
     public void changeUserLevel(MemberUserLevelRequest memberRequest) {
         memberRepository.findByMemberId(memberRequest.memberId())
-                .orElseThrow(IllegalArgumentException::new)
+                .orElseThrow(MemberNotExistException::new)
                 .changeUserLevel(memberRequest.userLevel());
     }
 
@@ -129,7 +130,7 @@ public class MemberService {
             return;
         }
         memberRepository.findByMemberId(memberId)
-                .orElseThrow(IllegalStateException::new)
+                .orElseThrow(MemberNotExistException::new)
                 .resetLoginTryCount();
     }
 
