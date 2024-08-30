@@ -53,7 +53,6 @@ public class ArticleController {
     public String getArticle(@PathVariable long id, Model model) {
         articleService.addHit(id);
         model.addAttribute(ARTICLE_KEY.getText(), articleService.getArticle(id));
-        model.addAttribute(BOARD_KEY.getText(), articleService.getArticle(id).board());
         model.addAttribute(COMMENTS_KEY.getText(), commentService.getCommentsByArticleId(id));
         return VIEW_ARTICLE.getText();
     }
@@ -61,7 +60,6 @@ public class ArticleController {
     @GetMapping("/modify/{id}")
     public String getUpdateArticleForm(@PathVariable long id, Model model) {
         model.addAttribute(ARTICLE_KEY.getText(), articleService.getArticle(id));
-        model.addAttribute(BOARD_KEY.getText(), articleService.getArticle(id).board());
         return UPDATE_ARTICLE.getText();
     }
 
