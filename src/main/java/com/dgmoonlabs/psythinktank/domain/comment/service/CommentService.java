@@ -3,6 +3,7 @@ package com.dgmoonlabs.psythinktank.domain.comment.service;
 import com.dgmoonlabs.psythinktank.domain.comment.dto.CommentRequest;
 import com.dgmoonlabs.psythinktank.domain.comment.model.Comment;
 import com.dgmoonlabs.psythinktank.domain.comment.repository.CommentRepository;
+import com.dgmoonlabs.psythinktank.global.exception.CommentNotExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,7 @@ public class CommentService {
     @Transactional
     public void updateComment(CommentRequest request) {
         commentRepository.findById(request.id())
-                .orElseThrow(IllegalArgumentException::new)
+                .orElseThrow(CommentNotExistException::new)
                 .update(request);
     }
 

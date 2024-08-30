@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,7 +45,9 @@ public class CircularService {
         try {
             if (!multipartFile.isEmpty()) {
                 String originalFilename = multipartFile.getOriginalFilename();
-                assert originalFilename != null;
+                if (originalFilename == null) {
+                    originalFilename = "";
+                }
                 int dotIndex = originalFilename.lastIndexOf(".");
                 String extension = originalFilename.substring(++dotIndex);
                 String fileName = UUID.randomUUID() + "." + extension;
@@ -53,7 +56,7 @@ public class CircularService {
             File file = new File(circular.getFileName());
             multipartFile.transferTo(file);
             circularRepository.save(circular);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new FileSaveFailedException(e);
         }
     }
@@ -74,33 +77,32 @@ public class CircularService {
     public CircularResponse getCircular(long id) {
         return CircularResponse.from(
                 circularRepository.findById(id)
-                        .orElseThrow(CircularNotExistException::new));
+                        .orElseThrow(CircularNotExistException::new)
+        );
     }
 
     @Transactional(readOnly = true)
     public Resource downloadCircular(long id) {
-        Resource resource;
+        Circular circular = circularRepository.findById(id)
+                .orElseThrow(CircularNotExistException::new);
         try {
-            Circular circular = circularRepository.findById(id)
-                    .orElseThrow(IllegalStateException::new);
             Path filePath = Paths.get(multipartProperties.getLocation(), circular.getFileName());
-            resource = new UrlResource(filePath.toUri());
             log.info("uri: {}", filePath.toUri());
+            return new UrlResource(filePath.toUri());
         } catch (MalformedURLException e) {
             throw new FileDownloadException(e);
         }
-        return resource;
     }
 
     @Transactional
     public void deleteCircular(long id) {
         Circular circular = circularRepository.findById(id)
-                .orElseThrow(IllegalStateException::new);
+                .orElseThrow(CircularNotExistException::new);
         try {
             Path path = Paths.get(multipartProperties.getLocation(), circular.getFileName());
             Files.delete(path);
             circularRepository.deleteById(id);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new FileDeletionException(e);
         }
     }

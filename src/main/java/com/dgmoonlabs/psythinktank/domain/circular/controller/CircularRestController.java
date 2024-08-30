@@ -3,7 +3,6 @@ package com.dgmoonlabs.psythinktank.domain.circular.controller;
 import com.dgmoonlabs.psythinktank.domain.circular.service.CircularService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -20,13 +19,10 @@ import static com.dgmoonlabs.psythinktank.global.constant.KeyName.CIRCULAR_KEY;
 public class CircularRestController {
     private final CircularService circularService;
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<Resource> getCircular(@PathVariable long id, Model model) {
         model.addAttribute(CIRCULAR_KEY.getText(), circularService.getCircular(id));
         return ResponseEntity.ok()
-                .header(
-                        HttpHeaders.CONTENT_TYPE,
-                        MediaType.APPLICATION_PDF_VALUE
-                ).body(circularService.downloadCircular(id));
+                .body(circularService.downloadCircular(id));
     }
 }

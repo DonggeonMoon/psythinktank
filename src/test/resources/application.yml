@@ -89,3 +89,5 @@ management:
     tags:
       application: \${spring.application.name}
 
+sitemap:
+  location: ${SITEMAP_LOCATION}

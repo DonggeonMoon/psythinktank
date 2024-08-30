@@ -98,7 +98,7 @@ class StockServiceTest {
 
     @Test
     void getStock() {
-        when(stockInfoRepository.findBySymbol(anyString()))
+        when(stockInfoRepository.findBySymbolIgnoreCase(anyString()))
                 .thenReturn(Optional.of(STOCK));
 
         assertThat(stockService.getStock(SYMBOL))
@@ -107,7 +107,7 @@ class StockServiceTest {
 
     @Test
     void getStocksBySymbol() {
-        when(stockInfoRepository.findBySymbolContains(SYMBOL))
+        when(stockInfoRepository.findBySymbolContainsIgnoreCase(SYMBOL))
                 .thenReturn(STOCKS);
 
         assertThat(stockService.getStocksBySymbol(STOCK_SEARCH_REQUEST))

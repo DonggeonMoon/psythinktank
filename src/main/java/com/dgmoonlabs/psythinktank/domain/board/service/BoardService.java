@@ -2,7 +2,6 @@ package com.dgmoonlabs.psythinktank.domain.board.service;
 
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardRequest;
 import com.dgmoonlabs.psythinktank.domain.board.dto.BoardResponse;
-import com.dgmoonlabs.psythinktank.domain.board.model.Board;
 import com.dgmoonlabs.psythinktank.domain.board.repository.BoardRepository;
 import com.dgmoonlabs.psythinktank.global.exception.BoardNotExistException;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +28,9 @@ public class BoardService {
 
     @Transactional
     public void updateBoard(BoardRequest request) {
-        Board board = boardRepository.findById(request.id())
-                .orElseThrow(BoardNotExistException::new);
-        board.update(request);
+        boardRepository.findById(request.id())
+                .orElseThrow(BoardNotExistException::new)
+                .update(request);
     }
 
     @Transactional

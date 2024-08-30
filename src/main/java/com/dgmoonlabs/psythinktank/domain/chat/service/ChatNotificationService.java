@@ -36,7 +36,7 @@ public class ChatNotificationService {
                         SseEmitter.event()
                                 .data(event)
                 );
-            } catch (Exception exception) {
+            } catch (Exception e) {
                 emitters.remove(emitter);
                 log.info("SSE Publish Error");
             }

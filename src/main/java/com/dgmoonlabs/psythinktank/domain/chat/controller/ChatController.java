@@ -12,7 +12,7 @@ import static com.dgmoonlabs.psythinktank.global.constant.ViewName.CHAT;
 @RequestMapping("/chat")
 public class ChatController {
     @GetMapping
-    public String getChats() {
+    public String getChat() {
         return CHAT.getText();
     }
 }

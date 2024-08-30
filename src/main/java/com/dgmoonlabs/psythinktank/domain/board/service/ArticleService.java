@@ -8,6 +8,7 @@ import com.dgmoonlabs.psythinktank.domain.board.model.Article;
 import com.dgmoonlabs.psythinktank.domain.board.repository.ArticleRepository;
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
 import com.dgmoonlabs.psythinktank.global.constant.Pagination;
+import com.dgmoonlabs.psythinktank.global.exception.ArticleNotExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,24 +43,10 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ArticleResponse> getArticles(Pageable pageable) {
-        return articleRepository.findAll(
-                PageRequest.of(
-                        pageable.getPageNumber(),
-                        Pagination.SIZE.getValue(),
-                        Sort.by(CriteriaField.IS_NOTICE.getName())
-                                .descending()
-                                .and(Sort.by(CriteriaField.ID.getName())
-                                        .descending())
-                )
-        ).map(ArticleResponse::from);
-    }
-
-    @Transactional(readOnly = true)
     public ArticleResponse getArticle(long id) {
         return ArticleResponse.from(
                 articleRepository.findById(id)
-                        .orElseThrow(IllegalStateException::new)
+                        .orElseThrow(ArticleNotExistException::new)
         );
     }
 
@@ -97,7 +84,7 @@ public class ArticleService {
     @Transactional
     public void updateArticle(ArticleRequest request) {
         articleRepository.findById(request.id())
-                .orElseThrow(IllegalArgumentException::new)
+                .orElseThrow(ArticleNotExistException::new)
                 .update(request);
     }
 
@@ -109,7 +96,7 @@ public class ArticleService {
     @Transactional
     public void addHit(long id) {
         Article article = articleRepository.findById(id)
-                .orElseThrow(IllegalStateException::new);
+                .orElseThrow(ArticleNotExistException::new);
         article.increaseHit();
     }
 }

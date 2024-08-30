@@ -5,6 +5,7 @@ import com.dgmoonlabs.psythinktank.domain.member.dto.*;
 import com.dgmoonlabs.psythinktank.domain.member.model.Member;
 import com.dgmoonlabs.psythinktank.domain.member.repository.MemberRepository;
 import com.dgmoonlabs.psythinktank.global.constant.*;
+import com.dgmoonlabs.psythinktank.global.exception.MemberNotExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,9 +31,9 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void createMember(MemberRequest memberRequest) {
-        Member member = memberRequest.toEntity();
-        member.changePassword(passwordEncoder.encode(memberRequest.password()));
+    public void createMember(MemberRequest request) {
+        Member member = request.toEntity();
+        member.changePassword(passwordEncoder.encode(request.password()));
         memberRepository.save(member);
     }
 
@@ -43,7 +44,7 @@ public class MemberService {
                         pageable.getPageNumber(), Pagination.MEMBER_SIZE.getValue(),
                         Sort.by(CriteriaField.USER_LEVEL.getName())
                                 .descending()
-                                .and(Sort.by("memberId").ascending())
+                                .and(Sort.by(CriteriaField.MEMBER_ID.getName()).ascending())
                 )
         ).map(MemberResponse::from);
     }
@@ -52,22 +53,22 @@ public class MemberService {
     public MemberResponse getMember(String memberId) {
         return MemberResponse.from(
                 memberRepository.findByMemberId(memberId)
-                        .orElseThrow(IllegalStateException::new)
+                        .orElseThrow(MemberNotExistException::new)
         );
     }
 
     @Transactional(readOnly = true)
-    public FindIdResponse getMemberByEmail(String memberEmail) {
-        Optional<Member> memberToFind = memberRepository.findByEmail(memberEmail);
-        return memberToFind.map(
-                member -> FindIdResponse.of(true, member.getMemberId())
-        ).orElseGet(() ->
-                FindIdResponse.of(false, null)
-        );
+    public FindIdResponse findId(String memberEmail) {
+        return memberRepository.findByEmail(memberEmail)
+                .map(
+                        member -> FindIdResponse.of(true, member.getMemberId())
+                ).orElseGet(() ->
+                        FindIdResponse.of(false, null)
+                );
     }
 
     @Transactional
-    public FindPasswordResponse getMemberByEmailAndMemberId(FindPasswordRequest request) {
+    public FindPasswordResponse findPassword(FindPasswordRequest request) {
         Optional<Member> memberToFind = memberRepository.findByEmailAndMemberId(request.memberEmail(), request.memberId());
 
         if (memberToFind.isEmpty()) {
@@ -96,7 +97,7 @@ public class MemberService {
     @Transactional
     public void updateMember(MemberRequest memberRequest) {
         Member memberToUpdate = memberRepository.findByMemberId(memberRequest.memberId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(MemberNotExistException::new);
         memberToUpdate.changePassword(passwordEncoder.encode(memberRequest.password()));
         memberToUpdate.changeEmail(memberRequest.email());
     }
@@ -109,7 +110,7 @@ public class MemberService {
     @Transactional
     public void changeUserLevel(MemberUserLevelRequest memberRequest) {
         memberRepository.findByMemberId(memberRequest.memberId())
-                .orElseThrow(IllegalArgumentException::new)
+                .orElseThrow(MemberNotExistException::new)
                 .changeUserLevel(memberRequest.userLevel());
     }
 
@@ -129,7 +130,7 @@ public class MemberService {
             return;
         }
         memberRepository.findByMemberId(memberId)
-                .orElseThrow(IllegalStateException::new)
+                .orElseThrow(MemberNotExistException::new)
                 .resetLoginTryCount();
     }
 

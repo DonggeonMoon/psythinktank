@@ -46,7 +46,7 @@ public class StockService {
     @Transactional(readOnly = true)
     public StockResponse getStock(final String symbol) {
         return StockResponse.from(
-                stockInfoRepository.findBySymbol(symbol)
+                stockInfoRepository.findBySymbolIgnoreCase(symbol)
                         .orElse(StockInfo.builder().build())
         );
     }
@@ -54,7 +54,7 @@ public class StockService {
     @Transactional(readOnly = true)
     public StockSearchResponse getStocksBySymbol(final StockSearchRequest stockSearchRequest) {
         return StockSearchResponse.from(
-                stockInfoRepository.findBySymbolContains(stockSearchRequest.searchText())
+                stockInfoRepository.findBySymbolContainsIgnoreCase(stockSearchRequest.searchText())
                         .stream()
                         .map(StockResponse::from)
                         .toList()

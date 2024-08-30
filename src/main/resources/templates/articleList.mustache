@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     {{>common/meta}}
     <title>{{board.name}}</title>
@@ -47,11 +47,13 @@
     </table>
     <button class="btn btn-dark m-2" onclick="location.href='/articles/add?boardId={{board.id}}'">글 작성</button>
     <div class="d-flex justify-content-center">
+        <label>
         <select id="select" class="form-select mx-2" style="width: 100px">
             <option>제목</option>
             <option>내용</option>
             <option>작성자</option>
         </select>
+        </label>
         <input type="text" id="searchText" class="d-inline form-control mx-2" style="width: 200px"
                name="searchText" placeholder="검색어를 입력하세요.">
         <input type="button" id="searchBtn" class="d-inline btn btn-secondary mx-2"
