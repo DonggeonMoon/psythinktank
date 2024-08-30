@@ -17,6 +17,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -61,12 +63,10 @@ public class SitemapService {
                 urlElement.appendChild(loc);
 
                 Element lastModificationDate = sitemap.createElement("lastmod");
-                lastModificationDate.appendChild(sitemap.createTextNode("2024-08-29"));
+                lastModificationDate.appendChild(sitemap.createTextNode(
+                        LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
+                ));
                 urlElement.appendChild(lastModificationDate);
-
-                Element priority = sitemap.createElement("priority");
-                priority.appendChild(sitemap.createTextNode("0.51"));
-                urlElement.appendChild(priority);
 
                 Elements links = document.select("a[href]");
                 for (org.jsoup.nodes.Element link : links) {
