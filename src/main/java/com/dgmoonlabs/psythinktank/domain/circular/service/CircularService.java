@@ -45,7 +45,9 @@ public class CircularService {
         try {
             if (!multipartFile.isEmpty()) {
                 String originalFilename = multipartFile.getOriginalFilename();
-                assert originalFilename != null;
+                if (originalFilename == null) {
+                    originalFilename = "";
+                }
                 int dotIndex = originalFilename.lastIndexOf(".");
                 String extension = originalFilename.substring(++dotIndex);
                 String fileName = UUID.randomUUID() + "." + extension;
@@ -84,15 +86,12 @@ public class CircularService {
         Circular circular = circularRepository.findById(id)
                 .orElseThrow(CircularNotExistException::new);
         try {
-            Circular circular = circularRepository.findById(id)
-                    .orElseThrow(IllegalStateException::new);
             Path filePath = Paths.get(multipartProperties.getLocation(), circular.getFileName());
-            resource = new UrlResource(filePath.toUri());
             log.info("uri: {}", filePath.toUri());
+            return new UrlResource(filePath.toUri());
         } catch (MalformedURLException e) {
             throw new FileDownloadException(e);
         }
-        return resource;
     }
 
     @Transactional

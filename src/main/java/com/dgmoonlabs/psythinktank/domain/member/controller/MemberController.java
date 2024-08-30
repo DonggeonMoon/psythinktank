@@ -45,10 +45,7 @@ public class MemberController {
 
     @GetMapping("/modify")
     public String getUpdateMemberForm(Model model, @SessionAttribute Map<String, String> member) {
-        model.addAttribute(
-                MEMBER_KEY.getText(),
-                memberService.getMember(member.get("memberId"))
-        );
+        model.addAttribute(MEMBER_KEY.getText(), memberService.getMember(member.get("memberId")));
         return EDIT_MEMBER_INFO.getText();
     }
 

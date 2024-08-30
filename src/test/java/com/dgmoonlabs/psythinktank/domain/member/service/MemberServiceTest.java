@@ -72,11 +72,11 @@ class MemberServiceTest {
     }
 
     @Test
-    void getMemberByEmail() {
+    void findId() {
         when(memberRepository.findByEmail(anyString()))
                 .thenReturn(Optional.of(MEMBER_1));
 
-        assertThat(memberService.getMemberByEmail(MEMBER_EMAIL))
+        assertThat(memberService.findId(MEMBER_EMAIL))
                 .isEqualTo(FIND_ID_RESPONSE);
     }
 

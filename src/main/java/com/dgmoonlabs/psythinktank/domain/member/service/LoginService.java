@@ -12,8 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 import static com.dgmoonlabs.psythinktank.global.constant.LoginResult.*;
 
 @Service
@@ -34,15 +32,13 @@ public class LoginService implements UserDetailsService {
             throw new InternalAuthenticationServiceException(String.valueOf(LOGIN_TRY_EXCEEDING.getCode()));
         }
 
-        String memberId = member.getMemberId();
-        String password = member.getPassword();
-        List<SimpleGrantedAuthority> authorities = member.getAuthorities()
-                .stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getName().getValue()))
-                .toList();
-
-        member.updateLastLoggedInAt();
-
-        return new User(memberId, password, authorities);
+        return new User(
+                member.getMemberId(),
+                member.getPassword(),
+                member.getAuthorities()
+                        .stream()
+                        .map(authority -> new SimpleGrantedAuthority(authority.getName().getValue()))
+                        .toList()
+        );
     }
 }

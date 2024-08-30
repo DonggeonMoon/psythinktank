@@ -9,7 +9,8 @@ public enum CriteriaField {
     ID("id"),
     IS_NOTICE("isNotice"),
     USER_LEVEL("userLevel"),
-    SYMBOL("symbol");
+    SYMBOL("symbol"),
+    MEMBER_ID("memberId");
 
     private final String name;
 }

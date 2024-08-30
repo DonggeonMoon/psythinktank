@@ -31,9 +31,9 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void createMember(MemberRequest memberRequest) {
-        Member member = memberRequest.toEntity();
-        member.changePassword(passwordEncoder.encode(memberRequest.password()));
+    public void createMember(MemberRequest request) {
+        Member member = request.toEntity();
+        member.changePassword(passwordEncoder.encode(request.password()));
         memberRepository.save(member);
     }
 
@@ -44,7 +44,7 @@ public class MemberService {
                         pageable.getPageNumber(), Pagination.MEMBER_SIZE.getValue(),
                         Sort.by(CriteriaField.USER_LEVEL.getName())
                                 .descending()
-                                .and(Sort.by("memberId").ascending())
+                                .and(Sort.by(CriteriaField.MEMBER_ID.getName()).ascending())
                 )
         ).map(MemberResponse::from);
     }
@@ -58,17 +58,17 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public FindIdResponse getMemberByEmail(String memberEmail) {
-        Optional<Member> memberToFind = memberRepository.findByEmail(memberEmail);
-        return memberToFind.map(
-                member -> FindIdResponse.of(true, member.getMemberId())
-        ).orElseGet(() ->
-                FindIdResponse.of(false, null)
-        );
+    public FindIdResponse findId(String memberEmail) {
+        return memberRepository.findByEmail(memberEmail)
+                .map(
+                        member -> FindIdResponse.of(true, member.getMemberId())
+                ).orElseGet(() ->
+                        FindIdResponse.of(false, null)
+                );
     }
 
     @Transactional
-    public FindPasswordResponse getMemberByEmailAndMemberId(FindPasswordRequest request) {
+    public FindPasswordResponse findPassword(FindPasswordRequest request) {
         Optional<Member> memberToFind = memberRepository.findByEmailAndMemberId(request.memberEmail(), request.memberId());
 
         if (memberToFind.isEmpty()) {

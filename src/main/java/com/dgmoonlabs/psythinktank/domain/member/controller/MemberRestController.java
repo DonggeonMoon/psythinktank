@@ -34,14 +34,14 @@ public class MemberRestController {
     @PostMapping("/find/id")
     public ResponseEntity<FindIdResponse> findId(@Valid @RequestBody FindIdRequest request) {
         return ResponseEntity.ok(
-                memberService.getMemberByEmail(request.memberEmail())
+                memberService.findId(request.memberEmail())
         );
     }
 
     @PostMapping("/find/password")
     public ResponseEntity<FindPasswordResponse> findPassword(@Valid @RequestBody FindPasswordRequest request) {
         return ResponseEntity.ok(
-                memberService.getMemberByEmailAndMemberId(request)
+                memberService.findPassword(request)
         );
     }
 }
