@@ -60,7 +60,8 @@ class ArticleServiceTest {
     private static final List<ArticleResponse> ARTICLE_RESPONSES = List.of(ARTICLE_RESPONSE_1);
     private static final Page<Article> ARTICLE_PAGE = new PageImpl<>(ARTICLES);
     private static final Page<ArticleResponse> ARTICLE_RESPONSE_PAGE = new PageImpl<>(ARTICLE_RESPONSES);
-    private static final PageRequest PAGE_REQUEST = PageRequest.of(1, 10);
+    public static final int BOARD_ID = 1;
+    private static final PageRequest PAGE_REQUEST = PageRequest.of(BOARD_ID, 10);
     @Mock
     private ArticleRepository articleRepository;
     @InjectMocks
@@ -68,10 +69,10 @@ class ArticleServiceTest {
 
     @Test
     void getArticles() {
-        when(articleRepository.findAll(any(Pageable.class)))
+        when(articleRepository.findAllByBoardId(any(Pageable.class), anyLong()))
                 .thenReturn(ARTICLE_PAGE);
 
-        assertThat(articleService.getArticles(PAGE_REQUEST))
+        assertThat(articleService.getBoardArticles((long) BOARD_ID, PAGE_REQUEST))
                 .isEqualTo(ARTICLE_RESPONSE_PAGE);
     }
 
@@ -117,6 +118,6 @@ class ArticleServiceTest {
         articleService.addHit(ARTICLE_2.getId());
 
         assertThat(ARTICLE_2.getHit())
-                .isEqualTo(articleHit + 1);
+                .isEqualTo(articleHit + BOARD_ID);
     }
 }
