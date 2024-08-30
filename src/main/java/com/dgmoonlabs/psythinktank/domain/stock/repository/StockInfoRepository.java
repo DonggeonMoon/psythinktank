@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface StockInfoRepository extends JpaRepository<StockInfo, Long> {
     List<StockInfo> findByNameContainsIgnoreCase(String name);
 
-    List<StockInfo> findBySymbolContains(String symbol);
+    List<StockInfo> findBySymbolContainsIgnoreCase(String symbol);
 
-    Optional<StockInfo> findBySymbol(String symbol);
+    Optional<StockInfo> findBySymbolIgnoreCase(String symbol);
 }
