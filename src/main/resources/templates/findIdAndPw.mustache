@@ -2,37 +2,37 @@
 <html lang="{{locale}}">
 <head>
     {{>common/meta}}
-    <title>{{member.find_id_or_password}}</title>
+    <title>{{member.label.find_id_or_password}}</title>
     {{>common/link}}
     {{>common/script}}
     <script defer src="/js/find-id-and-pw.js"></script>
 </head>
 <body>
 <div class="container-fluid">
-    <h2 class="d-flex justify-content-center m-5">{{member.find_id_or_password}}</h2>
-    <h3 class="d-flex justify-content-center m-5">{{member.find_id}}</h3>
+    <h2 class="d-flex justify-content-center m-5">{{member.label.find_id_or_password}}</h2>
+    <h3 class="d-flex justify-content-center m-5">{{member.label.find_id}}</h3>
     <div class="mx-auto text-center">
         <div class="m-2">
-            <label class="form-label d-inline">{{member.email}}:</label>
+            <label class="form-label d-inline">{{member.label.email}}:</label>
             <input type="email" class="form-control w-25 d-inline" id="memberEmail" name="email">
         </div>
         <div>
-            <input class="m-2" type="button" id="findIdBtn" value="{{member.find_id}}">
+            <input class="m-2" type="button" id="findIdBtn" value="{{member.label.find_id}}">
         </div>
     </div>
-    <h3 class="d-flex justify-content-center m-5">{{member.find_password}}</h3>
-    <h6 class="text-secondary d-flex justify-content-center m-5">{{member.email_will_send_if_matched}}</h6>
+    <h3 class="d-flex justify-content-center m-5">{{member.label.find_password}}</h3>
+    <h6 class="text-secondary d-flex justify-content-center m-5">{{member.label.email_will_send_if_matched}}</h6>
     <div class="mx-auto text-center">
         <div class="m-2">
-            <label class="form-label d-inline">{{member.id}}:</label>
+            <label class="form-label d-inline">{{member.label.id}}:</label>
             <input type="text" class="form-control w-25 d-inline" id="memberId" name="memberId">
         </div>
         <div class="m-2">
-            <label class="form-label d-inline">{{member.email}}:</label>
+            <label class="form-label d-inline">{{member.label.email}}:</label>
             <input type="email" class="form-control w-25 d-inline" id="memberEmail2" name="email">
         </div>
         <div>
-            <input class="m-2" type="button" id="findPwBtn" value="{{member.find_password}}">
+            <input class="m-2" type="button" id="findPwBtn" value="{{member.label.find_password}}">
         </div>
     </div>
 </div>
