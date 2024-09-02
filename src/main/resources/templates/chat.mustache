@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{locale}}">
 <head>
     {{>common/meta}}
-    <title>채팅</title>
+    <title>{{menu.chat}}</title>
     {{>common/link}}
     <link rel="stylesheet" type="text/css" href="/css/chat.css"/>
     {{>common/script}}
@@ -11,14 +11,14 @@
 <body>
 {{>layout/header}}
 <div class="container-fluid py-5">
-    <h2 class="m-2">채팅</h2>
+    <h2 class="m-2">{{menu.chat}}</h2>
 
     <div id="chat-container"></div>
 
     <div id="input-container">
         <input type="hidden" id="memberId" name="memberId" value="{{member.memberId}}">
-        <input type="text" id="messageInput" placeholder="메시지를 입력하세요." maxlength="2000"/>
-        <button id="sendButton" class="btn btn-success m-1">보내기</button>
+        <input type="text" id="messageInput" placeholder="{{chat.please_input_message}}" maxlength="2000"/>
+        <button id="sendButton" class="btn btn-success m-1">{{chat.send}}</button>
     </div>
 </div>
 {{>layout/footer}}

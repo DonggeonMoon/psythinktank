@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{locale}}">
 <head>
     {{>common/meta}}
-    <title>로그인</title>
+    <title>{{menu.login}}</title>
     {{>common/link}}
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet">
@@ -26,8 +26,9 @@
         </div>
         <div class="login-form-left-side">
             <div class="login-top-wrap">
-                <span>계정이 없으신가요?</span>
-                <button class="create-account-btn shadow-light" onclick="location.href='/members/add'">계정 생성</button>
+                <span>{{login.have_no_account}}</span>
+                <button class="create-account-btn shadow-light"
+                        onclick="location.href='/members/add'">{{login.create_account}}</button>
             </div>
             <form action="/login_proc" method="post">
                 <div class="login-input-container">
@@ -43,7 +44,7 @@
                 </div>
                 <div class="login-btn-wrap">
                     <button type="submit" id="loginBtn" class="login-btn">Login</button>
-                    <a href="#" onclick="findIdAndPw()">아이디 혹은 비밀번호를 잊어버리셨나요?</a>
+                    <a href="#" onclick="findIdAndPw()">{{login.forgot_id_or_password}}</a>
                 </div>
             </form>
         </div>

@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{locale}}">
 <head>
     {{>common/meta}}
-    <title>회보</title>
+    <title>{{menu.circular}}</title>
     {{>common/link}}
     {{>common/script}}
 </head>
 <body>
 {{>layout/header}}
 <div class="container-fluid py-5" style="min-height:800px;">
-    <h2 class="m-2">회보</h2>
+    <h2 class="m-2">{{menu.circular}}</h2>
     <table class="table text-center">
         <thead class="table-dark">
         <tr>
-            <td>번호</td>
-            <td class="w-50">제목</td>
-            <td>업로드한 날짜</td>
-            <td>기능</td>
+            <td>{{article.label.number}}</td>
+            <td class="w-50">{{article.label.title}}</td>
+            <td>{{circular.label.upload_date}}</td>
+            <td>{{circular.label.feature}}</td>
         </tr>
         </thead>
         <tbody>
@@ -44,20 +44,25 @@
         </tbody>
     </table>
     {{#member.isAdmin}}
-        <button class="btn btn-dark m-2" onclick="location.href='/circulars/add'">파일 올리기</button>
+        <button class="btn btn-dark m-2"
+                onclick="location.href='/circulars/add'">{{circular.label.upload_file}}</button>
     {{/member.isAdmin}}
 
     <div class="d-flex justify-content-center">
         <ul class="pagination">
             {{#circulars.hasPrevious}}
                 <li class="page-item">
-                    <a class="page-link" href="/circulars?page={{circulars.previousPageable.getPageNumber}}">이전</a>
+                    <a class="page-link" href="/circulars?page={{circulars.previousPageable.getPageNumber}}">
+                    {{pagination.prev}}
+                    </a>
                 </li>
             {{/circulars.hasPrevious}}
 
             {{#circulars.hasNext}}
                 <li class="page-item">
-                    <a class="page-link" href="/circulars?page={{circulars.nextPageable.getPageNumber}}">다음</a>
+                    <a class="page-link" href="/circulars?page={{circulars.nextPageable.getPageNumber}}">
+                    {{pagination.next}}
+                    </a>
                 </li>
             {{/circulars.hasNext}}
         </ul>

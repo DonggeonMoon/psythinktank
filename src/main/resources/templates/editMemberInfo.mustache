@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{locale}}">
 <head>
     {{>common/meta}}
-    <title>회원 정보 변경</title>
+    <title>{{member.label.member_edit}}</title>
     {{>common/link}}
     {{>common/script}}
     <script defer src="/js/edit-member-info.js"></script>
@@ -11,52 +11,54 @@
 {{>layout/header}}
 <div class="container-fluid py-5" style="min-height:800px;">
     <div class="text-center">
-        <h2 class="m-2">회원 정보 변경</h2>
+        <h2 class="m-2">{{member.label.member_edit}}</h2>
         <div class="w-75 mx-auto">
             <form id="form" class="text-start" action="/members" method="post">
                 <input type="hidden" name="_method" value="put">
                 <div>
                     <div>
-                        <label class="d-inline-block w-25">아이디</label>
+                        <label class="d-inline-block w-25">{{member.label.id}}</label>
                         <div class="d-inline">
                             <input class="d-inline-block form-control w-50 my-2" type="text" id="memberId"
                                    name="memberId" value="{{memberInfo.memberId}}"
-                                   placeholder="5 ~ 30자의 영숫자, 특수문자(-, _)" readonly>
+                                   placeholder="{{member.label.password_constraint}}(-, _)" readonly>
                         </div>
                     </div>
                     <div>
-                        <label class="d-inline-block w-25">새 비밀번호</label>
+                        <label class="d-inline-block w-25">{{member.label.new_password}}</label>
                         <div class="d-inline">
                             <input class="d-inline-block form-control w-50 my-2" type="password" id="memberPw"
                                    name="password" maxlength="50"
-                                   placeholder="비밀번호에는 8 ~ 16자의 영숫자, 특수문자(!, @, #, $, %, ^, &, ^, &, *, -, _, +, =)"
+                                   placeholder="{{member.label.password_constraint}}(!, @, #, $, %, ^, &, ^, &, *, -, _, +, =)"
                                    required>
                         </div>
                     </div>
                     <div>
-                        <label class="d-inline-block w-25">새 비밀번호 확인</label>
+                        <label class="d-inline-block w-25">{{member.label.confirm_new_password}}</label>
                         <div class="d-inline">
                             <input class="d-inline-block form-control w-50 my-2" type="password" id="memberPw2"
                                    maxlength="50" required>
                         </div>
                     </div>
                     <div>
-                        <label class="d-inline-block w-25">이메일</label>
+                        <label class="d-inline-block w-25">{{member.label.email}}</label>
                         <div class="d-inline">
                             <input class="d-inline-block form-control w-50 my-2" type="email" id="memberEmail"
                                    name="email" value="{{memberInfo.email}}" maxlength="50" required>
-                            <button type="button" id="checkEmailBtn" class="btn btn-secondary d-inline">이메일 중복 확인
+                            <button type="button" id="checkEmailBtn" class="btn btn-secondary d-inline">
+                                {{member.label.email_check}}
                             </button>
                         </div>
                     </div>
                 </div>
                 <input type="hidden" name="userLevel" value="{{memberInfo.userLevel}}">
             </form>
-            <button type="button" id="editBtn" class="btn btn-secondary mx-2" onclick="submitForm()">회원 정보 수정</button>
+            <button type="button" id="editBtn" class="btn btn-secondary mx-2"
+                    onclick="submitForm()">{{member.label.edit}}</button>
             <form class="d-inline" action="/members" method="post">
                 <input type="hidden" name="_method" value="delete">
                 <input type="hidden" name="memberId" value="{{memberInfo.memberId}}">
-                <input type="submit" class="btn btn-secondary mx-2 d-inline" value="회원 탈퇴">
+                <input type="submit" class="btn btn-secondary mx-2 d-inline" value="{{member.label.account_deletion}}">
             </form>
         </div>
     </div>

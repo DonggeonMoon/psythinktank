@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{locale}}">
 <head>
     {{>common/meta}}
     <title>{{stock.name}}({{stock.symbol}}) - {{stock.corporationClass}}</title>
@@ -20,31 +20,31 @@
             <col style="width:80%"/>
         </colgroup>
         <tr>
-            <td class="table-light text-center">구분</td>
+            <td class="table-light text-center">{{stock.label.classification}}</td>
             <td>
                 {{stock.corporationClass}}
             </td>
         </tr>
         <tr>
-            <td class="table-light text-center">종목코드</td>
+            <td class="table-light text-center">{{stock.label.symbol}}</td>
             <td>
                 {{stock.symbol}}
             </td>
         </tr>
         <tr>
-            <td class="table-light text-center">종목명</td>
+            <td class="table-light text-center">{{stock.label.stock_name}}</td>
             <td>
                 {{stock.name}}
             </td>
         </tr>
         <tr>
-            <td class="table-light text-center">기업 소개</td>
+            <td class="table-light text-center">{{stock.label.overview}}</td>
             <td>
                 {{stock.overview}}
             </td>
         </tr>
         <tr>
-            <td class="table-light text-center">지분 변동</td>
+            <td class="table-light text-center">{{stock.label.share_change}}</td>
             <td>
                 <div>
                     <canvas id="myChart"></canvas>
@@ -73,13 +73,13 @@
             </td>
         </tr>
         <tr>
-            <td class="table-light text-center">최근 배당</td>
+            <td class="table-light text-center">{{stock.label.recent_dividend}}</td>
             <td>
                 {{dividend.value}}
             </td>
         </tr>
         <tr>
-            <td class="table-light text-center">PSY THINKTANK 빅데이터 기반 평가</td>
+            <td class="table-light text-center">PSY THINKTANK {{stock.label.big_data_based_evaluation}}</td>
             <td>
                 {{#member}}
                     <table class="table">
@@ -121,12 +121,12 @@
                     </table>
                 {{/member}}
                 {{^member}}
-                    로그인 후 열람 가능합니다.
+                    {{stock.label.available_after_login}}
                 {{/member}}
             </td>
         </tr>
     </table>
-    <button class="btn btn-dark m-2" onclick="location.href='/stocks'">목록</button>
+    <button class="btn btn-dark m-2" onclick="location.href='/stocks'">{{navigation.list}}</button>
 </div>
 {{>layout/footer}}
 <script>

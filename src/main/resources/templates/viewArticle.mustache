@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{locale}}">
 <head>
     {{>common/meta}}
     <title>{{article.title}}</title>
@@ -17,31 +17,31 @@
             <col style="width:80%"/>
         </colgroup>
         <tr>
-            <td class="table-light">제목</td>
+            <td class="table-light">{{article.label.title}}</td>
             <td>
                 {{article.title}}
             </td>
         </tr>
         <tr>
-            <td class="table-light">작성자</td>
+            <td class="table-light">{{article.label.writer}}</td>
             <td>
                 {{article.memberId}}
             </td>
         </tr>
         <tr>
-            <td class="table-light">조회수</td>
+            <td class="table-light">{{article.label.hit}}</td>
             <td>
                 {{article.hit}}
             </td>
         </tr>
         <tr>
-            <td class="table-light">작성일</td>
+            <td class="table-light">{{article.label.write_date}}</td>
             <td>
                 {{article.createdAt}}
             </td>
         </tr>
         <tr>
-            <td class="table-light">내용</td>
+            <td class="table-light">{{article.label.content}}</td>
             <td class="text-start" style="white-space:pre-line">
                 <input type="hidden" id="content" name="content" value="{{article.content}}">
                 <div id="viewer"></div>
@@ -49,17 +49,18 @@
         </tr>
         <tr style="text-align:right;">
             <td colspan="2">
-                <input type="button" class="btn btn-secondary my-2" value="수정"
+                <input type="button" class="btn btn-secondary my-2" value="{{article.label.edit}}"
                        onclick="location.href='/articles/modify/{{article.id}}'">
                 <form style="display:inline" action="/articles/{{article.id}}" method="post">
                     <input type="hidden" name="_method" value="delete">
                     <input type="hidden" name="boardId" value="{{article.boardId}}">
-                    <input type="submit" class="btn btn-secondary my-2" value="삭제">
+                    <input type="submit" class="btn btn-secondary my-2" value="{{article.label.delete}}">
                 </form>
             </td>
         </tr>
     </table>
-    <button class="btn btn-dark my-2" onclick="location.href='/articles?boardId={{article.boardId}}'">목록</button>
+    <button class="btn btn-dark my-2" onclick="location.href='/articles?boardId={{article.boardId}}
+    '">{{navigation.list}}</button>
 </div>
 {{>layout/footer}}
 <script src="/js/view-article.js"></script>

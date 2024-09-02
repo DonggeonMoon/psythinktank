@@ -1,38 +1,38 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{locale}}">
 <head>
     {{>common/meta}}
-    <title>아이디/비밀번호 찾기</title>
+    <title>{{member.find_id_or_password}}</title>
     {{>common/link}}
     {{>common/script}}
     <script defer src="/js/find-id-and-pw.js"></script>
 </head>
 <body>
 <div class="container-fluid">
-    <h2 class="d-flex justify-content-center m-5">아이디/비밀번호 찾기</h2>
-    <h3 class="d-flex justify-content-center m-5">아이디 찾기</h3>
+    <h2 class="d-flex justify-content-center m-5">{{member.find_id_or_password}}</h2>
+    <h3 class="d-flex justify-content-center m-5">{{member.find_id}}</h3>
     <div class="mx-auto text-center">
         <div class="m-2">
-            <label class="form-label d-inline">이메일:</label>
+            <label class="form-label d-inline">{{member.email}}:</label>
             <input type="email" class="form-control w-25 d-inline" id="memberEmail" name="email">
         </div>
         <div>
-            <input class="m-2" type="button" id="findIdBtn" value="아이디 찾기">
+            <input class="m-2" type="button" id="findIdBtn" value="{{member.find_id}}">
         </div>
     </div>
-    <h3 class="d-flex justify-content-center m-5">비밀번호 찾기</h3>
-    <h6 class="text-secondary d-flex justify-content-center m-5">회원정보가 일치하면 임시 비밀번호가 이메일로 발송됩니다.</h6>
+    <h3 class="d-flex justify-content-center m-5">{{member.find_password}}</h3>
+    <h6 class="text-secondary d-flex justify-content-center m-5">{{member.email_will_send_if_matched}}</h6>
     <div class="mx-auto text-center">
         <div class="m-2">
-            <label class="form-label d-inline">아이디:</label>
+            <label class="form-label d-inline">{{member.id}}:</label>
             <input type="text" class="form-control w-25 d-inline" id="memberId" name="memberId">
         </div>
         <div class="m-2">
-            <label class="form-label d-inline">이메일:</label>
+            <label class="form-label d-inline">{{member.email}}:</label>
             <input type="email" class="form-control w-25 d-inline" id="memberEmail2" name="email">
         </div>
         <div>
-            <input class="m-2" type="button" id="findPwBtn" value="비밀번호 찾기">
+            <input class="m-2" type="button" id="findPwBtn" value="{{member.find_password}}">
         </div>
     </div>
 </div>

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{locale}}">
 <head>
     {{>common/meta}}
-    <title>주식 검색</title>
+    <title>{{menu.stock_search}}</title>
     {{>common/link}}
     {{>common/script}}
     <script defer src="/js/stock-list.js"></script>
@@ -10,17 +10,19 @@
 <body>
 {{>layout/header}}
 <div class="container-fluid py-5" style="min-height:800px;">
-    <h2 class="m-2">주식 종목</h2>
+    <h2 class="m-2">{{menu.stock_search}}</h2>
     <div class="d-flex justify-content-center m-2">
-        <input type="text" id="searchText" class="form-control mx-2" name="searchText" placeholder="종목명 또는 종목코드"> <input
-            type="button" id="searchBtn" class="btn btn-secondary mx-2" name="searchBtn" value="검색">
+        <input type="text" id="searchText" class="form-control mx-2"
+               name="searchText" placeholder="{{stock.label.stock_name_or_symbol}}">
+        <input type="button" id="searchBtn" class="btn btn-secondary mx-2"
+               name="searchBtn" value="{{search.search}}">
     </div>
     <table class="table text-center table-striped">
         <thead class="table-dark">
         <tr>
-            <td>종목코드</td>
-            <td>종목명</td>
-            <td>구분</td>
+            <td>{{stock.label.symbol}}</td>
+            <td>{{stock.label.stock_name}}</td>
+            <td>{{stock.label.classification}}</td>
         </tr>
         </thead>
         <tbody id="result">
@@ -43,12 +45,16 @@
         <ul class="pagination">
             {{#stocks.hasPrevious}}
                 <li class="page-item">
-                    <a class="page-link" href="/stocks?page={{stocks.previousPageable.getPageNumber}}">이전</a>
+                    <a class="page-link" href="/stocks?page={{stocks.previousPageable.getPageNumber}}">
+                    {{pagination.prev}}
+                    </a>
                 </li>
             {{/stocks.hasPrevious}}
             {{#stocks.hasNext}}
                 <li class="page-item">
-                    <a class="page-link" href="/stocks?page={{stocks.nextPageable.getPageNumber}}">다음</a>
+                    <a class="page-link" href="/stocks?page={{stocks.nextPageable.getPageNumber}}">
+                    {{pagination.next}}
+                    </a>
                 </li>
             {{/stocks.hasNext}}
 

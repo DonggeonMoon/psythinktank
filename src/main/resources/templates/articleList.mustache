@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{locale}}">
 <head>
     {{>common/meta}}
     <title>{{board.name}}</title>
@@ -14,18 +14,18 @@
     <table class="table text-center">
         <thead class="table-dark">
         <tr>
-            <td>번호</td>
-            <td class="w-50">제목</td>
-            <td>작성자</td>
-            <td>조회수</td>
-            <td>작성일</td>
+            <td>{{article.label.number}}</td>
+            <td class="w-50">{{article.label.title}}</td>
+            <td>{{article.label.writer}}</td>
+            <td>{{article.label.hit}}</td>
+            <td>{{article.label.write_date}}</td>
         </tr>
         </thead>
         <tbody id="result">
         {{#articles.toList}}
             <tr>
                 <td>
-                    {{#isNotice}}<b>공지</b>{{/isNotice}}
+                    {{#isNotice}}<b>{{article.label.notice}}</b>{{/isNotice}}
                     {{^isNotice}}{{id}}{{/isNotice}}
                 </td>
                 <td>
@@ -45,31 +45,37 @@
         {{/articles.toList}}
         </tbody>
     </table>
-    <button class="btn btn-dark m-2" onclick="location.href='/articles/add?boardId={{board.id}}'">글 작성</button>
+    <button class="btn btn-dark m-2" onclick="location.href='/articles/add?boardId={{board.id}}'">
+    {{article.label.create}}
+    </button>
     <div class="d-flex justify-content-center">
         <label>
-        <select id="select" class="form-select mx-2" style="width: 100px">
-            <option>제목</option>
-            <option>내용</option>
-            <option>작성자</option>
-        </select>
+            <select id="select" class="form-select mx-2" style="width: 100px">
+                <option>{{article.label.title}}</option>
+                <option>{{article.label.content}}</option>
+                <option>{{article.label.writer}}</option>
+            </select>
         </label>
         <input type="text" id="searchText" class="d-inline form-control mx-2" style="width: 200px"
-               name="searchText" placeholder="검색어를 입력하세요.">
+               name="searchText" placeholder="{{article.label.please_input_keyword}}">
         <input type="button" id="searchBtn" class="d-inline btn btn-secondary mx-2"
-               name="searchBtn" value="검색">
+               name="searchBtn" value="{{search.search}}">
     </div>
     <div class="d-flex justify-content-center m-2">
         <ul class="pagination">
             {{#articles.hasPrevious}}
                 <li class="page-item">
-                    <a class="page-link" href="/articles?page={{articles.previousPageable.getPageNumber}}">이전</a>
+                    <a class="page-link" href="/articles?page={{articles.previousPageable.getPageNumber}}">
+                    {{pagination.prev}}
+                    </a>
                 </li>
             {{/articles.hasPrevious}}
 
             {{#articles.hasNext}}
                 <li class="page-item">
-                    <a class="page-link" href="/articles?page={{articles.nextPageable.getPageNumber}}">다음</a>
+                    <a class="page-link" href="/articles?page={{articles.nextPageable.getPageNumber}}">
+                    {{pagination.next}}
+                    </a>
                 </li>
             {{/articles.hasNext}}
         </ul>
