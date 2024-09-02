@@ -10,57 +10,57 @@
             {{#member}}
                 <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button"
                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{member.memberId}} 님
+                    {{member.memberId}}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {{^member.isAdmin}}{{/member.isAdmin}}
                     {{#member.isAdmin}}
                         <a class="dropdown-item" href="/members">관리자 페이지</a>
                     {{/member.isAdmin}}
-                    <a class="dropdown-item" href="/members/modify">회원 정보 수정</a>
-                    <a class="dropdown-item" href="/logout">로그아웃</a>
+                    <a class="dropdown-item" href="/members/modify">{{menu.member_edit}}</a>
+                    <a class="dropdown-item" href="/logout">{{menu.logout}}</a>
                 </div>
                 <script src="/js/chat-notification.js"></script>
             {{/member}}
             {{^member}}
                 <li class="nav-item">
-                    <a class="nav-link" href="/login">로그인</a>
+                    <a class="nav-link" href="/login">{{menu.login}}</a>
                 </li>
             {{/member}}
             </li>
         </ul>
     </div>
 </nav>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-start">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse mx-2" id="navbarSupportedContent">
-        <ul class="navbar-nav text-center">
+        <ul class="navbar-nav text-start">
 
             <li class="nav-item">
-                <a class="nav-link" href="/stocks">종목 검색</a>
+                <a class="nav-link" href="/stocks">{{menu.stock_search}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/articles?boardId=1">회원 게시판</a>
+                <a class="nav-link" href="/articles?boardId=1">{{menu.member_board}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/articles?boardId=2">해외 게시판</a>
+                <a class="nav-link" href="/articles?boardId=2">{{menu.foreign_board}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/circulars">회보</a>
+                <a class="nav-link" href="/circulars">{{menu.circular}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/contents/investmentPerformance">투자 성과</a>
+                <a class="nav-link" href="/contents/investmentPerformance">{{menu.investment_performance}}</a>
             </li>
             <li class="nav-item">
                 <a id="chat-menu" class="nav-link" href="/chat">
                     <span class="position-relative p-1">
-                        채팅(준비중)
+                        {{menu.chat}}
                         <span id="chat-notification"
                               class="position-absolute top-0 start-100 translate-middle p-1 bg-warning border border-warning rounded-circle d-none">
-                            <span class="visually-hidden">New alerts</span>
+                            <span class="visually-hidden">{{chat.new_alerts}}</span>
                         </span>
                     </span>
                 </a>

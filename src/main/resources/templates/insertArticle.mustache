@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="{{locale}}">
 <head>
     {{>common/meta}}
     <title>{{board.name}} - 게시글 작성</title>
@@ -15,20 +15,21 @@
         <form id="form" action="/articles" method="post">
             <input type="hidden" name="boardId" value="{{board.id}}">
             <div class="mb-3 mt-3">
-                <label for="title" class="form-label">제목</label>
+                <label for="title" class="form-label">{{article.label.title}}</label>
                 <input type="text" class="form-control" id="title" name="title" size="135" maxlength="200"
                        required>
             </div>
             <div class="mb-3 mt-3">
-                <label for="comment">내용</label>
+                <label for="comment">{{article.label.content}}</label>
                 <div id="editor"></div>
             </div>
             <div class="mb-3 mt-3 text-center">
-                <label><input type="checkbox" id="isNotice" name="isNotice">공지</label>
+                <label><input type="checkbox" id="isNotice" name="isNotice">{{article.label.notice}}</label>
             </div>
-            <input type="button" class="btn btn-secondary mx-2" value="글 입력" onclick="submitForm();">
+            <input type="button" class="btn btn-secondary mx-2" value="{{article.label.create}}"
+                   onclick="submitForm();">
             <button type="button" class="btn btn-secondary mx-2"
-                    onclick="location.href='/articles?boardId={{board.id}}'">목록</button>
+                    onclick="location.href='/articles?boardId={{board.id}}'">{{navigation.list}}</button>
             <input type="hidden" id="content" name="content" value="">
             {{#member}}
                 <input type="hidden" name="memberId" value="{{member.memberId}}">

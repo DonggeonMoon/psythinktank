@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
 
 import static com.dgmoonlabs.psythinktank.global.constant.CorporateBoardStability.BUSINESS_YEAR;
@@ -120,7 +119,7 @@ public class StockService {
                 .stream()
                 .max(Comparator.comparing(Share::getDate))
                 .map(Share::getValue)
-                .orElseThrow(NoSuchElementException::new);
+                .orElse(null);
         return Rating.evaluateGovernance(currentShare);
     }
 
