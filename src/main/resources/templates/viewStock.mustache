@@ -14,40 +14,40 @@
 {{>layout/header}}
 <div class="container-fluid py-5" style="min-height:800px;">
     <h2 class="m-2">종목 보기</h2>
-    <table class="table">
+    <table class="table table-responsive-sm">
         <colgroup>
-            <col class="text-center" style="width:20%"/>
-            <col style="width:80%"/>
+            <col class="d-none d-md-table-cell text-center"/>
+            <col/>
         </colgroup>
         <tr>
-            <td class="table-light text-center">{{stock.label.classification}}</td>
+            <td class="d-none d-md-table-cell table-light text-center w-25">{{stock.label.classification}}</td>
             <td>
                 {{stock.corporationClass}}
             </td>
         </tr>
         <tr>
-            <td class="table-light text-center">{{stock.label.symbol}}</td>
+            <td class="d-none d-md-table-cell table-light text-center w-25">{{stock.label.symbol}}</td>
             <td>
                 {{stock.symbol}}
             </td>
         </tr>
         <tr>
-            <td class="table-light text-center">{{stock.label.stock_name}}</td>
+            <td class="d-none d-md-table-cell table-light text-center w-25">{{stock.label.stock_name}}</td>
             <td>
                 {{stock.name}}
             </td>
         </tr>
         <tr>
-            <td class="table-light text-center">{{stock.label.overview}}</td>
+            <td class="d-none d-md-table-cell table-light text-center w-25">{{stock.label.overview}}</td>
             <td>
                 {{stock.overview}}
             </td>
         </tr>
         <tr>
-            <td class="table-light text-center">{{stock.label.share_change}}</td>
-            <td>
+            <td class="d-none d-md-table-cell table-light text-center w-25">{{stock.label.share_change}}</td>
+            <td class="position-relative w-auto">
                 <div>
-                    <canvas id="myChart"></canvas>
+                    <canvas id="myChart" style="width:50vw"></canvas>
                 </div>
                 <a class="btn btn-light float-end" data-bs-toggle="collapse" href="#share" role="button"
                    aria-expanded="false" aria-controls="collapseExample">
@@ -73,13 +73,14 @@
             </td>
         </tr>
         <tr>
-            <td class="table-light text-center">{{stock.label.recent_dividend}}</td>
+            <td class="d-none d-md-table-cell table-light text-center w-25">{{stock.label.recent_dividend}}</td>
             <td>
                 {{dividend.value}}
             </td>
         </tr>
         <tr>
-            <td class="table-light text-center">PSY THINKTANK {{stock.label.big_data_based_evaluation}}</td>
+            <td class="d-none d-md-table-cell table-light text-center">PSY
+                THINKTANK {{stock.label.big_data_based_evaluation}}</td>
             <td>
                 {{#member}}
                     <table class="table">
@@ -171,7 +172,7 @@
                         ]
                     },
                     options: {
-                        responsive: true,
+                        responsive: false,
                         plugins: {
                             legend: {
                                 position: 'top',

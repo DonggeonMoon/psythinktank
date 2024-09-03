@@ -13,35 +13,35 @@
     <h2 class="m-2">{{article.board.name}} - 게시글 보기</h2>
     <table class="table text-center">
         <colgroup>
-            <col style="width:20%"/>
-            <col style="width:80%"/>
+            <col class="d-none d-md-table-cell w-25"/>
+            <col/>
         </colgroup>
         <tr>
-            <td class="table-light">{{article.label.title}}</td>
+            <td class="d-none d-md-table-cell table-light">{{article.label.title}}</td>
             <td>
                 {{article.title}}
             </td>
         </tr>
         <tr>
-            <td class="table-light">{{article.label.writer}}</td>
+            <td class="d-none d-md-table-cell table-light">{{article.label.writer}}</td>
             <td>
                 {{article.memberId}}
             </td>
         </tr>
         <tr>
-            <td class="table-light">{{article.label.hit}}</td>
+            <td class="d-none d-md-table-cell table-light">{{article.label.hit}}</td>
             <td>
                 {{article.hit}}
             </td>
         </tr>
         <tr>
-            <td class="table-light">{{article.label.creation_date}}</td>
+            <td class="d-none d-md-table-cell table-light">{{article.label.creation_date}}</td>
             <td>
                 {{article.createdAt}}
             </td>
         </tr>
         <tr>
-            <td class="table-light">{{article.label.content}}</td>
+            <td class="d-none d-md-table-cell table-light">{{article.label.content}}</td>
             <td class="text-start" style="white-space:pre-line">
                 <input type="hidden" id="content" name="content" value="{{article.content}}">
                 <div id="viewer"></div>

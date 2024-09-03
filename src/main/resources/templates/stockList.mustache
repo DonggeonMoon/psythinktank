@@ -20,21 +20,21 @@
     <table class="table text-center table-striped">
         <thead class="table-dark">
         <tr>
-            <td>{{stock.label.symbol}}</td>
+            <td class="d-none d-md-table-cell">{{stock.label.symbol}}</td>
             <td>{{stock.label.stock_name}}</td>
-            <td>{{stock.label.classification}}</td>
+            <td class="d-none d-md-table-cell">{{stock.label.classification}}</td>
         </tr>
         </thead>
         <tbody id="result">
         {{#stocks.toList}}
             <tr>
-                <td>
+                <td class="d-none d-md-table-cell">
                     {{symbol}}
                 </td>
                 <td>
                     <a href="/stocks/{{symbol}}">{{name}}</a>
                 </td>
-                <td>
+                <td class="d-none d-md-table-cell">
                     {{corporationClass}}
                 </td>
             </tr>
