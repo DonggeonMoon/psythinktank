@@ -4,6 +4,7 @@ import com.dgmoonlabs.psythinktank.domain.chat.service.ChatNotificationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -37,7 +38,7 @@ public class ChatHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void handleMessage(final WebSocketSession session, final WebSocketMessage<?> message) {
+    public void handleMessage(@NonNull final WebSocketSession session, final WebSocketMessage<?> message) {
         messages.push(message.getPayload().toString());
 
         sessions.forEach(openSession -> {
@@ -52,7 +53,7 @@ public class ChatHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionClosed(final WebSocketSession session, final CloseStatus closeStatus) {
+    public void afterConnectionClosed(final WebSocketSession session, @NonNull final CloseStatus closeStatus) {
         log.info("Connection closed: {}", session.getId());
         sessions.remove(session);
     }
