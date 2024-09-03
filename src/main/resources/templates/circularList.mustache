@@ -16,7 +16,9 @@
             <td>{{article.label.number}}</td>
             <td class="w-50">{{article.label.title}}</td>
             <td>{{circular.label.upload_date}}</td>
-            <td>{{circular.label.feature}}</td>
+            {{#member.isAdmin}}
+                <td>{{circular.label.feature}}</td>
+            {{/member.isAdmin}}
         </tr>
         </thead>
         <tbody>
@@ -31,14 +33,14 @@
                 <td>
                     {{createdAt}}
                 </td>
-                <td>
-                    {{#member.isAdmin}}
+                {{#member.isAdmin}}
+                    <td>
                         <form action="/circulars/{{id}}" method="post">
                             <input type="hidden" name="_method" value="delete">
                             <input type="submit" class="btn btn-primary p-1" value="삭제">
                         </form>
-                    {{/member.isAdmin}}
-                </td>
+                    </td>
+                {{/member.isAdmin}}
             </tr>
         {{/circulars.getContent}}
         </tbody>
