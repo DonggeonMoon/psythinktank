@@ -1,4 +1,4 @@
-package com.dgmoonlabs.psythinktank.domain.circular.dto;
+package com.dgmoonlabs.psythinktank.domain.newsletter.dto;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j
-class CircularRequestTest {
+class NewsletterRequestTest {
     private static ValidatorFactory factory;
     private static Validator validator;
 
@@ -41,16 +41,16 @@ class CircularRequestTest {
             "제목, 회보 이름"
     })
     void valid_values(String title, String fileName) {
-        CircularRequest request = new CircularRequest(null, title, Mockito.mock(MultipartFile.class));
-        Set<ConstraintViolation<CircularRequest>> violations = validator.validate(request);
+        NewsletterRequest request = new NewsletterRequest(null, title, Mockito.mock(MultipartFile.class));
+        Set<ConstraintViolation<NewsletterRequest>> violations = validator.validate(request);
         assertThat(violations).isEmpty();
     }
 
     @ParameterizedTest
     @NullAndEmptySource
     void invalid_values(String id) {
-        CircularRequest request = new CircularRequest(null, id, Mockito.mock(MultipartFile.class));
-        Set<ConstraintViolation<CircularRequest>> violations = validator.validate(request);
+        NewsletterRequest request = new NewsletterRequest(null, id, Mockito.mock(MultipartFile.class));
+        Set<ConstraintViolation<NewsletterRequest>> violations = validator.validate(request);
         assertThat(violations).isNotEmpty();
         violations.forEach(violation -> log.info("violation = {}", violation));
     }

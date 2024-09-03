@@ -24,52 +24,52 @@
         </tr>
         </thead>
         <tbody>
-        {{#circulars.getContent}}
+        {{#newsletters.getContent}}
             <tr>
                 <td class="d-none d-md-table-cell">
                     {{id}}
                 </td>
                 <td>
-                    <a href="/api/circulars/{{id}}">{{title}}</a>
+                    <a href="/api/newsletters/{{id}}">{{title}}</a>
                 </td>
                 <td class="d-none d-md-table-cell">
                     {{createdAt}}
                 </td>
                 {{#member.isAdmin}}
                     <td class="d-none d-md-table-cell">
-                        <form action="/circulars/{{id}}" method="post">
+                        <form action="/newsletters/{{id}}" method="post">
                             <input type="hidden" name="_method" value="delete">
                             <input type="submit" class="btn btn-primary p-1" value="삭제">
                         </form>
                     </td>
                 {{/member.isAdmin}}
             </tr>
-        {{/circulars.getContent}}
+        {{/newsletters.getContent}}
         </tbody>
     </table>
     {{#member.isAdmin}}
         <button class="btn btn-dark m-2"
-                onclick="location.href='/circulars/add'">파일 올리기
+                onclick="location.href='/newsletters/add'">파일 올리기
         </button>
     {{/member.isAdmin}}
 
     <div class="d-flex justify-content-center">
         <ul class="pagination">
-            {{#circulars.hasPrevious}}
+            {{#newsletters.hasPrevious}}
                 <li class="page-item">
-                    <a class="page-link" href="/circulars?page={{circulars.previousPageable.getPageNumber}}">
+                    <a class="page-link" href="/newsletters?page={{newsletters.previousPageable.getPageNumber}}">
                     {{pagination.prev}}
                     </a>
                 </li>
-            {{/circulars.hasPrevious}}
+            {{/newsletters.hasPrevious}}
 
-            {{#circulars.hasNext}}
+            {{#newsletters.hasNext}}
                 <li class="page-item">
-                    <a class="page-link" href="/circulars?page={{circulars.nextPageable.getPageNumber}}">
+                    <a class="page-link" href="/newsletters?page={{newsletters.nextPageable.getPageNumber}}">
                     {{pagination.next}}
                     </a>
                 </li>
-            {{/circulars.hasNext}}
+            {{/newsletters.hasNext}}
         </ul>
     </div>
 </div>

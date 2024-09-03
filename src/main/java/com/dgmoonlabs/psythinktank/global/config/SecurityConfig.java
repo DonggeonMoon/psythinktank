@@ -40,7 +40,7 @@ public class SecurityConfig {
                         )
                         .hasRole("ADMIN")
                         .antMatchers(
-                                HttpMethod.DELETE, "/api/circulars"
+                                HttpMethod.DELETE, "/api/newsletters"
                         )
                         .hasRole("ADMIN")
                         .antMatchers(
@@ -59,8 +59,8 @@ public class SecurityConfig {
                                 "/stocks/**",
                                 "/api/stocks/search/symbol",
                                 "/api/stocks/search/stockName",
-                                "/circulars/**",
-                                "/api/circulars/**",
+                                "/newsletters/**",
+                                "/api/newsletters/**",
                                 "/contents/**",
                                 "/members/**",
                                 "/login",
