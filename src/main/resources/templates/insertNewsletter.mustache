@@ -11,10 +11,10 @@
 <div class="container-fluid py-5" style="min-height:800px;">
     <h2 class="m-2">회보 올리기</h2>
     <div class="border rounded-3 m-2 p-3">
-        <form action="/circulars" method="post" enctype="multipart/form-data">
+        <form action="/newsletters/" method="post" enctype="multipart/form-data">
             <div class="mb-3 mt-3">
                 <label for="title" class="form-label">제목</label>
-                <input type="text" class="form-control" id="circularTitle" name="title" size="135"
+                <input type="text" class="form-control" id="title" name="title" size="135"
                        maxlength="200" required>
             </div>
             <div class="mb-3 mt-3">
@@ -22,7 +22,7 @@
                 <input type="file" class="form-control" id="file" name="file" required>
             </div>
             <input type="submit" class="btn btn-secondary mx-2" value="업로드">
-            <button type="button" class="btn btn-secondary mx-2" onclick="location.href='/circulars'">목록</button>
+            <button type="button" class="btn btn-secondary mx-2" onclick="location.href='/newsletters'">목록</button>
             {{#member}}
                 <input type="hidden" name="memberId" value="{{member.memberId}}">
             {{/member}}

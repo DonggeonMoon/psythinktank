@@ -1,15 +1,15 @@
-package com.dgmoonlabs.psythinktank.domain.circular.service;
+package com.dgmoonlabs.psythinktank.domain.newsletter.service;
 
-import com.dgmoonlabs.psythinktank.domain.circular.dto.CircularRequest;
-import com.dgmoonlabs.psythinktank.domain.circular.dto.CircularResponse;
-import com.dgmoonlabs.psythinktank.domain.circular.model.Circular;
-import com.dgmoonlabs.psythinktank.domain.circular.repository.CircularRepository;
+import com.dgmoonlabs.psythinktank.domain.newsletter.dto.NewsletterRequest;
+import com.dgmoonlabs.psythinktank.domain.newsletter.dto.NewsletterResponse;
+import com.dgmoonlabs.psythinktank.domain.newsletter.model.Newsletter;
+import com.dgmoonlabs.psythinktank.domain.newsletter.repository.NewsletterRepository;
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
 import com.dgmoonlabs.psythinktank.global.constant.Pagination;
-import com.dgmoonlabs.psythinktank.global.exception.CircularNotExistException;
 import com.dgmoonlabs.psythinktank.global.exception.FileDeletionException;
 import com.dgmoonlabs.psythinktank.global.exception.FileDownloadException;
 import com.dgmoonlabs.psythinktank.global.exception.FileSaveFailedException;
+import com.dgmoonlabs.psythinktank.global.exception.NewsletterNotExistException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
@@ -34,14 +34,14 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CircularService {
-    private final CircularRepository circularRepository;
+public class NewsletterService {
+    private final NewsletterRepository newsletterRepository;
     private final MultipartProperties multipartProperties;
 
     @Transactional
-    public void createCircular(CircularRequest circularRequest) {
-        Circular circular = circularRequest.toEntity();
-        MultipartFile multipartFile = circularRequest.file();
+    public void createNewsletter(NewsletterRequest newsletterRequest) {
+        Newsletter newsletter = newsletterRequest.toEntity();
+        MultipartFile multipartFile = newsletterRequest.file();
         try {
             if (!multipartFile.isEmpty()) {
                 String originalFilename = multipartFile.getOriginalFilename();
@@ -51,42 +51,42 @@ public class CircularService {
                 int dotIndex = originalFilename.lastIndexOf(".");
                 String extension = originalFilename.substring(++dotIndex);
                 String fileName = UUID.randomUUID() + "." + extension;
-                circular.setFileName(fileName);
+                newsletter.setFileName(fileName);
             }
-            File file = new File(circular.getFileName());
+            File file = new File(newsletter.getFileName());
             multipartFile.transferTo(file);
-            circularRepository.save(circular);
+            newsletterRepository.save(newsletter);
         } catch (IOException e) {
             throw new FileSaveFailedException(e);
         }
     }
 
     @Transactional(readOnly = true)
-    public Page<CircularResponse> getCirculars(Pageable pageable) {
-        return circularRepository.findAll(
+    public Page<NewsletterResponse> getNewsletters(Pageable pageable) {
+        return newsletterRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),
                         Pagination.SIZE.getValue(),
                         Sort.by(CriteriaField.ID.getName())
                                 .ascending()
                 )
-        ).map(CircularResponse::from);
+        ).map(NewsletterResponse::from);
     }
 
     @Transactional(readOnly = true)
-    public CircularResponse getCircular(long id) {
-        return CircularResponse.from(
-                circularRepository.findById(id)
-                        .orElseThrow(CircularNotExistException::new)
+    public NewsletterResponse getNewsletter(long id) {
+        return NewsletterResponse.from(
+                newsletterRepository.findById(id)
+                        .orElseThrow(NewsletterNotExistException::new)
         );
     }
 
     @Transactional(readOnly = true)
-    public Resource downloadCircular(long id) {
-        Circular circular = circularRepository.findById(id)
-                .orElseThrow(CircularNotExistException::new);
+    public Resource downloadNewsletter(long id) {
+        Newsletter newsletter = newsletterRepository.findById(id)
+                .orElseThrow(NewsletterNotExistException::new);
         try {
-            Path filePath = Paths.get(multipartProperties.getLocation(), circular.getFileName());
+            Path filePath = Paths.get(multipartProperties.getLocation(), newsletter.getFileName());
             log.info("uri: {}", filePath.toUri());
             return new UrlResource(filePath.toUri());
         } catch (MalformedURLException e) {
@@ -95,13 +95,13 @@ public class CircularService {
     }
 
     @Transactional
-    public void deleteCircular(long id) {
-        Circular circular = circularRepository.findById(id)
-                .orElseThrow(CircularNotExistException::new);
+    public void deleteNewsletter(long id) {
+        Newsletter newsletter = newsletterRepository.findById(id)
+                .orElseThrow(NewsletterNotExistException::new);
         try {
-            Path path = Paths.get(multipartProperties.getLocation(), circular.getFileName());
+            Path path = Paths.get(multipartProperties.getLocation(), newsletter.getFileName());
             Files.delete(path);
-            circularRepository.deleteById(id);
+            newsletterRepository.deleteById(id);
         } catch (IOException e) {
             throw new FileDeletionException(e);
         }

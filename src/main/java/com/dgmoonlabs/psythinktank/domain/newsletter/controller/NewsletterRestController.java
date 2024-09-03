@@ -1,6 +1,6 @@
-package com.dgmoonlabs.psythinktank.domain.circular.controller;
+package com.dgmoonlabs.psythinktank.domain.newsletter.controller;
 
-import com.dgmoonlabs.psythinktank.domain.circular.service.CircularService;
+import com.dgmoonlabs.psythinktank.domain.newsletter.service.NewsletterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.dgmoonlabs.psythinktank.global.constant.KeyName.CIRCULAR_KEY;
+import static com.dgmoonlabs.psythinktank.global.constant.KeyName.NEWSLETTER_KEY;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/circulars")
-public class CircularRestController {
-    private final CircularService circularService;
+@RequestMapping("/api/newsletters")
+public class NewsletterRestController {
+    private final NewsletterService newsletterService;
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<Resource> getCircular(@PathVariable long id, Model model) {
-        model.addAttribute(CIRCULAR_KEY.getText(), circularService.getCircular(id));
+    public ResponseEntity<Resource> getNewsletter(@PathVariable long id, Model model) {
+        model.addAttribute(NEWSLETTER_KEY.getText(), newsletterService.getNewsletter(id));
         return ResponseEntity.ok()
-                .body(circularService.downloadCircular(id));
+                .body(newsletterService.downloadNewsletter(id));
     }
 }

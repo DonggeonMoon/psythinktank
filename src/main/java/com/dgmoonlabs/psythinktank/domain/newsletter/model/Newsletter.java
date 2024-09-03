@@ -1,4 +1,4 @@
-package com.dgmoonlabs.psythinktank.domain.circular.model;
+package com.dgmoonlabs.psythinktank.domain.newsletter.model;
 
 import com.dgmoonlabs.psythinktank.global.model.BaseEntity;
 import lombok.*;
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Setter
-public class Circular extends BaseEntity {
+public class Newsletter extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column

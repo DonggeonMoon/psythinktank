@@ -6,6 +6,7 @@ import com.dgmoonlabs.psythinktank.domain.member.service.MemberService;
 import com.dgmoonlabs.psythinktank.global.constant.ViewName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,7 @@ public class MemberController {
     }
 
     @GetMapping
+    @Secured("ROLE_ADMIN")
     public String getMembers(Pageable pageable, Model model) {
         model.addAttribute(MEMBERS_KEY.getText(), memberService.getMembers(pageable));
         return MANAGER_PAGE.getText();
@@ -68,6 +70,7 @@ public class MemberController {
     }
 
     @PutMapping("/change/userLevel")
+    @Secured("ROLE_ADMIN")
     public String changeUserLevel(@Valid MemberUserLevelRequest memberRequest) {
         memberService.changeUserLevel(memberRequest);
         return MEMBERS.redirect();

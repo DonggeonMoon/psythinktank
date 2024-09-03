@@ -15,13 +15,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BoardServiceTest {
     public static final BoardRequest BOARD_REQUEST_1 = new BoardRequest(
             1L,
-            "일반 게시판",
+            "회원 게시판",
             true
     );
 
     public static final BoardRequest BOARD_REQUEST_2 = new BoardRequest(
             1L,
-            "다른 게시판",
+            "회원 게시판",
             true
     );
     @Autowired

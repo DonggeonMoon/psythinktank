@@ -16,10 +16,10 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
-    private static final long CIRCULAR_ID = 1L;
+    private static final long NEWSLETTER_ID = 1L;
     private static final long ARTICLE_ID = 1L;
     private static final Comment COMMENT = Comment.builder()
-            .id(CIRCULAR_ID)
+            .id(NEWSLETTER_ID)
             .build();
     private static final List<Comment> COMMENTS = List.of(COMMENT);
     @Mock

@@ -24,26 +24,6 @@ public class SecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
                         .antMatchers(
-                                HttpMethod.GET, "/members"
-                        )
-                        .hasRole("ADMIN")
-                        .antMatchers(
-                                HttpMethod.GET, "/sitemap"
-                        )
-                        .hasRole("ADMIN")
-                        .antMatchers(
-                                HttpMethod.POST, "/sitemap"
-                        )
-                        .hasRole("ADMIN")
-                        .antMatchers(
-                                HttpMethod.PUT, "/api/members/change/userLevel"
-                        )
-                        .hasRole("ADMIN")
-                        .antMatchers(
-                                HttpMethod.DELETE, "/api/circulars"
-                        )
-                        .hasRole("ADMIN")
-                        .antMatchers(
                                 HttpMethod.GET,
                                 "/articles/add",
                                 "/articles/modify/**",
@@ -59,8 +39,8 @@ public class SecurityConfig {
                                 "/stocks/**",
                                 "/api/stocks/search/symbol",
                                 "/api/stocks/search/stockName",
-                                "/circulars/**",
-                                "/api/circulars/**",
+                                "/newsletters/**",
+                                "/api/newsletters/**",
                                 "/contents/**",
                                 "/members/**",
                                 "/login",
@@ -100,7 +80,7 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/login_proc")
                         .usernameParameter("memberId")
-                        .passwordParameter("memberPw")
+                        .passwordParameter("memberPassword")
                         .successHandler(loginSuccessHandler)
                         .failureHandler(loginFailureHandler)
                 );
