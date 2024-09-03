@@ -2,22 +2,22 @@
 <html lang="{{locale}}">
 <head>
     {{>common/meta}}
-    <title>{{menu.circular}}</title>
+    <title>{{menu.newsletter}}</title>
     {{>common/link}}
     {{>common/script}}
 </head>
 <body>
 {{>layout/header}}
 <div class="container-fluid py-5" style="min-height:800px;">
-    <h2 class="m-2">{{menu.circular}}</h2>
+    <h2 class="m-2">{{menu.newsletter}}</h2>
     <table class="table text-center">
         <thead class="table-dark">
         <tr>
             <td>{{article.label.number}}</td>
             <td class="w-50">{{article.label.title}}</td>
-            <td>{{circular.label.upload_date}}</td>
+            <td>{{newsletter.label.upload_date}}</td>
             {{#member.isAdmin}}
-                <td>{{circular.label.feature}}</td>
+                <td>{{newsletter.label.feature}}</td>
             {{/member.isAdmin}}
         </tr>
         </thead>
