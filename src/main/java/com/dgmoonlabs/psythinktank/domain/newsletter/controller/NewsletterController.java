@@ -4,6 +4,7 @@ import com.dgmoonlabs.psythinktank.domain.newsletter.dto.NewsletterRequest;
 import com.dgmoonlabs.psythinktank.domain.newsletter.service.NewsletterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,7 @@ public class NewsletterController {
     }
 
     @DeleteMapping("/{id}")
+    @Secured("ROLE_ADMIN")
     public String deleteNewsletter(@PathVariable long id) {
         newsletterService.deleteNewsletter(id);
         return NEWSLETTER.redirect();

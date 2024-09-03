@@ -24,26 +24,6 @@ public class SecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
                         .antMatchers(
-                                HttpMethod.GET, "/members"
-                        )
-                        .hasRole("ADMIN")
-                        .antMatchers(
-                                HttpMethod.GET, "/sitemap"
-                        )
-                        .hasRole("ADMIN")
-                        .antMatchers(
-                                HttpMethod.POST, "/sitemap"
-                        )
-                        .hasRole("ADMIN")
-                        .antMatchers(
-                                HttpMethod.PUT, "/api/members/change/userLevel"
-                        )
-                        .hasRole("ADMIN")
-                        .antMatchers(
-                                HttpMethod.DELETE, "/api/newsletters"
-                        )
-                        .hasRole("ADMIN")
-                        .antMatchers(
                                 HttpMethod.GET,
                                 "/articles/add",
                                 "/articles/modify/**",
