@@ -100,7 +100,7 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/login_proc")
                         .usernameParameter("memberId")
-                        .passwordParameter("memberPw")
+                        .passwordParameter("memberPassword")
                         .successHandler(loginSuccessHandler)
                         .failureHandler(loginFailureHandler)
                 );
