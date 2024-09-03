@@ -21,6 +21,7 @@ import static com.dgmoonlabs.psythinktank.global.constant.ViewName.*;
 @RequiredArgsConstructor
 @RequestMapping("/articles")
 public class ArticleController {
+    private static final String SLASH = "/";
     private final ArticleService articleService;
     private final BoardService boardService;
     private final CommentService commentService;
@@ -66,7 +67,7 @@ public class ArticleController {
     @PutMapping
     public String updateArticle(@Valid ArticleRequest articleRequest) {
         articleService.updateArticle(articleRequest);
-        return ApiName.ARTICLE.redirect() + "/" + articleRequest.id();
+        return ApiName.ARTICLE.redirect() + SLASH + articleRequest.id();
     }
 
     @DeleteMapping("/{id}")
