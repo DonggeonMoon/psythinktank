@@ -14,11 +14,10 @@
         <thead class="table-dark">
         <tr>
             <td>아이디</td>
-            <td>이메일</td>
-            <td>사용자 레벨</td>
-            <td>가입일</td>
-            <td>마지막 로그인 날짜</td>
-            <td>권한 변경</td>
+            <td class="d-none d-md-table-cell">이메일</td>
+            <td class="d-none d-md-table-cell">가입 날짜</td>
+            <td class="d-none d-md-table-cell">마지막 로그인 날짜</td>
+            <td class="d-none d-md-table-cell">권한 변경</td>
         </tr>
         </thead>
         <tbody>
@@ -27,16 +26,13 @@
                 <td>
                     {{memberId}}
                 </td>
-                <td>
+                <td class="d-none d-md-table-cell">
                     {{email}}
                 </td>
-                <td>
-                    {{userLevel}}
-                </td>
-                <td>
+                <td class="d-none d-md-table-cell">
                     {{createdAt}}
                 </td>
-                <td>
+                <td class="d-none d-md-table-cell">
                     {{#lastLoggedInAt}}
                         {{lastLoggedInAt}}
                     {{/lastLoggedInAt}}
@@ -44,7 +40,7 @@
                         -
                     {{/lastLoggedInAt}}
                 </td>
-                <td>
+                <td class="d-none d-md-table-cell">
                     {{#toDto.isAdmin}}
                         -
                     {{/toDto.isAdmin}}
