@@ -5,21 +5,30 @@
                 <a class="navbar-brand" href="/">PSY THINKTANK</a>
             </li>
         </ul>
-        <ul class="navbar-nav me-5">
+        <ul class="navbar-nav me-md-5">
         <li class="nav-item dropdown">
             {{#member}}
-                <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{member.memberId}}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    {{^member.isAdmin}}{{/member.isAdmin}}
-                    {{#member.isAdmin}}
-                        <a class="dropdown-item" href="/members">관리자 페이지</a>
-                    {{/member.isAdmin}}
-                    <a class="dropdown-item" href="/members/modify">{{menu.member_edit}}</a>
-                    <a class="dropdown-item" href="/logout">{{menu.logout}}</a>
-                </div>
+                <li class="nav-item">
+                    <button type="button" class="btn btn-link btn-no" id="popoverButton">
+                        {{member.memberId}}
+                    </button>
+                </li>
+                <script>
+                    // Initialize popover
+                    let popoverTrigger = document.getElementById('popoverButton');
+                    let popover = new bootstrap.Popover(popoverTrigger, {
+                        html: true,
+                        content: `
+                        <ul class="list-group">
+                            {{#member.isAdmin}}
+                                <a class="dropdown-item p-0" href="/members">관리자 페이지</a>
+                            {{/member.isAdmin}}
+                                <a class="dropdown-item p-0" href="/members/modify">{{menu.member_edit}}</a>
+                                <a class="dropdown-item p-0" href="/logout">{{menu.logout}}</a>
+                          </ul>
+                        `
+                    });
+                </script>
                 <script src="/js/chat-notification.js"></script>
             {{/member}}
             {{^member}}
@@ -32,7 +41,7 @@
     </div>
 </nav>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-start">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+    <button class="navbar-toggler m-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
