@@ -14,4 +14,12 @@ public record BoardResponse(
                 board.getIsPublic()
         );
     }
+
+    public BoardResponse withName(String name) {
+        return new BoardResponse(
+                id,
+                name,
+                isPublic
+        );
+    }
 }
