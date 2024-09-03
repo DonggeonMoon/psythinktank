@@ -67,10 +67,6 @@ public class Member extends BaseEntity {
         this.userLevel = userLevel;
     }
 
-    public void updateLastLoggedInAt() {
-        this.lastLoggedInAt = LocalDateTime.now();
-    }
-
     public boolean isLocked() {
         return this.loginTryCount >= LoginTry.COUNT_RANGE.getEnd();
     }
