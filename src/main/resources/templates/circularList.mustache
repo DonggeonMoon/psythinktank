@@ -13,28 +13,28 @@
     <table class="table text-center">
         <thead class="table-dark">
         <tr>
-            <td>{{article.label.number}}</td>
+            <td class="d-none d-md-table-cell">{{article.label.number}}</td>
             <td class="w-50">{{article.label.title}}</td>
-            <td>{{newsletter.label.upload_date}}</td>
+            <td class="d-none d-md-table-cell">{{newsletter.label.upload_date}}</td>
             {{#member.isAdmin}}
-                <td>{{newsletter.label.feature}}</td>
+                <td class="d-none d-md-table-cell">{{newsletter.label.feature}}</td>
             {{/member.isAdmin}}
         </tr>
         </thead>
         <tbody>
         {{#circulars.getContent}}
             <tr>
-                <td>
+                <td class="d-none d-md-table-cell">
                     {{id}}
                 </td>
                 <td>
                     <a href="/api/circulars/{{id}}">{{title}}</a>
                 </td>
-                <td>
+                <td class="d-none d-md-table-cell">
                     {{createdAt}}
                 </td>
                 {{#member.isAdmin}}
-                    <td>
+                    <td class="d-none d-md-table-cell">
                         <form action="/circulars/{{id}}" method="post">
                             <input type="hidden" name="_method" value="delete">
                             <input type="submit" class="btn btn-primary p-1" value="삭제">

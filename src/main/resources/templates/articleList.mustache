@@ -11,20 +11,20 @@
 {{>layout/header}}
 <div class="container-fluid py-5" style="min-height:800px;">
     <h2 class="m-2">{{board.name}}</h2>
-    <table class="table text-center">
+    <table class="table table-responsive text-center">
         <thead class="table-dark">
         <tr>
-            <td>{{article.label.number}}</td>
+            <td class="d-none d-md-table-cell">{{article.label.number}}</td>
             <td class="w-50">{{article.label.title}}</td>
-            <td>{{article.label.writer}}</td>
-            <td>{{article.label.hit}}</td>
-            <td>{{article.label.creation_date}}</td>
+            <td class="d-none d-md-table-cell">{{article.label.writer}}</td>
+            <td class="d-none d-md-table-cell">{{article.label.hit}}</td>
+            <td class="d-none d-md-table-cell">{{article.label.creation_date}}</td>
         </tr>
         </thead>
         <tbody id="result">
         {{#articles.toList}}
             <tr>
-                <td>
+                <td class="d-none d-md-table-cell">
                     {{#isNotice}}<b>{{article.label.notice}}</b>{{/isNotice}}
                     {{^isNotice}}{{id}}{{/isNotice}}
                 </td>
@@ -32,13 +32,13 @@
                     {{#isNotice}}<b><a href="/articles/{{id}}">{{title}}</a></b>{{/isNotice}}
                     {{^isNotice}}<a href="/articles/{{id}}">{{title}}</a>{{/isNotice}}
                 </td>
-                <td>
+                <td class="d-none d-md-table-cell">
                     {{memberId}}
                 </td>
-                <td>
+                <td class="d-none d-md-table-cell">
                     {{hit}}
                 </td>
-                <td>
+                <td class="d-none d-md-table-cell">
                     {{createdAt}}
                 </td>
             </tr>
@@ -48,7 +48,7 @@
     <button class="btn btn-dark m-2" onclick="location.href='/articles/add?boardId={{board.id}}'">
     {{article.label.create}}
     </button>
-    <div class="d-flex justify-content-center">
+    <div class="d-none d-md-flex justify-content-center">
         <label>
             <select id="select" class="form-select mx-2" style="width: 100px">
                 <option>{{article.label.title}}</option>
