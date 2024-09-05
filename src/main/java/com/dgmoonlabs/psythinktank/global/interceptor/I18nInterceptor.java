@@ -24,6 +24,7 @@ public class I18nInterceptor implements HandlerInterceptor {
                                     resourceBundle.getString(key)
                             )
                     );
+            modelAndView.addObject("requestUrl", request.getRequestURL());
             modelAndView.addObject("locale", resourceBundle.getLocale());
         }
     }
