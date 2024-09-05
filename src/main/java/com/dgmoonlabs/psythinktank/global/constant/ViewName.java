@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum ViewName {
     ROOT(""),
+    CONTENT_PREFIX("contents/"),
     ARTICLE_LIST("articleList"),
     ARTICLE("ARTICLE"),
     VIEW_ARTICLE("viewArticle"),
