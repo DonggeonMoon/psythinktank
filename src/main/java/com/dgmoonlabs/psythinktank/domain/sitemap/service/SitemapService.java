@@ -64,7 +64,7 @@ public class SitemapService {
 
                 Element lastModificationDate = sitemap.createElement("lastmod");
                 lastModificationDate.appendChild(sitemap.createTextNode(
-                        LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
+                        LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
                 ));
                 urlElement.appendChild(lastModificationDate);
 
