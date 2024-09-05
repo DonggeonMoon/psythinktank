@@ -92,7 +92,8 @@ public class SitemapService {
     }
 
     private void saveSitemap(final Document sitemap) throws TransformerException {
-        TransformerFactory.newInstance()
+        TransformerFactory
+                .newDefaultInstance()
                 .newTransformer()
                 .transform(
                         new DOMSource(sitemap),
