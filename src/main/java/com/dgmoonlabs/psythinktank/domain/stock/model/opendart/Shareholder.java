@@ -41,6 +41,7 @@ public class Shareholder {
         return Double.parseDouble(data.shareholderTotalCount.replace(",", ""));
     }
 
+    @Builder
     public static class ShareholderData {
         private ObjectId id;
         @Field(name = "shrholdr_tot_co")
