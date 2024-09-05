@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum QueryParameter {
     ID("id"),
-    BOARD_ID("boardId");
+    BOARD_ID("boardId"),
+    MEMBER_ID("memberId"),
+    MEMBER_PASSWORD("memberPassword");
 
     private static final StringBuilder QUERY_STRING = new StringBuilder("?");
     private final String text;

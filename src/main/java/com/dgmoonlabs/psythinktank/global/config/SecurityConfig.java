@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static com.dgmoonlabs.psythinktank.global.constant.QueryParameter.MEMBER_ID;
+import static com.dgmoonlabs.psythinktank.global.constant.QueryParameter.MEMBER_PASSWORD;
+
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -78,9 +81,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .formLogin(configurer -> configurer
                         .loginPage("/login")
-                        .loginProcessingUrl("/login_proc")
-                        .usernameParameter("memberId")
-                        .passwordParameter("memberPassword")
+                        .loginProcessingUrl("/login_proc").usernameParameter(MEMBER_ID.getText()).passwordParameter(MEMBER_PASSWORD.getText())
                         .successHandler(loginSuccessHandler)
                         .failureHandler(loginFailureHandler)
                 );
