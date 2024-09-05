@@ -25,7 +25,7 @@ public class BoardRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BoardResponse> getBoards(@PathVariable Long id) {
+    public ResponseEntity<BoardResponse> getBoard(@PathVariable Long id) {
         return ResponseEntity.ok(
                 boardService.getBoard(id)
         );

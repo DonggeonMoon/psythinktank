@@ -38,9 +38,9 @@ class NewsletterRequestTest {
 
     @ParameterizedTest
     @CsvSource({
-            "제목, 회보 이름"
+            "제목"
     })
-    void valid_values(String title, String fileName) {
+    void valid_values(String title) {
         NewsletterRequest request = new NewsletterRequest(null, title, Mockito.mock(MultipartFile.class));
         Set<ConstraintViolation<NewsletterRequest>> violations = validator.validate(request);
         assertThat(violations).isEmpty();
