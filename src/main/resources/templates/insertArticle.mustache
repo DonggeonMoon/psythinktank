@@ -2,7 +2,7 @@
 <html lang="{{locale}}">
 <head>
     {{>common/meta}}
-    <title>{{board.name}} - 게시글 작성</title>
+    <title>{{board.name}} - {{article.label.article_creation}}</title>
     {{>common/link}}
     {{>common/script}}
     {{>common/toast-ui}}
@@ -10,7 +10,7 @@
 <body>
 {{>layout/header}}
 <div class="container-fluid py-5" style="min-height:800px;">
-    <h2 class="m-2">{{board.name}} - 게시글 작성</h2>
+    <h2 class="m-2">{{board.name}} - {{article.label.article_creation}}</h2>
     <div class="border rounded-3 m-2 p-3">
         <form id="form" action="/articles" method="post">
             <input type="hidden" name="boardId" value="{{board.id}}">
