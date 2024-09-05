@@ -1,6 +1,7 @@
 package com.dgmoonlabs.psythinktank.domain.board.controller;
 
 import com.dgmoonlabs.psythinktank.domain.board.dto.ArticleRequest;
+import com.dgmoonlabs.psythinktank.domain.board.dto.ArticleResponse;
 import com.dgmoonlabs.psythinktank.domain.board.service.ArticleService;
 import com.dgmoonlabs.psythinktank.domain.board.service.BoardService;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
@@ -53,14 +54,18 @@ public class ArticleController {
     @GetMapping("/{id}")
     public String getArticle(@PathVariable long id, Model model) {
         articleService.addHit(id);
-        model.addAttribute(ARTICLE_KEY.getText(), articleService.getArticle(id));
+        ArticleResponse articleResponse = articleService.getArticle(id);
+        model.addAttribute(ARTICLE_KEY.getText(), articleResponse);
+        model.addAttribute(BOARD_KEY.getText(), boardService.getBoard(articleResponse.boardId()));
         model.addAttribute(COMMENTS_KEY.getText(), commentService.getCommentsByArticleId(id));
         return VIEW_ARTICLE.getText();
     }
 
     @GetMapping("/modify/{id}")
     public String getUpdateArticleForm(@PathVariable long id, Model model) {
-        model.addAttribute(ARTICLE_KEY.getText(), articleService.getArticle(id));
+        ArticleResponse articleResponse = articleService.getArticle(id);
+        model.addAttribute(ARTICLE_KEY.getText(), articleResponse);
+        model.addAttribute(BOARD_KEY.getText(), boardService.getBoard(articleResponse.boardId()));
         return UPDATE_ARTICLE.getText();
     }
 
