@@ -13,26 +13,17 @@ import javax.persistence.*;
 @Getter
 @Setter
 public class Comment extends BaseEntity {
-    @Column(name = "article_id")
-    private Long articleId;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long id;
-
-    @Column
+    @Column(name = "article_id")
+    private Long articleId;
     private Long parent;
-
-    @Column(nullable = false)
     private int depth;
-
-    @Column(nullable = false)
     private long sequence;
-
-    @Column(name = "member_id", nullable = false)
+    @Column(name = "member_id")
     private String memberId;
-
     @Column(columnDefinition = "TEXT")
     private String content;
 
