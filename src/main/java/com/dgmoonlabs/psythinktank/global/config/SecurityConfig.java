@@ -38,6 +38,7 @@ public class SecurityConfig {
                                 "/api/articles/search/title",
                                 "/api/articles/search/content",
                                 "/api/articles/search/memberId",
+                                "/api/comments/**",
                                 "/api/boards/**/articles",
                                 "/stocks/**",
                                 "/api/stocks/search/symbol",

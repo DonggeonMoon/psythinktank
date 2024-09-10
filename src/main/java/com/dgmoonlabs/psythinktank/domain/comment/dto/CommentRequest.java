@@ -5,8 +5,8 @@ import com.dgmoonlabs.psythinktank.domain.comment.model.Comment;
 import java.time.LocalDateTime;
 
 public record CommentRequest(
-        Long articleId,
         Long id,
+        Long articleId,
         Long parent,
         int depth,
         long sequence,

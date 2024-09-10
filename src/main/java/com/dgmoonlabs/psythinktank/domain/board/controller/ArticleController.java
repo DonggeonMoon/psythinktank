@@ -57,7 +57,7 @@ public class ArticleController {
         ArticleResponse articleResponse = articleService.getArticle(id);
         model.addAttribute(ARTICLE_KEY.getText(), articleResponse);
         model.addAttribute(BOARD_KEY.getText(), boardService.getBoard(articleResponse.boardId()));
-        model.addAttribute(COMMENTS_KEY.getText(), commentService.getCommentsByArticleId(id));
+        model.addAttribute(COMMENTS_KEY.getText(), commentService.getComments(id));
         return VIEW_ARTICLE.getText();
     }
 
