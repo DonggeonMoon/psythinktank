@@ -28,8 +28,8 @@ public class ArticleAspect {
         return protectArticle(joinPoint, articleRequest.id());
     }
 
-    @Around("execution(* com..ArticleController.deleteArticle(..)) && args(boardId, id, ..)")
-    public Object protectDeleteArticle(final ProceedingJoinPoint joinPoint, final long boardId, final long id) throws Throwable {
+    @Around("execution(* com..ArticleController.deleteArticle(..)) && args(*, id, ..)")
+    public Object protectDeleteArticle(final ProceedingJoinPoint joinPoint, final long id) throws Throwable {
         return protectArticle(joinPoint, id);
     }
 

@@ -33,6 +33,10 @@ public class SecurityConfig {
                                 "/chat"
                         ).authenticated()
                         .antMatchers(
+                                HttpMethod.POST,
+                                "/api/comments"
+                        ).authenticated()
+                        .antMatchers(
                                 "/",
                                 "/articles/**",
                                 "/api/articles/search/title",
@@ -60,8 +64,7 @@ public class SecurityConfig {
                                 "/api/members/check/id",
                                 "/api/members/check/email",
                                 "/members/goodBye"
-                        )
-                        .permitAll()
+                        ).permitAll()
                         .antMatchers(
                                 "/favicon.ico",
                                 "/robots.txt",
