@@ -1,5 +1,6 @@
 package com.dgmoonlabs.psythinktank.global.interceptor;
 
+import com.dgmoonlabs.psythinktank.global.util.RequestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.lang.NonNull;
@@ -24,7 +25,7 @@ public class I18nInterceptor implements HandlerInterceptor {
                                     resourceBundle.getString(key)
                             )
                     );
-            modelAndView.addObject("requestUrl", request.getRequestURL());
+            modelAndView.addObject("requestUrl", RequestUtils.getHttpsUrl(request));
             modelAndView.addObject("locale", resourceBundle.getLocale());
         }
     }

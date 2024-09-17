@@ -5,6 +5,7 @@ import com.dgmoonlabs.psythinktank.domain.comment.dto.CommentResponse;
 import com.dgmoonlabs.psythinktank.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -18,6 +19,8 @@ public class CommentRestController {
 
     @PostMapping
     public ResponseEntity<Void> createComment(@RequestBody CommentRequest commentRequest) {
+        commentRequest = commentRequest.withMemberId(SecurityContextHolder.getContext().getAuthentication().getName());
+
         return ResponseEntity.created(
                 URI.create("/comment/" + commentService.createComment(commentRequest))
         ).build();

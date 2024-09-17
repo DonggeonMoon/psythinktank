@@ -20,4 +20,8 @@ public class RequestUtils {
         }
         return scheme + SEPARATOR_1 + serverName + SEPARATOR_2 + port;
     }
+
+    public static String getHttpsUrl(HttpServletRequest request) {
+        return "https" + SEPARATOR_1 + request.getServerName() + request.getServletPath();
+    }
 }
