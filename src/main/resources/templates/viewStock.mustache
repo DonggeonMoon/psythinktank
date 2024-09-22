@@ -130,6 +130,18 @@
     <button class="btn btn-dark m-2" onclick="location.href='/stocks'">
         {{navigation.list}}
     </button>
+    <div id="comments" class="form-control" data-stock-id="{{stock.id}}"></div>
+    <div class="form-control my-2">
+        <label for="comment-text"></label>
+        <textarea id="comment-text" class="form-control"></textarea>
+        <div class="text-end">
+            <button type="button"
+                    class="btn btn-secondary m-2"
+                    onclick="addComment({{stock.id}}, 0, 0, 1, document.getElementById('comment-text').value)">
+                추가
+            </button>
+        </div>
+    </div>
 </div>
 {{>layout/footer}}
 <script>
