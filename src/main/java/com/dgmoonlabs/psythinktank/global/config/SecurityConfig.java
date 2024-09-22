@@ -34,7 +34,8 @@ public class SecurityConfig {
                         ).authenticated()
                         .antMatchers(
                                 HttpMethod.POST,
-                                "/api/comments"
+                                "/api/comments",
+                                "/api/stocks/comments/**"
                         ).authenticated()
                         .antMatchers(
                                 "/",
@@ -47,6 +48,7 @@ public class SecurityConfig {
                                 "/stocks/**",
                                 "/api/stocks/search/symbol",
                                 "/api/stocks/search/stockName",
+                                "/api/stocks/comments/**",
                                 "/newsletters/**",
                                 "/api/newsletters/**",
                                 "/contents/**",
