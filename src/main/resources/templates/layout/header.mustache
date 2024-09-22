@@ -79,14 +79,17 @@
     <form method="get" id="localeForm" class="d-flex align-content-center">
         <div class="form-group text-center text-md-end mx-2">
             <label for="localeSelect">
-                <select id="localeSelect" class="form-select bg-dark text-light" name="locale"
+                <select id="localeSelect"
+                        class="form-select bg-dark text-light"
+                        name="locale"
                         onchange="this.form.submit()">
                     <option value="ko">🇰🇷 한국어</option>
                     <option value="en">🇺🇸 English</option>
                     <option value="ja">🇯🇵 日本語</option>
                     <option value="zh">🇨🇳 中文(简体)</option>
                     <script>
-                        $('#localeSelect > option[value="{{locale}}"]').prop('selected', true)
+                        document.querySelector('#localeSelect > option[value="{{locale}}"]')
+                                .setAttribute('selected', true);
                     </script>
                 </select>
             </label>
