@@ -1,20 +1,4 @@
 <footer class="bg-dark pt-4 pb-5 justify-content-center align-items-center">
-    <form method="get" id="localeForm">
-        <div class="form-group text-center text-md-end mx-4">
-            <label for="localeSelect" class="form-label">
-                <select id="localeSelect" class="form-select bg-dark text-light" name="locale"
-                        onchange="this.form.submit()">
-                    <option value="ko">🇰🇷 한국어</option>
-                    <option value="en">🇺🇸 English</option>
-                    <option value="ja">🇯🇵 日本語</option>
-                    <option value="zh">🇨🇳 中文(简体)</option>
-                    <script>
-                        $('#localeSelect > option[value="{{locale}}"]').prop('selected', true)
-                    </script>
-                </select>
-            </label>
-        </div>
-    </form>
     <div class="text-white text-center"> &copy; <span id="year"></span> PSY THINKTANK</div>
     <div class="text-white text-center"> Powered by dgmoonlabs</div>
     <script>
