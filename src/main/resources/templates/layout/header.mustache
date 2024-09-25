@@ -14,7 +14,6 @@
                     </button>
                 </li>
                 <script>
-                    // Initialize popover
                     let popoverTrigger = document.getElementById('popoverButton');
                     let popover = new bootstrap.Popover(popoverTrigger, {
                         html: true,
@@ -23,9 +22,9 @@
                             {{#member.isAdmin}}
                                 <a class="dropdown-item p-0" href="/members">관리자 페이지</a>
                             {{/member.isAdmin}}
-                                <a class="dropdown-item p-0" href="/members/modify">{{menu.member_edit}}</a>
-                                <a class="dropdown-item p-0" href="/logout">{{menu.logout}}</a>
-                          </ul>
+                            <a class="dropdown-item p-0" href="/members/modify">{{menu.member_edit}}</a>
+                            <a class="dropdown-item p-0" href="/logout">{{menu.logout}}</a>
+                        </ul>
                         `
                     });
                 </script>
@@ -89,7 +88,7 @@
                     <option value="zh">🇨🇳 中文(简体)</option>
                     <script>
                         document.querySelector('#localeSelect > option[value="{{locale}}"]')
-                                .setAttribute('selected', true);
+                                .setAttribute('selected', 'true');
                     </script>
                 </select>
             </label>
