@@ -9,7 +9,7 @@
 </head>
 <body>
 {{>layout/header}}
-<div class="container-fluid py-5" style="min-height:800px;">
+<div class="container py-5" style="min-height:800px;">
     <h2 class="m-2">{{board.name}} - {{article.label.article_view}}</h2>
     <table class="table text-center">
         <colgroup>
@@ -62,7 +62,7 @@
     <button class="btn btn-dark my-2" onclick="location.href='/articles?boardId={{article.boardId}}'">
     {{navigation.list}}
     </button>
-    <div id="comments" class="form-control" data-article-id="{{article.id}}"></div>
+    <div id="comments" class="form-control d-none" data-article-id="{{article.id}}"></div>
     <div class="form-control my-2">
         <label for="comment-text"></label>
         <textarea id="comment-text" class="form-control"></textarea>

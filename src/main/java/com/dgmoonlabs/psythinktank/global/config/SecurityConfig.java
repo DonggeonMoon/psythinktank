@@ -6,13 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 import static com.dgmoonlabs.psythinktank.global.constant.QueryParameter.MEMBER_ID;
 import static com.dgmoonlabs.psythinktank.global.constant.QueryParameter.MEMBER_PASSWORD;
@@ -33,11 +31,6 @@ public class SecurityConfig {
                                 "/articles/add",
                                 "/articles/modify/**",
                                 "/chat"
-                        ).authenticated()
-                        .antMatchers(
-                                HttpMethod.POST,
-                                "/api/comments",
-                                "/api/stocks/comments/**"
                         ).authenticated()
                         .antMatchers(
                                 "/",
@@ -89,11 +82,12 @@ public class SecurityConfig {
                 .csrf().disable()
                 .formLogin(configurer -> configurer
                         .loginPage("/login")
-                        .loginProcessingUrl("/login_proc").usernameParameter(MEMBER_ID.getText()).passwordParameter(MEMBER_PASSWORD.getText())
+                        .loginProcessingUrl("/login_proc")
+                        .usernameParameter(MEMBER_ID.getText())
+                        .passwordParameter(MEMBER_PASSWORD.getText())
                         .successHandler(loginSuccessHandler)
                         .failureHandler(loginFailureHandler)
-                )
-                .exceptionHandling(configurer -> configurer.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.FORBIDDEN)));
+                );
         return http.build();
     }
 }
