@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StockCommentAspect {
     private final StockCommentRepository stockCommentRepository;
+
+    @Around("execution(* com..StockCommentRestController.createComment(..))")
+    public Object protectCreateComment(final ProceedingJoinPoint joinPoint) throws Throwable {
+        if (SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken
+                || !SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+            throw new UnauthorizedAccessException();
+        }
+        return joinPoint.proceed();
+    }
 
     @Around("execution(* com..StockCommentRestController.updateComment(..)) && args(stockCommentRequest)")
     public Object protectUpdateComment(final ProceedingJoinPoint joinPoint, final StockCommentRequest stockCommentRequest) throws Throwable {
