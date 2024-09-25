@@ -57,7 +57,7 @@ jobs:
 
     - name: Upload JAR file
       run: |
-        scp -o StrictHostKeyChecking=no -P ${{ secrets.EC2_SSH_PORT }} ./build/libs/PSYThinktank-0.0.1.jar ${{ secrets.USERNAME }}@${{ secrets.EC2_PUBLIC_IP }}:${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}
+        scp -vvv -o StrictHostKeyChecking=no -P ${{ secrets.EC2_SSH_PORT }} ./build/libs/PSYThinktank-0.0.1.jar ${{ secrets.USERNAME }}@${{ secrets.EC2_PUBLIC_IP }}:${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}
 
     - name: Restart Java Container
       run: |
