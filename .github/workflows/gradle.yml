@@ -59,6 +59,7 @@ jobs:
         port: ${{ secrets.EC2_SSH_PORT }}
         source: "./build/libs/PSYThinktank-0.0.1.jar"
         target: "${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}"
+        tar_dereference: false
 
     - name: Restart Docker on EC2
       uses: appleboy/ssh-action@master
