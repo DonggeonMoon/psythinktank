@@ -50,7 +50,11 @@ jobs:
     # - name: Build with Gradle 8.5
     #   run: gradle build
 
-    - name: Upload JAR file and Restart Docker
+    - name: Upload JAR file
+      run: |
+        scp -o StrictHostKeyChecking=no -P ${{ secrets.EC2_SSH_PORT }} ./build/libs/PSYThinktank-0.0.1.jar ${{ secrets.USERNAME }}@${{ secrets.EC2_PUBLIC_IP }}:${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}
+
+    - name: Restart Docker on EC2
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.EC2_PUBLIC_IP }}
@@ -58,5 +62,4 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.EC2_SSH_PORT }}
         script: |
-          scp ./build/libs/PSYThinktank-0.0.1.jar ${{ secrets.USERNAME }}@${{ secrets.EC2_PUBLIC_IP }}:${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}
           sudo docker restart java
