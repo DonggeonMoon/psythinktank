@@ -66,7 +66,8 @@ public class SecurityConfig {
                                 "/favicon.ico",
                                 "/robots.txt",
                                 "/sitemap.xml",
-                                "/style.css"
+                                "/style.css",
+                                "/messages.json"
                         )
                         .permitAll()
                         .antMatchers("/supervision/**")
