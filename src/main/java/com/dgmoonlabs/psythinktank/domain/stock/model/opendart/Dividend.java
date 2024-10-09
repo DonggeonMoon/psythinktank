@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -68,7 +69,10 @@ public class Dividend {
         }
 
         public boolean isCommonShare() {
-            return "보통주".equals(stockKind);
+            if (!StringUtils.hasText(stockKind)) {
+                return false;
+            }
+            return stockKind.contains("보통");
         }
     }
 }
