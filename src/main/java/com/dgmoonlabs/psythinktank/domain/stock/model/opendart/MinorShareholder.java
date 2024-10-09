@@ -6,12 +6,14 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.List;
+
 @Document(collection = "open_dart")
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class Shareholder {
+public class MinorShareholder {
     @Id
     private String id;
     private String symbol;
@@ -23,26 +25,33 @@ public class Shareholder {
     private String businessYear;
     @Field(name = "reprt_code")
     private String reportCode;
-    private ShareholderData data;
+    private List<MinorShareholderData> data;
 
-    public static Shareholder from() {
-        return Shareholder.builder()
-                .build();
-    }
-
-    public static Shareholder emptyDocument() {
-        return Shareholder.builder().build();
+    public static MinorShareholder emptyDocument() {
+        return MinorShareholder.builder()
+                .data(
+                        List.of(
+                                MinorShareholderData.builder()
+                                        .shareholderTotalCount("0")
+                                        .build()
+                        )
+                ).build();
     }
 
     public Double getShareholderTotalCount() {
-        if (data == null || data.shareholderTotalCount == null || "-".equals(data.shareholderTotalCount)) {
+        if (data == null) {
             return 0.0;
         }
-        return Double.parseDouble(data.shareholderTotalCount.replace(",", ""));
+        return data.stream()
+                .map(minorShareholderData -> minorShareholderData.shareholderTotalCount)
+                .filter(count -> !"-".equals(count))
+                .map(count -> count.replace(",", ""))
+                .mapToDouble(Double::parseDouble)
+                .sum();
     }
 
     @Builder
-    public static class ShareholderData {
+    public static class MinorShareholderData {
         private ObjectId id;
         @Field(name = "shrholdr_tot_co")
         private String shareholderTotalCount;
