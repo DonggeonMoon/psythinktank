@@ -6,6 +6,7 @@ import com.dgmoonlabs.psythinktank.domain.stock.repository.*;
 import com.dgmoonlabs.psythinktank.domain.stock.vo.ChartData;
 import com.dgmoonlabs.psythinktank.domain.stock.vo.ChartDataset;
 import com.dgmoonlabs.psythinktank.global.constant.CriteriaField;
+import com.dgmoonlabs.psythinktank.global.constant.GrowthPotential;
 import com.dgmoonlabs.psythinktank.global.constant.Pagination;
 import com.dgmoonlabs.psythinktank.global.constant.Rating;
 import lombok.RequiredArgsConstructor;
@@ -106,8 +107,8 @@ public class StockService {
     public String calculateGrowthPotential(final String symbol) {
         Double hrr = hrrRepository.findBySymbolAndBusinessYearAndReportCode(
                         symbol,
-                        com.dgmoonlabs.psythinktank.global.constant.Hrr.BUSINESS_YEAR.getText(),
-                        com.dgmoonlabs.psythinktank.global.constant.Hrr.REPORT_CODE.getText()
+                        GrowthPotential.BUSINESS_YEAR.getText(),
+                        GrowthPotential.REPORT_CODE.getText()
                 ).orElse(Hrr.builder().build())
                 .getValue();
         return Rating.evaluateGrowthPotential(hrr);
