@@ -1,7 +1,7 @@
 package com.dgmoonlabs.psythinktank.domain.stock.controller;
 
-import com.dgmoonlabs.psythinktank.domain.stock.service.ShareholderService;
-import com.dgmoonlabs.psythinktank.domain.stock.service.StockService;
+import com.dgmoonlabs.psythinktank.domain.stock.service.NewShareholderService;
+import com.dgmoonlabs.psythinktank.domain.stock.service.NewStockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -18,8 +18,8 @@ import static com.dgmoonlabs.psythinktank.global.constant.ViewName.STOCK_LIST;
 @RequiredArgsConstructor
 @RequestMapping("/stocks")
 public class StockController {
-    private final StockService stockService;
-    private final ShareholderService shareholderService;
+    private final NewStockService stockService;
+    private final NewShareholderService shareholderService;
 
     @GetMapping
     public String getStocks(Pageable pageable, Model model) {
