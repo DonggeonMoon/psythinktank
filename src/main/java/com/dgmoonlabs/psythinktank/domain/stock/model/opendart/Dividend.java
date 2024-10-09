@@ -45,6 +45,7 @@ public class Dividend {
         }
         return data.stream()
                 .filter(DividendData::isCashDividendPerShare)
+                .filter(DividendData::isCommonShare)
                 .map(dividendData -> dividendData.value)
                 .filter(count -> !"-".equals(count))
                 .map(count -> count.replace(",", ""))
@@ -64,6 +65,10 @@ public class Dividend {
 
         public boolean isCashDividendPerShare() {
             return "주당 현금배당금(원)".equals(segmentation);
+        }
+
+        public boolean isCommonShare() {
+            return "보통주".equals(stockKind);
         }
     }
 }
