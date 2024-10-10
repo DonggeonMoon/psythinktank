@@ -28,6 +28,6 @@ public class StockInfo {
     @Column(name = "corp_code", nullable = false, length = 8)
     private String corporationCode;
 
-    @Column(name = "overview", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String overview;
 }

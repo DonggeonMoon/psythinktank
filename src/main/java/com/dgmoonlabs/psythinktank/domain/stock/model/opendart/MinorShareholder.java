@@ -51,7 +51,7 @@ public class MinorShareholder {
     }
 
     @Builder
-    public static class MinorShareholderData {
+    static class MinorShareholderData {
         private ObjectId id;
         @Field(name = "shrholdr_tot_co")
         private String shareholderTotalCount;

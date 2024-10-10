@@ -52,7 +52,7 @@ public class UnregisteredDirectorCompensation {
     }
 
     @Builder
-    public static class UnregisteredDirectorCompensationData {
+    static class UnregisteredDirectorCompensationData {
         private ObjectId id;
         @Field(name = "fyer_salary_totamt")
         private String salaryTotalAmount;
