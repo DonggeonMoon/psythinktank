@@ -51,7 +51,7 @@ public class DirectorCompensation {
     }
 
     @Builder
-    public static class DirectorCompensationData {
+    static class DirectorCompensationData {
         private ObjectId id;
         @Field(name = "mendng_totamt")
         private String compensationTotalAmount;

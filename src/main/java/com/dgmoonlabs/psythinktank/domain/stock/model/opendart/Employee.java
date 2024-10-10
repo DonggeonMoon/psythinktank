@@ -66,7 +66,7 @@ public class Employee {
     }
 
     @Builder
-    public static class EmployeeData {
+    static class EmployeeData {
         private ObjectId id;
         @Field(name = "fo_bbm")
         private String businessSector;
