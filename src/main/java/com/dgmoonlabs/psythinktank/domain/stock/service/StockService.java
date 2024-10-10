@@ -3,16 +3,10 @@ package com.dgmoonlabs.psythinktank.domain.stock.service;
 import com.dgmoonlabs.psythinktank.domain.stock.dto.*;
 import com.dgmoonlabs.psythinktank.domain.stock.model.Share;
 import com.dgmoonlabs.psythinktank.domain.stock.model.StockInfo;
-import com.dgmoonlabs.psythinktank.domain.stock.model.opendart.DirectorCompensation;
-import com.dgmoonlabs.psythinktank.domain.stock.model.opendart.Dividend;
-import com.dgmoonlabs.psythinktank.domain.stock.model.opendart.Employee;
-import com.dgmoonlabs.psythinktank.domain.stock.model.opendart.UnregisteredDirectorCompensation;
+import com.dgmoonlabs.psythinktank.domain.stock.model.opendart.*;
 import com.dgmoonlabs.psythinktank.domain.stock.repository.ShareRepository;
 import com.dgmoonlabs.psythinktank.domain.stock.repository.StockInfoRepository;
-import com.dgmoonlabs.psythinktank.domain.stock.repository.mongo.DirectorCompensationRepository;
-import com.dgmoonlabs.psythinktank.domain.stock.repository.mongo.EmployeeRepository;
-import com.dgmoonlabs.psythinktank.domain.stock.repository.mongo.MongoDividendRepository;
-import com.dgmoonlabs.psythinktank.domain.stock.repository.mongo.UnregisteredDirectorCompensationRepository;
+import com.dgmoonlabs.psythinktank.domain.stock.repository.mongo.*;
 import com.dgmoonlabs.psythinktank.domain.stock.vo.ChartData;
 import com.dgmoonlabs.psythinktank.domain.stock.vo.ChartDataset;
 import com.dgmoonlabs.psythinktank.global.constant.*;
@@ -30,16 +24,19 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static com.dgmoonlabs.psythinktank.global.constant.Message.ERROR;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class NewStockService {
+public class StockService {
     private final StockInfoRepository stockInfoRepository;
     private final ShareRepository shareRepository;
     private final DirectorCompensationRepository directorCompensationRepository;
-    private final MongoDividendRepository mongoDividendRepository;
+    private final DividendRepository dividendRepository;
     private final EmployeeRepository employeeRepository;
     private final UnregisteredDirectorCompensationRepository unregisteredDirectorCompensationRepository;
+    private final MinorShareholderRepository minorShareholderRepository;
 
     @Transactional(readOnly = true)
     public Page<StockInfo> getStocks(final Pageable pageable) {
@@ -98,7 +95,7 @@ public class NewStockService {
 
     @Transactional(readOnly = true)
     public DividendResponse getDividendBySymbol(final String symbol) {
-        Dividend dividend = mongoDividendRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+        Dividend dividend = dividendRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
                 symbol,
                 ApiName.DIVIDEND.getText(),
                 GrowthPotential.BUSINESS_YEAR.getText(),
@@ -106,10 +103,7 @@ public class NewStockService {
         ).orElse(Dividend.emptyDocument());
 
         log.info("dividend = {}", dividend.getValue());
-        return new DividendResponse(
-                symbol,
-                dividend.getValue()
-        );
+        return DividendResponse.from(dividend);
     }
 
     @Transactional(readOnly = true)
@@ -179,6 +173,32 @@ public class NewStockService {
                 .map(Share::getValue)
                 .orElse(null);
         return Rating.evaluateGovernance(currentShare);
+    }
+
+    public String calculateStockHypeIndex(String symbol) {
+        try {
+            double thisYear = minorShareholderRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+                            symbol,
+                            OpenDartApiName.MINOR_HOLDER_STATUS.getApiName(),
+                            StockHypeIndex.BUSINESS_YEAR.getText(),
+                            StockHypeIndex.REPORT_CODE.getText()
+                    ).orElse(MinorShareholder.emptyDocument())
+                    .getShareholderTotalCount();
+
+            double lastYear =
+                    minorShareholderRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+                                    symbol,
+                                    OpenDartApiName.MINOR_HOLDER_STATUS.getApiName(),
+                                    StockHypeIndex.LAST_BUSINESS_YEAR.getText(),
+                                    StockHypeIndex.REPORT_CODE.getText()
+                            ).orElse(MinorShareholder.emptyDocument())
+                            .getShareholderTotalCount();
+
+            double stockHypeIndex = Math.round((thisYear - lastYear) / lastYear * 100.0 * 100.0) / 100.0;
+            return String.valueOf(stockHypeIndex);
+        } catch (Exception e) {
+            return ERROR.getText();
+        }
     }
 
     @Transactional(readOnly = true)

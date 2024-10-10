@@ -2,7 +2,7 @@ package com.dgmoonlabs.psythinktank.domain.stock.controller;
 
 import com.dgmoonlabs.psythinktank.domain.stock.dto.StockSearchRequest;
 import com.dgmoonlabs.psythinktank.domain.stock.dto.StockSearchResponse;
-import com.dgmoonlabs.psythinktank.domain.stock.service.NewStockService;
+import com.dgmoonlabs.psythinktank.domain.stock.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/api/stocks")
 public class StockRestController {
-    private final NewStockService stockService;
+    private final StockService stockService;
 
     @PostMapping("/search/symbol")
     public ResponseEntity<StockSearchResponse> searchBySymbol(
