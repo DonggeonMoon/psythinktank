@@ -1,11 +1,16 @@
 package com.dgmoonlabs.psythinktank.domain.stock.service;
 
 import com.dgmoonlabs.psythinktank.domain.stock.dto.*;
-import com.dgmoonlabs.psythinktank.domain.stock.model.*;
-import com.dgmoonlabs.psythinktank.domain.stock.repository.*;
+import com.dgmoonlabs.psythinktank.domain.stock.model.Share;
+import com.dgmoonlabs.psythinktank.domain.stock.model.StockInfo;
+import com.dgmoonlabs.psythinktank.domain.stock.model.opendart.Dividend;
+import com.dgmoonlabs.psythinktank.domain.stock.repository.ShareRepository;
+import com.dgmoonlabs.psythinktank.domain.stock.repository.StockInfoRepository;
+import com.dgmoonlabs.psythinktank.domain.stock.repository.mongo.DividendRepository;
 import com.dgmoonlabs.psythinktank.domain.stock.vo.ChartData;
 import com.dgmoonlabs.psythinktank.domain.stock.vo.ChartDataset;
 import com.dgmoonlabs.psythinktank.global.constant.Rating;
+import com.dgmoonlabs.psythinktank.global.constant.opendart.ApiName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,20 +33,12 @@ import static org.mockito.Mockito.when;
 class StockServiceTest {
     public static final String SYMBOL = "005930";
     public static final String NAME = "삼성전자";
-    public static final CorporateBoardStability CORPORATE_BOARD_STABILITY = CorporateBoardStability.builder()
-            .id(1L)
-            .symbol(SYMBOL)
-            .stockName(NAME)
-            .value(15.0)
-            .build();
     public static final Dividend DIVIDEND = Dividend.builder()
             .symbol(SYMBOL)
-            .stockName(NAME)
-            .value(15)
-            .build();
-    public static final Hrr HRR = Hrr.builder()
-            .id(1L)
-            .value(15.0)
+            .apiName(ApiName.DIVIDEND.getText())
+            .corporationCode("")
+            .businessYear("2023")
+            .reportCode("11011")
             .build();
     public static final Share SHARE_1 = Share.builder()
             .id(1L)
@@ -75,11 +72,7 @@ class StockServiceTest {
     public static final StockSearchResponse STOCK_SEARCH_RESPONSE = StockSearchResponse.from(List.of(STOCK_RESPONSE));
     private static final List<Share> SHARES = List.of(SHARE_1, SHARE_2);
     @Mock
-    private CorporateBoardStabilityRepository corporateBoardStabilityRepository;
-    @Mock
     private DividendRepository dividendRepository;
-    @Mock
-    private HrrRepository hrrRepository;
     @Mock
     private ShareRepository shareRepository;
     @Mock
@@ -134,29 +127,11 @@ class StockServiceTest {
 
     @Test
     void getDividendBySymbol() {
-        when(dividendRepository.findBySymbol(anyString()))
+        when(dividendRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(Optional.of(DIVIDEND));
 
         assertThat(stockService.getDividendBySymbol(SYMBOL))
                 .isEqualTo(DividendResponse.from(DIVIDEND));
-    }
-
-    @Test
-    void calculateBoardStability() {
-        when(corporateBoardStabilityRepository.findBySymbolAndBusinessYear(anyString(), anyString()))
-                .thenReturn(Optional.of(CORPORATE_BOARD_STABILITY));
-
-        assertThat(stockService.calculateBoardStability(SYMBOL))
-                .isEqualTo(Rating.A.getGrade());
-    }
-
-    @Test
-    void calculateGrowthPotential() {
-        when(hrrRepository.findBySymbolAndBusinessYearAndReportCode(anyString(), anyString(), anyString()))
-                .thenReturn(Optional.of(HRR));
-
-        assertThat(stockService.calculateGrowthPotential(SYMBOL))
-                .isEqualTo(Rating.A.getGrade());
     }
 
     @Test

@@ -1,7 +1,6 @@
 package com.dgmoonlabs.psythinktank.domain.stock.controller;
 
-import com.dgmoonlabs.psythinktank.domain.stock.service.NewShareholderService;
-import com.dgmoonlabs.psythinktank.domain.stock.service.NewStockService;
+import com.dgmoonlabs.psythinktank.domain.stock.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -18,8 +17,7 @@ import static com.dgmoonlabs.psythinktank.global.constant.ViewName.STOCK_LIST;
 @RequiredArgsConstructor
 @RequestMapping("/stocks")
 public class StockController {
-    private final NewStockService stockService;
-    private final NewShareholderService shareholderService;
+    private final StockService stockService;
 
     @GetMapping
     public String getStocks(Pageable pageable, Model model) {
@@ -36,7 +34,7 @@ public class StockController {
         model.addAttribute(DIVIDEND_KEY.getText(), stockService.getDividendBySymbol(symbol));
         model.addAttribute(GOVERNANCE_KEY.getText(), stockService.calculateGovernance(symbol));
         model.addAttribute(CORPORATE_BOARD_STABILITY.getText(), stockService.calculateBoardStability(symbol));
-        model.addAttribute(STOCK_HYPE_INDEX.getText(), shareholderService.calculateStockHypeIndex(symbol));
+        model.addAttribute(STOCK_HYPE_INDEX.getText(), stockService.calculateStockHypeIndex(symbol));
         return STOCK.getText();
     }
 }
