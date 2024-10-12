@@ -59,6 +59,10 @@ public class Member extends BaseEntity {
         this.passwordLastChangedAt = LocalDateTime.now();
     }
 
+    public void updateLastLoggedIn() {
+        this.lastLoggedInAt = LocalDateTime.now();
+    }
+
     public void changeEmail(String email) {
         this.email = email;
     }

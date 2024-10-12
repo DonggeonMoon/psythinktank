@@ -135,6 +135,16 @@ public class MemberService {
     }
 
     @Transactional
+    public void updateLastLoggedInAt(String memberId) {
+        if (!StringUtils.hasText(memberId)) {
+            return;
+        }
+        memberRepository.findByMemberId(memberId)
+                .orElseThrow(MemberNotExistException::new)
+                .updateLastLoggedIn();
+    }
+
+    @Transactional
     public void increaseLoginTryCount(String memberId) {
         if (!StringUtils.hasText(memberId)) {
             return;
