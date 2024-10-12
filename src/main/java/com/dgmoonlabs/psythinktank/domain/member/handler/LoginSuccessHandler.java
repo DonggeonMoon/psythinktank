@@ -23,6 +23,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws IOException {
         String username = authentication.getName();
         memberService.resetLoginTryCount(username);
+        memberService.updateLastLoggedInAt(username);
         request.getSession().setAttribute(
                 "member",
                 Map.of(
