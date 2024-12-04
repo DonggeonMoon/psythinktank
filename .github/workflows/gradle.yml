@@ -59,7 +59,7 @@ jobs:
         sudo docker save psythinktank:latest -o psythinktank.tar
 
     - name: Fix file permissions
-      run: chmod 644 psythinktank.tar
+      run: sudo chmod 644 psythinktank.tar
 
     - name: Transfer Docker Image
       uses: appleboy/scp-action@master
