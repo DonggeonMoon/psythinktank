@@ -79,6 +79,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.EC2_SSH_PORT }}
         script: |
+          chmod 644 ${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}/psythinktank.tar
           docker load -i ${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}/psythinktank.tar
 
     - name: Restart Docker on EC2
