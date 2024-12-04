@@ -53,6 +53,11 @@ jobs:
     # - name: Build with Gradle 8.5
     #   run: gradle build
 
+    - name: Build Docker Image
+      run: |
+        docker build -t psythinktank:latest .
+        docker save my-app:latest -o psythinktank.tar
+
     - name: Upload JAR file using SCP
       uses: appleboy/scp-action@master
       with:
@@ -60,9 +65,18 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.EC2_SSH_PORT }}
-        source: "./build/libs/PSYThinktank-0.0.1.jar"
+        source: "./psythinktank.tar"
         target: ${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}
         strip_components: 3
+
+    - name: Deploy on Remote Server
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          docker load -i /home/${{ secrets.SERVER_USERNAME }}/psythinktank.tar
 
     - name: Restart Docker on EC2
       uses: appleboy/ssh-action@master
