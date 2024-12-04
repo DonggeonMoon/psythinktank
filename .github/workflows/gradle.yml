@@ -55,11 +55,8 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build -t psythinktank:latest .
-        docker save psythinktank:latest -o psythinktank.tar
-
-    - name: Fix file permissions
-      run: chmod 644 psythinktank.tar
+        sudo docker build -t psythinktank:latest .
+        sudo docker save psythinktank:latest -o psythinktank.tar
 
     - name: Transfer Docker Image
       uses: appleboy/scp-action@master
@@ -79,8 +76,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.EC2_SSH_PORT }}
         script: |
-          chmod 644 ${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}/psythinktank.tar
-          docker load -i ${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}/psythinktank.tar
+          sudo docker load -i ${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}/psythinktank.tar
 
     - name: Restart Docker on EC2
       uses: appleboy/ssh-action@master
