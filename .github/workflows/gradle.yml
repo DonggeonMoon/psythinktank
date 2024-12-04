@@ -56,7 +56,7 @@ jobs:
     - name: Build Docker Image
       run: |
         docker build -t psythinktank:latest .
-        docker save my-app:latest -o psythinktank.tar
+        docker save psythinktank:latest -o psythinktank.tar
 
     - name: Upload JAR file using SCP
       uses: appleboy/scp-action@master
@@ -69,7 +69,7 @@ jobs:
         target: ${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}
         strip_components: 3
 
-    - name: Deploy on Remote Server
+    - name: Transfer Docker Image
       uses: appleboy/ssh-action@v0.1.7
       with:
         host: ${{ secrets.SERVER_HOST }}
