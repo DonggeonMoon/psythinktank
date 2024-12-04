@@ -53,16 +53,33 @@ jobs:
     # - name: Build with Gradle 8.5
     #   run: gradle build
 
-    - name: Upload JAR file using SCP
+    - name: Build Docker Image
+      run: |
+        sudo docker build -t psythinktank:latest .
+        sudo docker save psythinktank:latest -o psythinktank.tar
+
+    - name: Fix file permissions
+      run: sudo chmod 644 psythinktank.tar
+
+    - name: Transfer Docker Image
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.EC2_PUBLIC_IP }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.EC2_SSH_PORT }}
-        source: "./build/libs/PSYThinktank-0.0.1.jar"
+        source: "./psythinktank.tar"
         target: ${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}
-        strip_components: 3
+
+    - name: Deploy on remote server
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.EC2_PUBLIC_IP }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.EC2_SSH_PORT }}
+        script: |
+          sudo docker load -i ${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}/psythinktank.tar
 
     - name: Restart Docker on EC2
       uses: appleboy/ssh-action@master
