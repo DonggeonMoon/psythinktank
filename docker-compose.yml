@@ -28,7 +28,7 @@ services:
     command: certonly -n --expand --webroot --webroot-path=/var/www/certbot --email nullsafer@naver.com --agree-tos --no-eff-email -d "psythinktank.com,www.psythinktank.com,m.psythinktank.com"
   java:
     container_name: java
-    image: openjdk:17-alpine
+    image: psythinktank
     platform: linux/amd64
     ports:
       - "8080:8080"
