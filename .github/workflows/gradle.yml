@@ -39,6 +39,9 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew bootJar
 
+    - name: Verify local file exists
+      run: ls -la ./build/libs/PSYThinktank-0.0.1.jar && echo $BASE_DIR && echo $DEPLOY_DIR
+
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
     #
@@ -68,6 +71,12 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no -p ${{ secrets.EC2_SSH_PORT }} ${{ secrets.USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "docker load -i ${{ secrets.BASE_DIR }}${{ secrets.DEPLOY_DIR }}/psythinktank.tar"
 
-    - name: Restart Java Container
-      run: |
-        ssh -o StrictHostKeyChecking=no -p ${{ secrets.EC2_SSH_PORT }} ${{ secrets.USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "sudo docker restart java"
+    - name: Restart Docker on EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_PUBLIC_IP }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.EC2_SSH_PORT }}
+        script: |
+          sudo docker restart java
