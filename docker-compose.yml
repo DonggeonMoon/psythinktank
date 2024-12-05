@@ -37,7 +37,7 @@ services:
     volumes:
       - ./deploy:/usr/src/app
     working_dir: /usr/src/app
-    command: [ 'java', '-jar', '/usr/src/app/PSYThinktank-0.0.1.jar' ]
+    command: [ 'java', '-jar', '/usr/src/app/app.jar' ]
     environment:
       TZ: "Asia/Seoul"
     depends_on:
