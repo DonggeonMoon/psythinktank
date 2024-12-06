@@ -1,6 +1,6 @@
 FROM openjdk:17-alpine
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
 COPY build/libs/*.jar app.jar
 
