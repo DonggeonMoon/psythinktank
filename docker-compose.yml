@@ -15,15 +15,6 @@ services:
       - ./certbot/lib:/var/lib/letsencrypt
       - ./certbot/www:/var/www/certbot
     restart: always
-  certbot:
-    container_name: certbot
-    image: certbot/certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/logs:/var/log/letsencrypt
-      - ./certbot/lib:/var/lib/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    command: certonly -n --expand --webroot --webroot-path=/var/www/certbot --email nullsafer@naver.com --agree-tos --no-eff-email -d "psythinktank.com,www.psythinktank.com,m.psythinktank.com"
   java:
     container_name: java
     image: psythinktank
@@ -58,7 +49,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - PGDATA=${PGDATA}
-    volumes:
+    volumes
       - ${POSTGRES_VOLUME}
     restart: always
   mongo:
