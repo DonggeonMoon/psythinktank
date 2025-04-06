@@ -48,6 +48,7 @@ spring:
     show-sql: ${JPA_SHOW_SQL}
     properties:
       hibernate:
+        dialect: ${JPA_HIBERNATE_DIALECT}
         format:
           sql: ${JPA_HIBERNATE_FORMAT_SQL}
 
