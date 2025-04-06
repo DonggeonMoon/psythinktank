@@ -13,6 +13,10 @@ import com.dgmoonlabs.psythinktank.global.constant.*;
 import com.dgmoonlabs.psythinktank.global.constant.opendart.ApiName;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +29,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.dgmoonlabs.psythinktank.global.constant.Message.ERROR;
+import static com.dgmoonlabs.psythinktank.global.constant.ViewName.STOCK_LIST;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +52,27 @@ public class StockService {
                         Sort.by(CriteriaField.SYMBOL.getName()).ascending()
                 )
         );
+    }
+
+    @Transactional(readOnly = true)
+    public Workbook createExcel() {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet(STOCK_LIST.getText());
+
+        Row header = sheet.createRow(1);
+        header.createCell(1).setCellValue("종목코드");
+        header.createCell(2).setCellValue("종목명");
+        header.createCell(3).setCellValue("개요");
+
+        int currentRow = 1;
+        for (StockInfo stockInfo : stockInfoRepository.findAll()) {
+            currentRow++;
+            Row row = sheet.createRow(currentRow);
+            row.createCell(1).setCellValue(stockInfo.getSymbol());
+            row.createCell(2).setCellValue(stockInfo.getName());
+            row.createCell(3).setCellValue(stockInfo.getOverview());
+        }
+        return workbook;
     }
 
     @Transactional(readOnly = true)
