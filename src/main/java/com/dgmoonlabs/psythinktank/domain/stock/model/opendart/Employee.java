@@ -76,7 +76,11 @@ public class Employee {
         private String salaryTotalAmount;
 
         public boolean isNotSubTotal() {
-            return !"합계".contains(businessSector) && !"총계".contains(businessSector);
+            if (businessSector == null) {
+                return true;
+            }
+
+            return !businessSector.contains("합계") && !businessSector.contains("총계");
         }
     }
 }
