@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum BoardStability {
-    BUSINESS_YEAR("2023"),
+    BUSINESS_YEAR("2024"),
     REPORT_CODE("11011");
 
     private final String text;
