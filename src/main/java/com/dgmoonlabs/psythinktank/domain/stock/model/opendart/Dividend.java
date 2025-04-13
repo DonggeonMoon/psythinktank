@@ -65,6 +65,9 @@ public class Dividend {
         private String value;
 
         public boolean isCashDividendPerShare() {
+            if (!StringUtils.hasText(segmentation)) {
+                return false;
+            }
             return "주당 현금배당금(원)".equals(segmentation);
         }
 

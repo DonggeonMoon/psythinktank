@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.servlet.http.HttpServletResponse;
 
 import static com.dgmoonlabs.psythinktank.global.constant.QueryParameter.MEMBER_ID;
 import static com.dgmoonlabs.psythinktank.global.constant.QueryParameter.MEMBER_PASSWORD;
@@ -32,6 +35,8 @@ public class SecurityConfig {
                                 "/articles/modify/**",
                                 "/chat"
                         ).authenticated()
+                        .antMatchers(HttpMethod.POST, "/api/stocks/download/excel")
+                        .hasRole("ADMIN")
                         .antMatchers(
                                 "/",
                                 "/articles/**",
@@ -79,6 +84,18 @@ public class SecurityConfig {
                         })
                         .anyRequest()
                         .authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .defaultAuthenticationEntryPointFor(
+                                (request, response, object) ->
+                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"),
+                                new AntPathRequestMatcher("/api/**")
+                        )
+                        .defaultAccessDeniedHandlerFor(
+                                (request, response, object) ->
+                                        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden"),
+                                new AntPathRequestMatcher("/api/**")
+                        )
                 )
                 .csrf().disable()
                 .formLogin(configurer -> configurer
