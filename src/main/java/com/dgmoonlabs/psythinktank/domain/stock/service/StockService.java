@@ -63,14 +63,96 @@ public class StockService {
         header.createCell(1).setCellValue("종목코드");
         header.createCell(2).setCellValue("종목명");
         header.createCell(3).setCellValue("개요");
+        header.createCell(4).setCellValue("최대주주 지분");
+        header.createCell(5).setCellValue("배당금");
+        header.createCell(6).setCellValue("성장성");
+        header.createCell(7).setCellValue("이사회 안정성");
+        header.createCell(8).setCellValue("대외 환경");
 
         int currentRow = 1;
         for (StockInfo stockInfo : stockInfoRepository.findAll()) {
-            currentRow++;
-            Row row = sheet.createRow(currentRow);
-            row.createCell(1).setCellValue(stockInfo.getSymbol());
-            row.createCell(2).setCellValue(stockInfo.getName());
-            row.createCell(3).setCellValue(stockInfo.getOverview());
+            try {
+                currentRow++;
+                Row row = sheet.createRow(currentRow);
+                row.createCell(1).setCellValue(stockInfo.getSymbol());
+                row.createCell(2).setCellValue(stockInfo.getName());
+                row.createCell(3).setCellValue(stockInfo.getOverview());
+                row.createCell(4).setCellValue(
+                        shareRepository.findBySymbol(stockInfo.getSymbol())
+                                .stream()
+                                .sorted(
+                                        Comparator.comparing(Share::getDate)
+                                                .thenComparing(Share::getValue)
+                                                .reversed()
+                                ).max(Comparator.comparing(Share::getValue)).orElse(
+                                        Share.builder()
+                                                .value(0.0)
+                                                .build()
+                                ).getValue()
+                );
+
+                dividendRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+                        stockInfo.getSymbol(),
+                        ApiName.DIVIDEND.getText(),
+                        GrowthPotential.BUSINESS_YEAR.getText(),
+                        GrowthPotential.REPORT_CODE.getText()
+                ).ifPresent(dividend -> row.createCell(5).setCellValue(dividend.getValue()));
+
+                employeeRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+                        stockInfo.getSymbol(),
+                        ApiName.EMPLOYEE.getText(),
+                        GrowthPotential.BUSINESS_YEAR.getText(),
+                        GrowthPotential.REPORT_CODE.getText()
+                ).ifPresent(thisYearEmployee -> employeeRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+                        stockInfo.getSymbol(),
+                        ApiName.EMPLOYEE.getText(),
+                        GrowthPotential.PREVIOUS_BUSINESS_YEAR.getText(),
+                        GrowthPotential.REPORT_CODE.getText()
+                ).ifPresent(previousYearEmployee -> {
+                    double hrr = (thisYearEmployee.getTotalEmployeeCount() - previousYearEmployee.getTotalEmployeeCount())
+                            / previousYearEmployee.getTotalEmployeeCount() * 100;
+                    row.createCell(6).setCellValue(hrr);
+                }));
+
+                employeeRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+                        stockInfo.getSymbol(),
+                        ApiName.EMPLOYEE.getText(),
+                        BoardStability.BUSINESS_YEAR.getText(),
+                        BoardStability.REPORT_CODE.getText()
+                ).ifPresent(employee -> directorCompensationRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+                        stockInfo.getSymbol(),
+                        ApiName.DIRECTOR_COMPENSATION.getText(),
+                        BoardStability.BUSINESS_YEAR.getText(),
+                        BoardStability.REPORT_CODE.getText()
+                ).ifPresent(directorCompensation -> unregisteredDirectorCompensationRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+                        stockInfo.getSymbol(),
+                        ApiName.UNREGISTERED_DIRECTOR_COMPENSATION.getText(),
+                        BoardStability.BUSINESS_YEAR.getText(),
+                        BoardStability.REPORT_CODE.getText()
+                ).ifPresent(unregisteredDirectorCompensation -> {
+                    double boardStability = employee.getSalaryTotalAmount()
+                            / (directorCompensation.getCompensationTotalAmount()
+                            + unregisteredDirectorCompensation.getSalaryTotalAmount());
+                    row.createCell(7).setCellValue(boardStability);
+                })));
+
+                minorShareholderRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+                        stockInfo.getSymbol(),
+                        OpenDartApiName.MINOR_HOLDER_STATUS.getApiName(),
+                        StockHypeIndex.BUSINESS_YEAR.getText(),
+                        StockHypeIndex.REPORT_CODE.getText()
+                ).ifPresent(thisYear -> minorShareholderRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(
+                        stockInfo.getSymbol(),
+                        OpenDartApiName.MINOR_HOLDER_STATUS.getApiName(),
+                        StockHypeIndex.LAST_BUSINESS_YEAR.getText(),
+                        StockHypeIndex.REPORT_CODE.getText()
+                ).ifPresent(lastYear -> {
+                    double stockHypeIndex = Math.round((thisYear.getShareholderTotalCount() - lastYear.getShareholderTotalCount()) / lastYear.getShareholderTotalCount() * 100.0 * 100.0) / 100.0;
+                    row.createCell(8).setCellValue(stockHypeIndex);
+                }));
+            } catch (Exception e) {
+                log.error("Error : {}, symbol: {} ", e.getMessage(), stockInfo.getSymbol());
+            }
         }
         return workbook;
     }
@@ -201,6 +283,7 @@ public class StockService {
         return Rating.evaluateGovernance(currentShare);
     }
 
+    @Transactional(readOnly = true)
     public String calculateStockHypeIndex(String symbol) {
         try {
             double thisYear = minorShareholderRepository.findBySymbolAndApiNameAndBusinessYearAndReportCode(

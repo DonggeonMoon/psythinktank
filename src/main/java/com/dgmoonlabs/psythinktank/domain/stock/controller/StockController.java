@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static com.dgmoonlabs.psythinktank.global.constant.KeyName.*;
@@ -44,7 +45,11 @@ public class StockController {
         response.setHeader("Content-Disposition", "attachment; filename=data.xlsx");
 
         try (Workbook workbook = stockService.createExcel()) {
-            workbook.write(response.getOutputStream());
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            workbook.write(out);
+            byte[] fileBytes = out.toByteArray();
+            response.setContentLength(fileBytes.length);
+            response.getOutputStream().write(fileBytes);
             response.getOutputStream().flush();
         } catch (IOException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
