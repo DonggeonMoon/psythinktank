@@ -35,7 +35,10 @@ public class SecurityConfig {
                                 "/articles/modify/**",
                                 "/chat"
                         ).authenticated()
-                        .antMatchers(HttpMethod.POST, "/api/stocks/download/excel")
+                        .antMatchers(
+                                HttpMethod.POST,
+                                "/stocks/download/excel"
+                        )
                         .hasRole("ADMIN")
                         .antMatchers(
                                 "/",
