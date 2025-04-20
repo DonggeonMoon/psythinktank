@@ -3,7 +3,6 @@ package com.dgmoonlabs.psythinktank.domain.stock.controller;
 import com.dgmoonlabs.psythinktank.domain.stock.service.StockService;
 import com.dgmoonlabs.psythinktank.global.limiter.DownloadLimiter;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -44,12 +43,8 @@ public class StockController {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=data.xlsx");
 
-        try (Workbook workbook = stockService.createExcel()) {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            workbook.write(out);
-            byte[] fileBytes = out.toByteArray();
-            response.setContentLength(fileBytes.length);
-            response.getOutputStream().write(fileBytes);
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            stockService.createExcel(outputStream);
             response.getOutputStream().flush();
         } catch (IOException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
