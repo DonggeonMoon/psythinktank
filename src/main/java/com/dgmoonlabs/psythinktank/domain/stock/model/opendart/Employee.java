@@ -46,7 +46,7 @@ public class Employee {
         return data.stream()
                 .filter(EmployeeData::isNotSubTotal)
                 .map(employeeData -> employeeData.totalEmployeeCount)
-                .filter(count -> !"-".equals(count))
+                .filter(count -> count != null && !"-".equals(count))
                 .map(count -> count.replace(",", ""))
                 .mapToDouble(Double::parseDouble)
                 .sum();
@@ -59,7 +59,7 @@ public class Employee {
         return data.stream()
                 .filter(EmployeeData::isNotSubTotal)
                 .map(employeeData -> employeeData.salaryTotalAmount)
-                .filter(count -> !"-".equals(count))
+                .filter(count -> count != null && !"-".equals(count))
                 .map(count -> count.replace(",", ""))
                 .mapToDouble(Double::parseDouble)
                 .sum();

@@ -44,7 +44,7 @@ public class MinorShareholder {
         }
         return data.stream()
                 .map(minorShareholderData -> minorShareholderData.shareholderTotalCount)
-                .filter(count -> !"-".equals(count))
+                .filter(count -> count != null && !"-".equals(count))
                 .map(count -> count.replace(",", ""))
                 .mapToDouble(Double::parseDouble)
                 .sum();

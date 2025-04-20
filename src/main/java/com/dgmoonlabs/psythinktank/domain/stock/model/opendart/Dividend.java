@@ -48,7 +48,7 @@ public class Dividend {
                 .filter(DividendData::isCashDividendPerShare)
                 .filter(DividendData::isCommonShare)
                 .map(dividendData -> dividendData.value)
-                .filter(count -> !"-".equals(count))
+                .filter(count -> count != null && !"-".equals(count))
                 .map(count -> count.replace(",", ""))
                 .mapToDouble(Double::parseDouble)
                 .sum();

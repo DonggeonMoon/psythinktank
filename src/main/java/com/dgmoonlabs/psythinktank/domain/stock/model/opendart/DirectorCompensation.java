@@ -44,7 +44,7 @@ public class DirectorCompensation {
         }
         return data.stream()
                 .map(directorCompensationData -> directorCompensationData.compensationTotalAmount)
-                .filter(count -> !"-".equals(count))
+                .filter(count -> count != null && !"-".equals(count))
                 .map(count -> count.replace(",", ""))
                 .mapToDouble(Double::parseDouble)
                 .sum();
